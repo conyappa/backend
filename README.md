@@ -15,9 +15,7 @@ WIP 🚧
 - [Make](https://en.wikipedia.org/wiki/Make_(software)) (highly recommended)
 - [Poetry](https://python-poetry.org/docs/) (highly recommended)
 
-## Install Con Yappa’s back end for local development.
-
----
+## Install Con Yappa’s back end for local development
 
 Create your local settings (_i.e._, environment variables):
 
@@ -69,9 +67,7 @@ Kill all processes (on another terminal, if the application is still running):
 docker-compose down
 ```
 
----
-
-## Wanna write some code? Follow these steps first.
+## Wanna write some code? Follow these steps first
 
 ---
 
