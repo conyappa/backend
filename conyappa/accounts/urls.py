@@ -1,10 +1,9 @@
 from django.urls import path
 
-from rest_framework_simplejwt import views as jwt_views
+from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 app_name = "accounts"
 
-
 urlpatterns = [
-    path("login/", jwt_views.TokenObtainSlidingView.as_view(), name="login"),
+    path("login/", TokenObtainSlidingView.as_view(), name="login"),
 ]
