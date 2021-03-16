@@ -1,5 +1,17 @@
 from .settings import *  # noqa: F401,F403
 
+##################
+# AUTHENTICATION #
+##################
+
+SIMPLE_JWT.update(  # noqa: F405
+    {
+        "SIGNING_KEY": "w8/L1-B-Bkov1;cs]mkvh*_6wW&./6m1:p89>.JFtTK$(dF9gn",
+        "ALGORITHM": "HS256",
+    }
+)
+
+
 #############
 # DATABASES #
 #############

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conyappa"
-version = "0.12.1"
+version = "1.0.0"
 description = "Latam’s first prize-linked savings account."
 authors = [
   "Alex Apt Iberkleid <aapt@uc.cl>",
@@ -21,6 +21,7 @@ requests = "^2.25.1"
 django-extensions = "^3.1.1"
 django-admin-numeric-filter = "^0.1.6"
 fintoc = "^0.3.0"
+djangorestframework-simplejwt = "^4.6.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

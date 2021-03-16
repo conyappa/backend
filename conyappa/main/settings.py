@@ -1,3 +1,4 @@
+import datetime as dt
 import os
 import sys
 
@@ -40,6 +41,14 @@ INSTALLED_APPS = [
 ##################
 
 AUTH_USER_MODEL = "accounts.User"
+
+SLIDING_TOKEN_LIFETIME = os.environ.get("SLIDING_TOKEN_LIFETIME", 365)
+
+SIMPLE_JWT = {
+    "SLIDING_TOKEN_LIFETIME": dt.timedelta(days=SLIDING_TOKEN_LIFETIME),
+    "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY"),
+    "ALGORITHM": os.environ.get("JWT_ALGORITHM"),
+}
 
 
 #####################
@@ -164,6 +173,17 @@ PRIZES = tuple(map(int, os.environ.get("PRIZES", "10 20 50 100 200 500 1000 5000
 BANK_ACCOUNT = os.environ.get("BANK_ACCOUNT")
 
 
+##################
+# REST FRAMEWORK #
+##################
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
+
 ###########
 # SECRETS #
 ###########
@@ -182,9 +202,9 @@ FINTOC_ACCOUNT_ID = os.environ.get("FINTOC_ACCOUNT_ID")
 sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegration()])
 
 
-###############
+################
 # STATIC FILES #
-###############
+################
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_URL = "/static/"

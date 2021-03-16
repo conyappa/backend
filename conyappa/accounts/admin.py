@@ -5,8 +5,7 @@ from django.contrib.admin.models import CHANGE, LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 
-from admin_numeric_filter.admin import (NumericFilterModelAdmin,
-                                        SliderNumericFilter)
+from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 from lottery.models import Draw, Ticket
 
 from .models import User
