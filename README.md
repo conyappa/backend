@@ -69,8 +69,6 @@ docker-compose down
 
 ## Wanna write some code? Follow these steps first
 
----
-
 Create a development-friendly virtual environment:
 
 ```bash

@@ -164,6 +164,17 @@ PRIZES = tuple(map(int, os.environ.get("PRIZES", "10 20 50 100 200 500 1000 5000
 BANK_ACCOUNT = os.environ.get("BANK_ACCOUNT")
 
 
+##################
+# REST Framework #
+##################
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
+
 ###########
 # SECRETS #
 ###########
