@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db import models, transaction
 
 from main.base import BaseModel
 
@@ -17,10 +17,20 @@ class UserManager(BaseUserManager):
     def everything(self):
         return super().get_queryset()
 
+    @transaction.atomic
+    def create_user(self, **fields):
+        password = fields.pop("password", None)
+        user = self.create(**fields)
+
+        if password is not None:
+            user.set_password(password)
+            user.save()
+
     def create_superuser(self, **fields):
         fields.setdefault("is_staff", True)
         fields.setdefault("is_superuser", True)
-        return self.create(**fields)
+
+        return self.create_user(**fields)
 
 
 class User(BaseModel, AbstractUser):
