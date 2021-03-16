@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     # First party apps.
     "accounts.apps.AccountsConfig",
     "banking.apps.BankingConfig",
-    # "docs.apps.DocsConfig",
+    "docs.apps.DocsConfig",
     "lottery.apps.LotteryConfig",
     # Built-in apps.
     "django.contrib.admin",

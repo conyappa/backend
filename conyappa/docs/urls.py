@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import render_docs, json_loader
+from .views import json_loader, render_docs
 
 app_name = "docs"
 
