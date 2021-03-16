@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254,
+      "writeOnly": true
+    },
+    "password": {
+      "type": "string",
+      "format": "password",
+      "writeOnly": true
+    },
+    "token": {
+      "type": "string",
+      "format": "JWT",
+      "readOnly": true
+    }
+  }
+}
