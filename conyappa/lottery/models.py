@@ -22,7 +22,7 @@ def generate_result_pool():
 
 class DrawManager(models.Manager):
     def ongoing(self):
-        # This method assumes there always is an ongoing draw.
+        # This method assumes there is an ongoing draw.
         return self.latest("created_at")
 
     @transaction.atomic

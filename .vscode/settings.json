@@ -2,7 +2,7 @@
   "python.formatting.provider": "black",
   "python.linting.enabled": true,
   "python.linting.flake8Enabled": true,
-  "python.pythonPath": "/Users/ArielMartinezSilberstein/Desktop/conyappa/backend/.venv/bin/python3",
+  "python.pythonPath": ".venv/bin/python",
   "python.autoComplete.extraPaths": ["./conyappa"],
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,

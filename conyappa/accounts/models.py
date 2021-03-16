@@ -89,6 +89,7 @@ class User(BaseModel, AbstractUser):
 
     @property
     def current_tickets(self):
+        # This method assumes there is an ongoing draw.
         return self.tickets.ongoing()
 
     @property
