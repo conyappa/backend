@@ -13,7 +13,7 @@ rd = SystemRandom()
 
 
 def generate_random_picks():
-    return rd.sample(population=Draw.objects.current().pool, k=7)
+    return rd.sample(population=Draw.objects.ongoing().pool, k=7)
 
 
 def generate_result_pool():
@@ -21,7 +21,7 @@ def generate_result_pool():
 
 
 class DrawManager(models.Manager):
-    def current(self):
+    def ongoing(self):
         # This method assumes there always is an ongoing draw.
         return self.latest("created_at")
 
@@ -76,8 +76,9 @@ class Draw(BaseModel):
 
 
 class TicketManager(models.Manager):
-    def current(self):
-        return self.filter(draw=Draw.objects.current())
+    def ongoing(self):
+        current_draw = Draw.objects.ongoing()
+        return self.filter(draw=current_draw)
 
 
 class Ticket(BaseModel):

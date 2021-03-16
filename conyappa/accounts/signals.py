@@ -10,4 +10,4 @@ from .models import User
 def user_join_current_draw(sender, instance, created, *args, **kwargs):
     if created:
         if Draw.objects.exists():
-            Draw.objects.current().include_new_user(user=instance)
+            Draw.objects.ongoing().include_new_user(user=instance)

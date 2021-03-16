@@ -89,7 +89,7 @@ class User(BaseModel, AbstractUser):
 
     @property
     def current_tickets(self):
-        return self.tickets.current()
+        return self.tickets.ongoing()
 
     @property
     def number_of_current_tickets(self):
