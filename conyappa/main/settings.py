@@ -22,8 +22,8 @@ INSTALLED_APPS = [
     "admin_numeric_filter",
     # First party apps.
     "accounts.apps.AccountsConfig",
-    "lottery.apps.LotteryConfig",
     "banking.apps.BankingConfig",
+    "lottery.apps.LotteryConfig",
     # Built-in apps.
     "django.contrib.admin",
     "django.contrib.auth",

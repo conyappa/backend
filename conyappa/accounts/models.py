@@ -27,7 +27,10 @@ class User(BaseModel, AbstractUser):
     class Meta:
         indexes = [models.Index(fields=["rut"])]
 
-    USERNAME_FIELD = ["email"]
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    email = models.EmailField(unique=True, max_length=254, verbose_name="email address")
 
     rut = models.PositiveIntegerField(unique=True, null=True, default=None, verbose_name="RUT")
     check_digit = models.PositiveSmallIntegerField(null=True, default=None, verbose_name="RUT check digit")
