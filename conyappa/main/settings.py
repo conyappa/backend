@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     # First party apps.
     "accounts.apps.AccountsConfig",
     "banking.apps.BankingConfig",
+    # "docs.apps.DocsConfig",
     "lottery.apps.LotteryConfig",
     # Built-in apps.
     "django.contrib.admin",
@@ -125,7 +126,7 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "app", "templates")],
+        "DIRS": [os.path.join(BASE_DIR, "main", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

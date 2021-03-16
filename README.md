@@ -41,7 +41,7 @@ docker-compose down --volumes
 
 ---
 
-If you want, you can run the migrations mannually (the next step will do it for you, though):
+If you want, you can run the migrations manually (the next step will do it for you, though):
 
 (The database might not be ready yet; if the command fails then try again.)
 

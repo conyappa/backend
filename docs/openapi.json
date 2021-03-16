@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Con Yappa’s API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/v1",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api-staging.conyappa.cl/v1",
+      "description": "Staging server"
+    },
+    {
+      "url": "https://api.conyappa.cl/v1",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication"
+    }
+  ],
+  "paths": {
+    "/login/": {
+      "post": {
+        "summary": "Obtain JSON Web Sliding Token",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/login.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/login.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "No active account found with the given credentials"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
