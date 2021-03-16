@@ -1,3 +1,4 @@
+import datetime as dt
 import os
 import sys
 
@@ -40,6 +41,14 @@ INSTALLED_APPS = [
 ##################
 
 AUTH_USER_MODEL = "accounts.User"
+
+ACCESS_TOKEN_LIFETIME_MINUTES = os.environ.get("ACCESS_TOKEN_LIFETIME_MINUTES", 1440)
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": dt.timedelta(minutes=ACCESS_TOKEN_LIFETIME_MINUTES),
+    "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY"),
+    "ALGORITHM": os.environ.get("JWT_ALGORITHM"),
+}
 
 
 #####################
@@ -165,7 +174,7 @@ BANK_ACCOUNT = os.environ.get("BANK_ACCOUNT")
 
 
 ##################
-# REST Framework #
+# REST FRAMEWORK #
 ##################
 
 REST_FRAMEWORK = {
@@ -193,9 +202,9 @@ FINTOC_ACCOUNT_ID = os.environ.get("FINTOC_ACCOUNT_ID")
 sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegration()])
 
 
-###############
+################
 # STATIC FILES #
-###############
+################
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_URL = "/static/"

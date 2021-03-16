@@ -4,5 +4,5 @@ admin_site.site_header = "Con Yappa"
 admin_site.site_title = "Con Yappa"
 
 
-def trigger_exception(_request):
+def trigger_error(_request):
     raise Exception("This is just a test.")
