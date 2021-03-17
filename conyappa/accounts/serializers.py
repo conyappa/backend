@@ -14,6 +14,7 @@ class TokenLoginSerializer(TokenObtainSlidingSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
+
         fields = [
             "id",
             "email",
@@ -27,7 +28,12 @@ class UserSerializer(ModelSerializer):
             "balance",
             "winnings",
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "balance": {"read_only": True},
+            "winnings": {"read_only": True},
+        }
 
     def create(self, validated_data):
         return self.Meta.model.objects.create_user(**validated_data)
