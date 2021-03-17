@@ -14,7 +14,12 @@
     },
     "token": {
       "type": "string",
-      "format": "JWT",
+      "format": "jwt",
+      "readOnly": true
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
       "readOnly": true
     }
   }

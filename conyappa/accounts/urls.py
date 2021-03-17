@@ -1,9 +1,9 @@
 from django.urls import path
 
-from rest_framework_simplejwt.views import TokenObtainSlidingView
+from .views import TokenLoginView
 
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", TokenObtainSlidingView.as_view(), name="login"),
+    path("login/", TokenLoginView.as_view(), name="login"),
 ]
