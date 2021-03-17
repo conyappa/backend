@@ -23,6 +23,7 @@ class UserSerializer(ModelSerializer):
             "rut",
             "check_digit",
             "formatted_rut",
+            "password",
             "balance",
             "winnings",
         ]
