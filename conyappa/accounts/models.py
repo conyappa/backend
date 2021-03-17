@@ -26,6 +26,8 @@ class UserManager(BaseUserManager):
             user.set_password(password)
             user.save()
 
+        return user
+
     def create_superuser(self, **fields):
         fields.setdefault("is_staff", True)
         fields.setdefault("is_superuser", True)
@@ -40,6 +42,7 @@ class User(BaseModel, AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
+    username = None
     email = models.EmailField(unique=True, max_length=254, verbose_name="email address")
 
     rut = models.PositiveIntegerField(unique=True, null=True, default=None, verbose_name="RUT")
