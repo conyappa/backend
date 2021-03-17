@@ -118,5 +118,9 @@ class User(BaseModel, AbstractUser):
         formatted_check_digit = "K" if (self.check_digit == 10) else self.check_digit
         return f"{rut_w_thousands_sep}-{formatted_check_digit}"
 
+    @property
+    def owners(self):
+        return {self}
+
     def __str__(self):
         return self.email
