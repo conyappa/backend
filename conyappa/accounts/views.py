@@ -1,5 +1,5 @@
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 from .models import User
@@ -18,3 +18,8 @@ class GenericUserView(GenericAPIView):
 class UserListView(CreateModelMixin, GenericUserView):
     def post(self, request):
         return self.create(request)
+
+
+class UserDetailView(RetrieveModelMixin, GenericUserView):
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
