@@ -1,8 +1,13 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin
+from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 from .models import User
-from .serializers import UserSerializer
+from .serializers import TokenLoginSerializer, UserSerializer
+
+
+class TokenLoginView(TokenObtainSlidingView):
+    serializer_class = TokenLoginSerializer
 
 
 class GenericUserView(GenericAPIView):
