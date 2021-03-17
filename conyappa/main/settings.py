@@ -218,6 +218,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ########
 
 ROOT_URLCONF = "main.urls"
+APPEND_SLASH = False
 
 
 ########
