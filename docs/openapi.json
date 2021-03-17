@@ -20,14 +20,14 @@
   ],
   "tags": [
     {
-      "name": "Authentication"
+      "name": "Accounts"
     }
   ],
   "paths": {
     "/login/": {
       "post": {
         "summary": "Obtain JSON Web Sliding Token",
-        "tags": ["Authentication"],
+        "tags": ["Accounts"],
         "requestBody": {
           "required": true,
           "content": {
@@ -61,6 +61,50 @@
                       "enum": [
                         "No active account found with the given credentials"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/": {
+      "post": {
+        "summary": "Create a user",
+        "tags": ["Accounts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/user.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "<field>": {
+                      "type": "string",
+                      "enum": ["user with this <field> already exists."]
                     }
                   }
                 }

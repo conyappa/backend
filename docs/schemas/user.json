@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "first_name": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "last_name": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "full_name": {
+      "type": "string",
+      "maxLength": 301,
+      "readOnly": true
+    },
+    "rut": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "check_digit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "formatted_rut": {
+      "type": "string",
+      "readOnly": true
+    },
+    "password": {
+      "type": "string",
+      "format": "password",
+      "writeOnly": true
+    },
+    "balance": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "readOnly": true
+    },
+    "winnings": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "readOnly": true
+    }
+  }
+}
