@@ -49,6 +49,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": dt.timedelta(days=SLIDING_TOKEN_LIFETIME),
     "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY"),
     "ALGORITHM": os.environ.get("JWT_ALGORITHM"),
+    "AUTH_TOKEN_CLASSES": ["rest_framework_simplejwt.tokens.SlidingToken"],
 }
 
 
@@ -217,6 +218,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ########
 
 ROOT_URLCONF = "main.urls"
+APPEND_SLASH = False
 
 
 ########

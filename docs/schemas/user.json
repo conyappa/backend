@@ -22,15 +22,18 @@
     "rut": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 2147483647
+      "maximum": 2147483647,
+      "example": 19659234
     },
     "check_digit": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 10
+      "maximum": 10,
+      "example": 2
     },
     "formatted_rut": {
       "type": "string",
+      "example": "19.659.234-2",
       "readOnly": true
     },
     "password": {

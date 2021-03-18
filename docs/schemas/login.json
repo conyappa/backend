@@ -15,6 +15,7 @@
     "token": {
       "type": "string",
       "format": "jwt",
+      "example": "xxxxx.yyyyy.zzzzz",
       "readOnly": true
     },
     "id": {

@@ -113,6 +113,35 @@
           }
         }
       }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "summary": "Retrieve a user",
+        "tags": ["Accounts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
