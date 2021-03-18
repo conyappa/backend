@@ -1,3 +1,4 @@
+from main.permissions import InternalCommunication
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin
 
@@ -11,5 +12,7 @@ class GenericDrawView(GenericAPIView):
 
 
 class DrawListView(CreateModelMixin, GenericDrawView):
+    permission_classes = [InternalCommunication]
+
     def post(self, request):
         return self.create(request)

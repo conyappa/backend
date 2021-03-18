@@ -23,7 +23,7 @@ class UserListView(CreateModelMixin, GenericUserView):
 
 
 class UserDetailView(RetrieveModelMixin, GenericUserView):
-    permission_classes = [IsAuthenticated, IsOwnerOfObject]
+    permission_classes = [IsAuthenticated & IsOwnerOfObject]
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
