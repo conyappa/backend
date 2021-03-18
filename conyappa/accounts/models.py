@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         return super().get_queryset()
 
     @transaction.atomic
-    def create_user(self, **fields):
+    def create(self, **fields):
         password = fields.pop("password", None)
         user = self.create(**fields)
 

@@ -34,6 +34,3 @@ class UserSerializer(ModelSerializer):
             "balance": {"read_only": True},
             "winnings": {"read_only": True},
         }
-
-    def create(self, validated_data):
-        return self.Meta.model.objects.create_user(**validated_data)
