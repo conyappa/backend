@@ -210,11 +210,30 @@
     },
     "/health-check": {
       "get": {
-        "summary": "Trigger an error",
+        "summary": "Check the back end’s health",
         "tags": ["Misc"],
         "responses": {
-          "500": {
-            "description": "Internal Server Error"
+          "204": {
+            "description": "No Content (everything seems OK)"
+          },
+          "503": {
+            "description": "Service Unavailable (something’s not working)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "Can't connect to database.",
+                        "Unknown database problem."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
