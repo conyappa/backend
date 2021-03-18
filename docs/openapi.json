@@ -28,6 +28,9 @@
     },
     {
       "name": "Lottery"
+    },
+    {
+      "name": "Misc"
     }
   ],
   "paths": {
@@ -190,6 +193,28 @@
           },
           "403": {
             "$ref": "#/components/responses/default_403"
+          }
+        }
+      }
+    },
+    "/error": {
+      "get": {
+        "summary": "Trigger an error",
+        "tags": ["Misc"],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/health-check": {
+      "get": {
+        "summary": "Trigger an error",
+        "tags": ["Misc"],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
