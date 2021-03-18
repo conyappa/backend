@@ -2,7 +2,11 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Con Yappa’s API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "x-logo": {
+      "url": "/static/svg/logo.svg",
+      "altText": "Con Yappa logo"
+    }
   },
   "servers": [
     {
