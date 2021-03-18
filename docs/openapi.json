@@ -21,10 +21,13 @@
   "tags": [
     {
       "name": "Accounts"
+    },
+    {
+      "name": "Lottery"
     }
   ],
   "paths": {
-    "/login/": {
+    "/login": {
       "post": {
         "summary": "Obtain JSON Web Sliding Token",
         "tags": ["Accounts"],
@@ -70,7 +73,7 @@
         }
       }
     },
-    "/users/": {
+    "/users": {
       "post": {
         "summary": "Create a user",
         "tags": ["Accounts"],
@@ -136,6 +139,35 @@
               "application/json": {
                 "schema": {
                   "$ref": "./schemas/user.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draws": {
+      "post": {
+        "summary": "Create a draw [for internal communication only]",
+        "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
+        "tags": ["Lottery"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/draw.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
                 }
               }
             }
