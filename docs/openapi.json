@@ -142,6 +142,15 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
+          },
+          "404": {
+            "$ref": "#/components/responses/default_404"
           }
         }
       }
@@ -168,6 +177,74 @@
               "application/json": {
                 "schema": {
                   "$ref": "./schemas/draw.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "default_401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "enum": ["Given token not valid for any token type"]
+                },
+                "code": {
+                  "type": "string",
+                  "enum": ["token_not_valid"]
+                },
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "default_403": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "enum": ["You do not have permission to perform this action."]
+                }
+              }
+            }
+          }
+        }
+      },
+      "default_404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "enum": ["Not found."]
                 }
               }
             }
