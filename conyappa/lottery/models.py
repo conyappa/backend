@@ -1,6 +1,8 @@
+import datetime as dt
 from random import SystemRandom
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models, transaction
 
 from main.base import BaseModel
@@ -26,7 +28,13 @@ class DrawManager(models.Manager):
         return self.latest("created_at")
 
     @transaction.atomic
-    def create(self, users, **fields):
+    def create(self, **fields):
+        User = get_user_model()
+        users = User.objects.all()
+
+        today = dt.date.today()
+        fields.setdefault("start_date", today)
+
         draw = super().create(**fields)
         tickets = []
 
@@ -62,14 +70,14 @@ class Draw(BaseModel):
         self.results += results
         self.save()
 
+    @transaction.atomic
     def conclude(self):
         result_set = set(self.results)
-        with transaction.atomic():
-            for ticket in self.tickets.all():
-                number_of_matches = len(result_set & set(ticket.picks))
-                user = ticket.user
-                value = settings.PRIZES[number_of_matches]
-                user.award_prize(value)
+        for ticket in self.tickets.all():
+            number_of_matches = len(result_set & set(ticket.picks))
+            user = ticket.user
+            value = settings.PRIZES[number_of_matches]
+            user.award_prize(value)
 
     def __str__(self):
         return str(self.start_date)

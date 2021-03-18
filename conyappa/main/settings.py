@@ -191,6 +191,8 @@ REST_FRAMEWORK = {
 ###########
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+INTERNAL_KEY = os.environ.get("INTERNAL_KEY")
+
 FINTOC_IS_ENABLED = bool(int(os.environ.get("FINTOC_IS_ENABLED", "0")))
 FINTOC_SECRET_KEY = os.environ.get("FINTOC_SECRET_KEY")
 FINTOC_LINK_TOKEN = os.environ.get("FINTOC_LINK_TOKEN")

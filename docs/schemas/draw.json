@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "uniqueItems": true,
+      "default": [],
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "readOnly": true
+    }
+  }
+}

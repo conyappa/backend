@@ -54,6 +54,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 ###########
 
 SECRET_KEY = "m[4xQ]go~21)h6'HWh@Xz4ydn8X]H1vON4E8~`'>zv+cf+rZww"
+INTERNAL_KEY = "XSi,7l|7.hC*w-4z[P+.&82:v]vgCGN3_XG<8tu`!|i/89<^x;"
 
 FINTOC_IS_ENABLED = False
 FINTOC_SECRET_KEY = "sk_example_WXUFqk8hMPQ4UA7HafJtZDsPZvabS5af"
