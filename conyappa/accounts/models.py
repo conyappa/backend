@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
     @transaction.atomic
     def create(self, **fields):
         password = fields.pop("password", None)
-        user = self.create(**fields)
+        user = super().create(**fields)
 
         if password is not None:
             user.set_password(password)
