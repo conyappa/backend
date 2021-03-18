@@ -197,17 +197,6 @@
         }
       }
     },
-    "/error": {
-      "get": {
-        "summary": "Trigger an error",
-        "tags": ["Misc"],
-        "responses": {
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/health-check": {
       "get": {
         "summary": "Check the back end’s health",
@@ -234,6 +223,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/error": {
+      "get": {
+        "summary": "Trigger an error",
+        "tags": ["Misc"],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
