@@ -27,9 +27,9 @@ jobs:
         run: docker build -t $ECR_REPOSITORY:latest --build-arg DJANGO_ENV=production --build-arg DJANGO_SECRET_KEY="$DJANGO_SECRET_KEY" .
         env:
           DJANGO_SECRET_KEY: ${{ secrets.STAGING_DJANGO_SECRET_KEY }}
-          ECR_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.STAGING_ECR_REPOSITORY_NAME }}
+          ECR_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY_NAME }}
 
       - name: Push Docker image to Amazon ECR
         run: docker push $ECR_REPOSITORY:latest
         env:
-          ECR_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.STAGING_ECR_REPOSITORY_NAME }}
+          ECR_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY_NAME }}
