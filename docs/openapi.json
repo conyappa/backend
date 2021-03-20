@@ -34,7 +34,7 @@
     }
   ],
   "paths": {
-    "v1/login": {
+    "/v1/login": {
       "post": {
         "summary": "Obtain JSON Web Sliding Token",
         "tags": ["Accounts"],
@@ -80,7 +80,7 @@
         }
       }
     },
-    "v1/users": {
+    "/v1/users": {
       "post": {
         "summary": "Create a user",
         "tags": ["Accounts"],
@@ -124,7 +124,7 @@
         }
       }
     },
-    "v1/users/{user_id}": {
+    "/v1/users/{user_id}": {
       "get": {
         "summary": "Retrieve a user",
         "tags": ["Accounts"],
@@ -162,7 +162,7 @@
         }
       }
     },
-    "v1/draws": {
+    "/v1/draws": {
       "post": {
         "summary": "Create a draw [for internal communication only]",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",

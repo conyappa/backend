@@ -155,6 +155,15 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
         },
+        "null": {
+            "class": "logging.NullHandler",
+        },
+    },
+    "loggers": {
+        "django.security.DisallowedHost": {
+            "handlers": ["null"],
+            "level": "CRITICAL",
+        },
     },
     "root": {
         "handlers": ["console"],
