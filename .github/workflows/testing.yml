@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Create testing environment
+      - name: Setup testing environment
         run: |
           make localsettings
           docker-compose build --parallel
