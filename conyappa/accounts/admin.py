@@ -18,7 +18,7 @@ class TicketInline(admin.StackedInline):
     extra = 0
 
     def get_queryset(self, request):
-        # This method assumes there is an ongoing draw.
+        # This method assumes that there is an ongoing draw.
         current_draw = Draw.objects.ongoing()
         qs = super().get_queryset(request).filter(draw=current_draw)
         return qs
