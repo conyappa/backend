@@ -12,7 +12,6 @@
   <a href="https://api-staging.conyappa.cl/docs" target="_blank">
       <img src="https://img.shields.io/website?label=production&logo=amazon&url=https://api-staging.conyappa.cl/docs" alt="Staging">
   </a>
-
 </p>
 
 ![ER Diagram](docs/er_diagram.png "ER Diagram")
