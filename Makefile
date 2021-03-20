@@ -15,6 +15,9 @@ migrate:
 shell:
 	docker-compose run web python manage.py shell_plus
 
+test:
+	docker-compose run web python manage.py test
+
 format:
 	poetry run black conyappa
 	poetry run isort conyappa

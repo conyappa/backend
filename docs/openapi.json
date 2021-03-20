@@ -202,11 +202,11 @@
         "summary": "Health check",
         "tags": ["Misc"],
         "responses": {
-          "204": {
-            "description": "No Content (everything seems OK)"
+          "200": {
+            "description": "OK"
           },
           "503": {
-            "description": "Service Unavailable (something’s not working)",
+            "description": "Service Unavailable (something’s not right)",
             "content": {
               "application/json": {
                 "schema": {
