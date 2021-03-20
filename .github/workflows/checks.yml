@@ -9,23 +9,6 @@ on:
       - master
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up testing environment
-        run: |
-          make localsettings
-          docker-compose build --parallel
-          docker-compose up --detach
-          docker-compose down
-
-      - name: Run unit tests
-        run: make test
-
   linters:
     runs-on: ubuntu-latest
 
@@ -54,3 +37,20 @@ jobs:
 
       - name: Lint with iSort
         run: poetry run isort conyappa --check
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up testing environment
+        run: |
+          make localsettings
+          docker-compose build --parallel
+          docker-compose up --detach
+          docker-compose down
+
+      - name: Run unit tests
+        run: make test
