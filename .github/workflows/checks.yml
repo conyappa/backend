@@ -49,5 +49,8 @@ jobs:
       - name: Lint with Black
         run: poetry run black conyappa --check
 
+      - name: Lint with Flake8
+        run: poetry run flake8 conyappa
+
       - name: Lint with iSort
         run: poetry run isort conyappa --check
