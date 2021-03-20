@@ -3,7 +3,7 @@ name: staging
 on:
   push:
     branches:
-      - setup-ci/cd
+      - master
 
 jobs:
   build:
@@ -40,12 +40,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v16
-      with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: ${{ secrets.AWS_REGION_NAME }}
-        application_name: ${{ secrets.EB_APPLICATION_NAME }}
-        environment_name: ${{ secrets.EB_STAGING_ENVIRONMENT_NAME }}
-        version_label: ${{ secrets.EB_STAGING_VERSION_LABEL }}
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v16
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.AWS_REGION_NAME }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_STAGING_ENVIRONMENT_NAME }}
+          version_label: ${{ secrets.EB_STAGING_VERSION_LABEL }}
