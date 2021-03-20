@@ -4,7 +4,6 @@ from random import SystemRandom
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models, transaction
-from django.db.models import F
 
 from main.base import BaseModel
 
