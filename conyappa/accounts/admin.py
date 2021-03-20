@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.admin.models import CHANGE, LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 from lottery.models import Draw, Ticket
@@ -84,7 +85,7 @@ class UserAdmin(NumericFilterModelAdmin):
     @transaction.atomic
     def change_balance(self, request, queryset, amount):
         for user in queryset:
-            user.balance += amount
+            user.balance = F("balance") + amount
             user.save()
 
             content_type = ContentType.objects.get_for_model(user)

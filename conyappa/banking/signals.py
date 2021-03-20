@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from django.db import transaction
-from django.db.models import signals
+from django.db.models import F, signals
 from django.dispatch import receiver
 
 from accounts.models import User
@@ -27,5 +27,5 @@ def associate_movement_w_user(sender, instance, created, *args, **kwargs):
 
                 amount = instance.amount
                 if amount > 0:
-                    user.balance += amount
+                    user.balance = F("balance") + amount
                 user.save()
