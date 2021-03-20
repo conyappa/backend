@@ -1,14 +1,21 @@
-# Con Yappa
+<h1 align="center">Con Yappa</h1>
 
-> The main back end application of Con Yappa, version 1.0.0
+<p align="center">
+  <em>Latam’s first prize-linked savings account.</em>
+</p>
+
+<p align="center">
+  <a href="https://api.conyappa.cl/docs" target="_blank">
+      <img src="https://img.shields.io/website?label=production&logo=amazon&url=https://api.conyappa.cl/docs" alt="Production">
+  </a>
+
+  <a href="https://api-staging.conyappa.cl/docs" target="_blank">
+      <img src="https://img.shields.io/website?label=production&logo=amazon&url=https://api-staging.conyappa.cl/docs" alt="Staging">
+  </a>
+
+</p>
 
 ![ER Diagram](docs/er_diagram.png "ER Diagram")
-
-## Servers
-
-[![Production](https://img.shields.io/website?label=production&logo=amazon&url=https://api.conyappa.cl/docs)](https://api-staging.conyappa.cl/docs)
-
-[![Staging](https://img.shields.io/website?label=staging&logo=amazon&url=https://api-staging.conyappa.cl/docs)](https://api-staging.conyappa.cl/docs)
 
 ## Requirements
 
