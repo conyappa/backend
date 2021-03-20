@@ -5,6 +5,7 @@ import sys
 import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from whitenoise.storage import CompressedManifestStaticFilesStorage
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...).
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -210,7 +211,7 @@ sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegr
 # STATIC FILES #
 ################
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 

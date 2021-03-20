@@ -10,8 +10,8 @@ urlpatterns = [
             [
                 path("health-check", health_check),
                 path("error", trigger_error),
-                path("docs/", include("docs.urls")),
                 path("", include("accounts.urls")),
+                path("", include("docs.urls")),
                 path("", include("lottery.urls")),
             ]
         ),
