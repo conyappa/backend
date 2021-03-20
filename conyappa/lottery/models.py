@@ -4,6 +4,7 @@ from random import SystemRandom
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models, transaction
+from django.db.models import F
 
 from main.base import BaseModel
 
@@ -66,6 +67,9 @@ class Draw(BaseModel):
 
     def choose_result(self):
         results = rd.sample(population=self.pool, k=1)
+
+        # Eventual race conditions are not avoided by the following code.
+        # Note that F expressions are not compatible with JSONField.
         self.pool = list(set(self.pool) - set(results))
         self.results += results
         self.save()

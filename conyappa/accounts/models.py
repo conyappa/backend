@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
+from django.db.models import F
 
 from main.base import BaseModel
 
@@ -72,8 +73,8 @@ class User(BaseModel, AbstractUser):
         self.save()
 
     def award_prize(self, value):
-        self.balance += value
-        self.winnings += value
+        self.balance = F("balance") + value
+        self.winnings = F("winnings") + value
         self.save()
 
     @property
