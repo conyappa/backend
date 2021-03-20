@@ -148,6 +148,7 @@ TEMPLATES = [
 PROPAGATE_EXCEPTIONS = True
 DEFAULT_LOGGING_LEVEL = "INFO" if DEBUG else "WARNING"
 LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL", DEFAULT_LOGGING_LEVEL)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
