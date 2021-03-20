@@ -1,0 +1,17 @@
+name: testing
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create testing environment
+        run: docker-compose build --parallel
+
+      - name: Run unit tests
+        run: make test
