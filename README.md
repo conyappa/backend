@@ -6,7 +6,9 @@
 
 ## Servers
 
-WIP 🚧
+[![Production](https://img.shields.io/website?label=production&logo=amazon&url=https://api.conyappa.cl/docs)](https://api-staging.conyappa.cl/docs)
+
+[![Staging](https://img.shields.io/website?label=staging&logo=amazon&url=https://api-staging.conyappa.cl/docs)](https://api-staging.conyappa.cl/docs)
 
 ## Requirements
 
