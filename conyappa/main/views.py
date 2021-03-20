@@ -4,7 +4,7 @@ from django.db.utils import OperationalError
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_503_SERVICE_UNAVAILABLE
+from rest_framework.status import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
 
 admin_site.site_header = "Con Yappa"
 admin_site.site_title = "Con Yappa"
@@ -22,7 +22,7 @@ def health_check(request):
             data={"detail": "Unknown database problem."},
             status=HTTP_503_SERVICE_UNAVAILABLE,
         )
-    return Response(status=HTTP_204_NO_CONTENT)
+    return Response(status=HTTP_200_OK)
 
 
 @api_view(["GET"])

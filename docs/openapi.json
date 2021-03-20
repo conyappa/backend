@@ -4,21 +4,21 @@
     "title": "Con Yappa’s API",
     "version": "1.0.0",
     "x-logo": {
-      "url": "/static/svg/logo.svg",
+      "url": "static/svg/logo.svg",
       "altText": "Con Yappa logo"
     }
   },
   "servers": [
     {
-      "url": "http://localhost:8000/v1",
+      "url": "http://localhost:8000",
       "description": "Development server"
     },
     {
-      "url": "https://api-staging.conyappa.cl/v1",
+      "url": "https://api-staging.conyappa.cl",
       "description": "Staging server"
     },
     {
-      "url": "https://api.conyappa.cl/v1",
+      "url": "https://api.conyappa.cl",
       "description": "Production server"
     }
   ],
@@ -34,7 +34,7 @@
     }
   ],
   "paths": {
-    "/login": {
+    "v1/login": {
       "post": {
         "summary": "Obtain JSON Web Sliding Token",
         "tags": ["Accounts"],
@@ -80,7 +80,7 @@
         }
       }
     },
-    "/users": {
+    "v1/users": {
       "post": {
         "summary": "Create a user",
         "tags": ["Accounts"],
@@ -124,7 +124,7 @@
         }
       }
     },
-    "/users/{user_id}": {
+    "v1/users/{user_id}": {
       "get": {
         "summary": "Retrieve a user",
         "tags": ["Accounts"],
@@ -162,7 +162,7 @@
         }
       }
     },
-    "/draws": {
+    "v1/draws": {
       "post": {
         "summary": "Create a draw [for internal communication only]",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
@@ -197,9 +197,9 @@
         }
       }
     },
-    "/health-check": {
+    "": {
       "get": {
-        "summary": "Check the back end’s health",
+        "summary": "Health check",
         "tags": ["Misc"],
         "responses": {
           "204": {

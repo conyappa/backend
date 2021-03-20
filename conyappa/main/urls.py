@@ -4,16 +4,16 @@ from .views import admin_site, health_check, trigger_error
 
 urlpatterns = [
     path("admin", admin_site.urls),
+    path("", include("docs.urls")),
     path(
         "v1/",
         include(
             [
-                path("health-check", health_check),
-                path("error", trigger_error),
                 path("", include("accounts.urls")),
-                path("", include("docs.urls")),
                 path("", include("lottery.urls")),
             ]
         ),
     ),
+    path("", health_check),
+    path("error", trigger_error),
 ]
