@@ -10,7 +10,7 @@
   </a>
 
   <a href="https://api-staging.conyappa.cl/docs" target="_blank">
-      <img src="https://img.shields.io/website?label=production&logo=amazon&url=https://api-staging.conyappa.cl/docs" alt="Staging">
+      <img src="https://img.shields.io/website?label=staging&logo=amazon&url=https://api-staging.conyappa.cl/docs" alt="Staging">
   </a>
 </p>
 
