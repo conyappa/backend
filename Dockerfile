@@ -1,7 +1,7 @@
 # Import the environment-setter image.
 FROM python:3.8.8-buster
 
-# Add Django's environment type.
+# Add Django’s environment type.
 ARG DJANGO_ENV
 
 # Set up some environmental variables.
@@ -14,12 +14,12 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.0.9
+    POETRY_VERSION=1.1.5
 
 # Set up the base working directory.
-WORKDIR /conyappa
+WORKDIR /app
 
-# Install the OS's package dependencies.
+# Install the OS’s package dependencies.
 RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     # Install poetry
@@ -28,11 +28,11 @@ RUN apt-get update && \
 # Set up the virtual environment.
 RUN python -m venv /venv
 
-# Copy the project's dependency files to the image.
+# Copy the project’s dependency files to the image.
 COPY pyproject.toml poetry.lock ./
 
 # Install the dependencies;
-# export them as `requirements.txt` and install them using `pip`.
+# export them as requirements.txt and install them using pip.
 RUN poetry export -f requirements.txt $(test "$DJANGO_ENV" = development && echo "--dev") \
     | /venv/bin/pip install -r /dev/stdin
 
@@ -59,7 +59,7 @@ ENV PATH="/venv/bin:$PATH"
 # Copy all files to the this image.
 COPY . .
 
-# Move to the projects root directory.
+# Move to the project’s root directory.
 WORKDIR /app/conyappa
 
 # Collect the assets.
@@ -71,7 +71,7 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 80 88 443 8000 8080 8443
 
-# Run as a non-root user (`conyappauser`).
+# Run as a non-root user.
 RUN useradd -m conyappauser
 USER conyappauser
 
