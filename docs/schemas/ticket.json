@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "picks": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "default": [],
+      "readOnly": true,
+      "example": [1, 2, 3, 4, 5, 6, 7]
+    }
+  }
+}

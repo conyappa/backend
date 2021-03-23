@@ -44,9 +44,9 @@ class OngoingUserTicketsView(ListModelMixin, GenericTicketView):
     # For now, and for security reasons, make this viewset read-only.
     permission_classes = [IsAuthenticated & Ownership & ReadOnly]
 
-    def dispatch(self, request, user):
+    def dispatch(self, request, user_id):
         User = get_user_model()
-        self.user = User.objects.get(pk=user)
+        self.user = User.objects.get(pk=user_id)
 
         return super().dispatch(request)
 
