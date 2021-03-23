@@ -1,4 +1,4 @@
-from main.permissions import IsOwnerOfObject
+from main.permissions import OwnerOfObject
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -23,7 +23,7 @@ class UserListView(CreateModelMixin, GenericUserView):
 
 
 class UserDetailView(RetrieveModelMixin, GenericUserView):
-    permission_classes = [IsAuthenticated & IsOwnerOfObject]
+    permission_classes = [IsAuthenticated & OwnerOfObject]
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)

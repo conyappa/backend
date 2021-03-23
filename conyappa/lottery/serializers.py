@@ -8,9 +8,11 @@ class DrawSerializer(ModelSerializer):
         model = Draw
 
         fields = [
+            "start_date",
             "results",
         ]
 
         extra_kwargs = {
+            "start_date": {"read_only": True},
             "results": {"read_only": True},
         }
