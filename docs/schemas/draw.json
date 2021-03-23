@@ -1,15 +1,23 @@
 {
   "type": "object",
   "properties": {
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "readOnly": true
+    },
     "results": {
       "type": "array",
       "uniqueItems": true,
-      "default": [],
+      "minItems": 0,
+      "maxItems": 7,
       "items": {
         "type": "integer",
         "minimum": 1
       },
-      "readOnly": true
+      "default": [],
+      "readOnly": true,
+      "example": [15, 8, 23, 42, 16, 4]
     }
   }
 }

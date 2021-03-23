@@ -197,6 +197,31 @@
         }
       }
     },
+    "/v1/draws/ongoing": {
+      "get": {
+        "summary": "Retrieve the ongoing draw",
+        "description": "Returns this week’s draw.",
+        "tags": ["Lottery"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
+          }
+        }
+      }
+    },
     "": {
       "get": {
         "summary": "Health check",
