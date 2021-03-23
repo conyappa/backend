@@ -6,6 +6,11 @@
       "format": "uuid",
       "readOnly": true
     },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
     "first_name": {
       "type": "string",
       "maxLength": 150
