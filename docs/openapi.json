@@ -200,6 +200,9 @@
           },
           "403": {
             "$ref": "#/components/responses/default_403"
+          },
+          "404": {
+            "$ref": "#/components/responses/default_404"
           }
         }
       }
