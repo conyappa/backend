@@ -9,9 +9,15 @@ class InternalCommunication(BasePermission):
         return internal_key == settings.INTERNAL_KEY
 
 
-class OwnerOfObject(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return request.user in obj.owners
+class Ownership(BasePermission):
+    def has_permission(self, request, view):
+        user = getattr(view, "user", None)
+
+        # Ownership over a user gives you ownership over the user’s resources.
+        return self.has_object_permission(request, view, obj=user)
+
+    def has_object_permission(self, request, view, obj=None):
+        return (obj is None) or (request.user in obj.owners)
 
 
 class ReadOnly(BasePermission):

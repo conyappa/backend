@@ -200,7 +200,7 @@
     "/v1/draws/ongoing": {
       "get": {
         "summary": "Retrieve the ongoing draw",
-        "description": "Returns this week’s draw.",
+        "description": "Returns this week’s draw (there is only one).",
         "tags": ["Lottery"],
         "responses": {
           "200": {
