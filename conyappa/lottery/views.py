@@ -36,7 +36,7 @@ class GenericTicketView(GenericAPIView):
     serializer_class = TicketSerializer
 
 
-class OngoingUserTicketsView(ListModelMixin, GenericTicketView):
+class UserTicketsView(ListModelMixin, GenericTicketView):
     # Changing tickets is a feature we would like to have in the near future.
     # For now, and for security reasons, make this viewset read-only.
     permission_classes = [IsAuthenticated & Ownership & ReadOnly]
