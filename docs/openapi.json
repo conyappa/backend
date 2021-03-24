@@ -106,20 +106,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "<field>": {
-                      "type": "string",
-                      "enum": ["user with this <field> already exists."]
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/user_exists_400"
           }
         }
       }
@@ -185,6 +172,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/user_exists_400"
           },
           "401": {
             "$ref": "#/components/responses/default_401"
@@ -284,6 +274,22 @@
       }
     },
     "responses": {
+      "user_exists_400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "<field>": {
+                  "type": "string",
+                  "enum": ["user with this <field> already exists."]
+                }
+              }
+            }
+          }
+        }
+      },
       "default_401": {
         "description": "Unauthorized",
         "content": {
