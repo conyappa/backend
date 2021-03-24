@@ -30,6 +30,8 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "winnings",
         ]
 
+        # These fields can only be set once.
+        # I.e., they can only be changed if blank or null.
         set_only_fields = [
             "first_name",
             "last_name",

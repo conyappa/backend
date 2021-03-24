@@ -13,10 +13,12 @@
     },
     "first_name": {
       "type": "string",
+      "description": "**set-only** (can only be set once, but not changed)",
       "maxLength": 150
     },
     "last_name": {
       "type": "string",
+      "description": "**set-only** (can only be set once, but not changed)",
       "maxLength": 150
     },
     "full_name": {
@@ -26,12 +28,14 @@
     },
     "rut": {
       "type": "integer",
+      "description": "**set-only** (can only be set once, but not changed)",
       "minimum": 0,
       "maximum": 2147483647,
       "example": 19659234
     },
     "check_digit": {
       "type": "integer",
+      "description": "**set-only** (can only be set once, but not changed)",
       "minimum": 0,
       "maximum": 10,
       "example": 2

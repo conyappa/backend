@@ -160,6 +160,42 @@
             "$ref": "#/components/responses/default_404"
           }
         }
+      },
+      "patch": {
+        "summary": "Update a user",
+        "tags": ["Accounts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
+          },
+          "404": {
+            "$ref": "#/components/responses/default_404"
+          }
+        }
       }
     },
     "/v1/draws": {
