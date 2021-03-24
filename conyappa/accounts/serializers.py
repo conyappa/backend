@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
-
 from utils.serializers import SetOnlyFieldsMixin
+
 from .models import User
 
 
