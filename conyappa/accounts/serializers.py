@@ -1,9 +1,11 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import User
 
+from logging import getLogger
+logger = getLogger(__name__)
 
 class TokenLoginSerializer(TokenObtainSlidingSerializer):
     def validate(self, attrs):
@@ -44,3 +46,9 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "balance": {"read_only": True},
             "winnings": {"read_only": True},
         }
+
+    def validate_password(self, value):
+        if len(value) < 6:
+            raise ValidationError("Too short.")
+
+        return value
