@@ -16,7 +16,8 @@ from .models import User
 class TicketInline(admin.TabularInline):
     model = Ticket
 
-    readonly_fields = ["draw"]
+    readonly_fields = ["picks"]
+    fields = ["picks", "draw"]
     extra = 0
 
     classes = ["collapse"]
