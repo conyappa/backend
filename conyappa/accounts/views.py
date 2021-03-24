@@ -1,6 +1,6 @@
 from main.permissions import Ownership
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainSlidingView
 
@@ -22,8 +22,11 @@ class UserListView(CreateModelMixin, GenericUserView):
         return self.create(request)
 
 
-class UserDetailView(RetrieveModelMixin, GenericUserView):
-    permission_classes = [IsAuthenticated & Ownership]
+class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
+    permission_classes = [IsAuthenticated & IsOwnerOfObject]
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
+
+    def patch(self, request, pk):
+        return self.partial_update(request, pk=pk)

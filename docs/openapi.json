@@ -109,20 +109,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "<field>": {
-                      "type": "string",
-                      "enum": ["user with this <field> already exists."]
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/user_exists_400"
           }
         }
       }
@@ -152,6 +139,45 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
+          },
+          "404": {
+            "$ref": "#/components/responses/default_404"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a user",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/user_exists_400"
           },
           "401": {
             "$ref": "#/components/responses/default_401"
@@ -212,19 +238,16 @@
         "summary": "Create a draw [for internal communication only]",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
         "tags": ["Draws"],
-        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "./schemas/draw.json"
+              "schema": {ref": "./schemas/draw.json"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -318,6 +341,22 @@
       }
     },
     "responses": {
+      "user_exists_400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "<field>": {
+                  "type": "string",
+                  "enum": ["user with this <field> already exists."]
+                }
+              }
+            }
+          }
+        }
+      },
       "default_401": {
         "description": "Unauthorized",
         "content": {

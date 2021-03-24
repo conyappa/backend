@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
+from utils.serializers import SetOnlyFieldsMixin
 
 from .models import User
 
@@ -11,7 +12,7 @@ class TokenLoginSerializer(TokenObtainSlidingSerializer):
         return data
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
     class Meta:
         model = User
 
@@ -27,6 +28,15 @@ class UserSerializer(ModelSerializer):
             "password",
             "balance",
             "winnings",
+        ]
+
+        # These fields can only be set once.
+        # I.e., they can only be changed if blank or null.
+        set_only_fields = [
+            "first_name",
+            "last_name",
+            "rut",
+            "check_digit",
         ]
 
         extra_kwargs = {
