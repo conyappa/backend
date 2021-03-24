@@ -1,4 +1,4 @@
-from main.permissions import IsOwnerOfObject
+from main.permissions import Ownership
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated

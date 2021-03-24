@@ -42,8 +42,8 @@
     },
     "formatted_rut": {
       "type": "string",
-      "example": "19.659.234-2",
-      "readOnly": true
+      "readOnly": true,
+      "example": "19.659.234-2"
     },
     "password": {
       "type": "string",

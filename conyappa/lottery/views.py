@@ -1,9 +1,13 @@
-from main.permissions import InternalCommunication
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+
+from main.permissions import InternalCommunication, Ownership, ReadOnly
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Draw
-from .serializers import DrawSerializer
+from .serializers import DrawSerializer, TicketSerializer
 
 
 class GenericDrawView(GenericAPIView):
@@ -16,3 +20,35 @@ class DrawListView(CreateModelMixin, GenericDrawView):
 
     def post(self, request):
         return self.create(request)
+
+
+class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
+    permission_classes = [IsAuthenticated & ReadOnly]
+
+    def get_object(self):
+        return Draw.objects.ongoing()
+
+    def get(self, request):
+        return self.retrieve(request)
+
+
+class GenericTicketView(GenericAPIView):
+    serializer_class = TicketSerializer
+
+
+class UserTicketsView(ListModelMixin, GenericTicketView):
+    # Changing tickets is a feature we would like to have in the near future.
+    # For now, and for security reasons, make this viewset read-only.
+    permission_classes = [IsAuthenticated & Ownership & ReadOnly]
+
+    def set_user(self, user_id):
+        User = get_user_model()
+
+        self.user = get_object_or_404(User.objects, pk=user_id)
+
+    def get_queryset(self):
+        return self.user.current_tickets
+
+    def get(self, request, user_id):
+        self.set_user(user_id)
+        return self.list(request)
