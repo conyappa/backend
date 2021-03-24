@@ -2,8 +2,8 @@ from django.conf import settings
 from django.db import transaction
 
 from fintoc import Client
-from main.utils import Singleton
 
+from utils.metaclasses import Singleton
 from .models import Movement
 
 
