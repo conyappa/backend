@@ -24,7 +24,6 @@ class MovementAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
-        "user",
         "fintoc_post_date",
     ]
 
@@ -38,5 +37,8 @@ class MovementAdmin(admin.ModelAdmin):
 
     fields = ["user"] + readonly_fields
 
+    def has_add_permission(self, request):
+        return super().has_add_permission(request) and settings.DEBUG
+
     def has_delete_permission(self, request, obj=None):
-        return super().has_delete_permission(request, obj) and settings.DEBUG
+        return super().has_add_permission(request) and settings.DEBUG

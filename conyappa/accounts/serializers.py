@@ -19,13 +19,13 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
         fields = [
             "id",
             "email",
-            "first_name",
-            "last_name",
-            "full_name",
             "rut",
             "check_digit",
             "formatted_rut",
             "password",
+            "first_name",
+            "last_name",
+            "full_name",
             "balance",
             "winnings",
         ]
@@ -33,10 +33,10 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
         # These fields can only be set once.
         # I.e., they can only be changed if blank or null.
         set_only_fields = [
-            "first_name",
-            "last_name",
             "rut",
             "check_digit",
+            "first_name",
+            "last_name",
         ]
 
         extra_kwargs = {

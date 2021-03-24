@@ -14,8 +14,11 @@ from .models import User
 
 class TicketInline(admin.StackedInline):
     model = Ticket
+
     fields = ["draw"]
     extra = 0
+
+    classes = ['collapse']
 
     def get_queryset(self, request):
         # This method assumes that there is an ongoing draw.
@@ -50,8 +53,6 @@ class UserAdmin(NumericFilterModelAdmin):
         "formatted_rut",
         "balance",
         "winnings",
-        "number_of_current_tickets",
-        "current_prize",
         "is_staff",
         "is_superuser",
     ]
@@ -64,15 +65,33 @@ class UserAdmin(NumericFilterModelAdmin):
         ("winnings", SliderNumericFilter),
     ]
 
+    fieldsets = [
+        ("PERSONAL", {
+            "fields": [
+                "email",
+                ("rut", "check_digit"),
+                ("first_name", "last_name"),
+            ],
+            "classes": ["collapse"],
+        }),
+        ("FINANCIAL", {
+            "fields": [
+                ("balance", "winnings", "current_prize"),
+                ("number_of_current_tickets", "extra_tickets_ttl"),
+            ],
+            "classes": ["collapse"],
+        })
+    ]
+
     readonly_fields = [
         "email",
-        "first_name",
-        "last_name",
-        "formatted_rut",
+        "number_of_current_tickets",
+        "current_prize",
         "balance",
         "winnings",
-        "extra_tickets_ttl",
     ]
+
+    check_digit = None
 
     inlines = [TicketInline]
 
@@ -80,7 +99,7 @@ class UserAdmin(NumericFilterModelAdmin):
         return super().has_add_permission(request) and settings.DEBUG
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return super().has_add_permission(request) and settings.DEBUG
 
     @transaction.atomic
     def change_balance(self, request, queryset, amount):
