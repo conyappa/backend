@@ -8,23 +8,40 @@ from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 from lottery.models import Draw, Ticket
+from banking.models import Movement
 
 from .models import User
 
 
-class TicketInline(admin.StackedInline):
+class TicketInline(admin.TabularInline):
     model = Ticket
 
-    fields = ["draw"]
+    readonly_fields = ["draw"]
+    extra = 0
+
+    classes = ["collapse"]
+
+    def has_view_or_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class MovementInline(admin.TabularInline):
+    model = Movement
+
+    readonly_fields = ["rut", "fintoc_post_date"]
+    fields = [tuple(readonly_fields)]
     extra = 0
 
     classes = ['collapse']
 
-    def get_queryset(self, request):
-        # This method assumes that there is an ongoing draw.
-        current_draw = Draw.objects.ongoing()
-        qs = super().get_queryset(request).filter(draw=current_draw)
-        return qs
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class UserBalanceChangeForm(admin.helpers.ActionForm):
@@ -93,7 +110,7 @@ class UserAdmin(NumericFilterModelAdmin):
 
     check_digit = None
 
-    inlines = [TicketInline]
+    inlines = [TicketInline, MovementInline]
 
     def has_add_permission(self, request):
         return super().has_add_permission(request) and settings.DEBUG

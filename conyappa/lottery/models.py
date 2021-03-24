@@ -117,3 +117,6 @@ class Ticket(BaseModel):
     @property
     def prize(self):
         return settings.PRIZES[self.number_of_matches]
+
+    def __str__(self):
+        return str(self.picks)
