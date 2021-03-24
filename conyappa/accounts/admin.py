@@ -7,8 +7,8 @@ from django.db import transaction
 from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
-from lottery.models import Draw, Ticket
 from banking.models import Movement
+from lottery.models import Ticket
 
 from .models import User
 
@@ -36,7 +36,7 @@ class MovementInline(admin.TabularInline):
     fields = [tuple(readonly_fields)]
     extra = 0
 
-    classes = ['collapse']
+    classes = ["collapse"]
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -84,21 +84,27 @@ class UserAdmin(NumericFilterModelAdmin):
     ]
 
     fieldsets = [
-        ("PERSONAL", {
-            "fields": [
-                "email",
-                ("rut", "check_digit"),
-                ("first_name", "last_name"),
-            ],
-            "classes": ["collapse"],
-        }),
-        ("FINANCIAL", {
-            "fields": [
-                ("balance", "winnings", "current_prize"),
-                ("number_of_current_tickets", "extra_tickets_ttl"),
-            ],
-            "classes": ["collapse"],
-        })
+        (
+            "PERSONAL",
+            {
+                "fields": [
+                    "email",
+                    ("rut", "check_digit"),
+                    ("first_name", "last_name"),
+                ],
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            "FINANCIAL",
+            {
+                "fields": [
+                    ("balance", "winnings", "current_prize"),
+                    ("number_of_current_tickets", "extra_tickets_ttl"),
+                ],
+                "classes": ["collapse"],
+            },
+        ),
     ]
 
     readonly_fields = [
