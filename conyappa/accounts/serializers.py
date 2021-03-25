@@ -95,7 +95,9 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
         return value
 
     def validate_password(self, value):
-        if len(value) < 6:
-            raise ValidationError("Ensure this field has no less than 6 characters.")
+        PASSWORD_MIN_LENGTH = 6
+
+        if len(value) < PASSWORD_MIN_LENGTH:
+            raise ValidationError(f"Ensure this field has no less than {PASSWORD_MIN_LENGTH} characters.")
 
         return value
