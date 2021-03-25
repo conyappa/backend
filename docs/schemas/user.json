@@ -35,7 +35,7 @@
     },
     "check_digit": {
       "type": "integer",
-      "description": "**set-only** (can only be set once, but not changed)",
+      "description": "**set-only** (can only be set once, but not changed), must correspond to the RUT",
       "minimum": 0,
       "maximum": 10,
       "example": 2
