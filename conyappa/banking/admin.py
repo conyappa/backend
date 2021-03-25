@@ -17,26 +17,28 @@ class MovementAdmin(admin.ModelAdmin):
 
     list_display = [
         "name",
-        "raw_rut",
-        "user",
+        "rut",
         "amount",
         "fintoc_post_date",
+        "user",
     ]
 
     list_filter = [
-        "user",
         "fintoc_post_date",
     ]
 
     readonly_fields = [
         "name",
-        "raw_rut",
-        "fintoc_data",
-        "fintoc_post_date",
+        "rut",
         "amount",
+        "fintoc_post_date",
+        "fintoc_data",
     ]
 
     fields = ["user"] + readonly_fields
 
+    def has_add_permission(self, request):
+        return False
+
     def has_delete_permission(self, request, obj=None):
-        return super().has_delete_permission(request, obj) and settings.DEBUG
+        return super().has_add_permission(request) and settings.DEBUG

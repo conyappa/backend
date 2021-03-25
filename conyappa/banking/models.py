@@ -41,4 +41,4 @@ class Movement(BaseModel):
         return sender_account.get("holder_name")
 
     def __str__(self):
-        return f"{self.name} | {self.fintoc_post_date}"
+        return f"{self.name} | ${self.amount}"

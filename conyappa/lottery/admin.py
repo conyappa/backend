@@ -17,8 +17,8 @@ class DrawAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         "start_date",
-        "pool",
         "results",
+        "pool",
     ]
 
     def has_add_permission(self, request):

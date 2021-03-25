@@ -18,7 +18,7 @@ def associate_movement_w_user(sender, instance, created, *args, **kwargs):
 
         try:
             user = User.objects.get(rut=movement_rut)
-        except User.DoesNotExist as e:
+        except (User.DoesNotExist, User.MultipleObjectsReturned) as e:
             logger.warning(f"Couldn’t associate movement to user: {e}")
         else:
             with transaction.atomic():
