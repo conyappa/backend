@@ -1,78 +1,78 @@
 {
-  "openapi":"3.0.3",
-  "info":{
-    "title":"Con Yappa’s API",
-    "version":"1.0.0",
-    "x-logo":{
-      "url":"static/svg/logo.svg",
-      "altText":"Con Yappa logo"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Con Yappa’s API",
+    "version": "1.0.0",
+    "x-logo": {
+      "url": "static/svg/logo.svg",
+      "altText": "Con Yappa logo"
     }
   },
   "servers":[
     {
-      "url":"http://localhost:8000",
-      "description":"Development server"
+      "url": "http://localhost:8000",
+      "description": "Development server"
     },
     {
-      "url":"https://api-staging.conyappa.cl",
-      "description":"Staging server"
+      "url": "https://api-staging.conyappa.cl",
+      "description": "Staging server"
     },
     {
-      "url":"https://api.conyappa.cl",
-      "description":"Production server"
+      "url": "https://api.conyappa.cl",
+      "description": "Production server"
     }
   ],
   "tags":[
     {
-      "name":"Users"
+      "name": "Users"
     },
     {
-      "name":"Draws"
+      "name": "Draws"
     },
     {
-      "name":"Tickets"
+      "name": "Tickets"
     },
     {
-      "name":"Misc"
+      "name": "Misc"
     }
   ],
-  "paths":{
-    "/v1/login":{
-      "post":{
-        "summary":"Obtain JSON Web Sliding Token",
+  "paths": {
+    "/v1/login": {
+      "post": {
+        "summary": "Obtain JSON Web Sliding Token",
         "tags":[
           "Users"
         ],
-        "requestBody":{
-          "required":true,
-          "content":{
-            "application/json":{
-              "schema":{
-                "$ref":"./schemas/login.json"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/login.json"
               }
             }
           }
         },
-        "responses":{
-          "200":{
-            "description":"OK",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "$ref":"./schemas/login.json"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/login.json"
                 }
               }
             }
           },
-          "401":{
-            "description":"Unauthorized",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "type":"object",
-                  "properties":{
-                    "detail":{
-                      "type":"string",
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
                       "enum":[
                         "No active account found with the given credentials"
                       ]
@@ -85,250 +85,250 @@
         }
       }
     },
-    "/v1/users":{
-      "post":{
-        "summary":"Create a user",
+    "/v1/users": {
+      "post": {
+        "summary": "Create a user",
         "tags":[
           "Users"
         ],
-        "requestBody":{
-          "required":true,
-          "content":{
-            "application/json":{
-              "schema":{
-                "$ref":"./schemas/user.json"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/user.json"
               }
             }
           }
         },
-        "responses":{
-          "201":{
-            "description":"Created",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "$ref":"./schemas/user.json"
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
                 }
               }
             }
           },
-          "400":{
-            "$ref":"#/components/responses/user_exists_400"
+          "400": {
+            "$ref": "#/components/responses/user_exists_400"
           }
         }
       }
     },
-    "/v1/users/{user_id}":{
-      "get":{
-        "summary":"Retrieve a user",
+    "/v1/users/{user_id}": {
+      "get": {
+        "summary": "Retrieve a user",
         "tags":[
           "Users"
         ],
         "parameters":[
           {
-            "in":"path",
-            "name":"user_id",
-            "required":true,
-            "schema":{
-              "type":"string",
-              "format":"uuid"
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
-        "responses":{
-          "200":{
-            "description":"OK",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "$ref":"./schemas/user.json"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
                 }
               }
             }
           },
-          "401":{
-            "$ref":"#/components/responses/default_401"
+          "401": {
+            "$ref": "#/components/responses/default_401"
           },
-          "403":{
-            "$ref":"#/components/responses/default_403"
+          "403": {
+            "$ref": "#/components/responses/default_403"
           },
-          "404":{
-            "$ref":"#/components/responses/default_404"
+          "404": {
+            "$ref": "#/components/responses/default_404"
           }
         }
       },
-      "patch":{
-        "summary":"Update a user",
+      "patch": {
+        "summary": "Update a user",
         "tags":[
           "Users"
         ],
         "parameters":[
           {
-            "in":"path",
-            "name":"user_id",
-            "required":true,
-            "schema":{
-              "type":"string",
-              "format":"uuid"
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
-        "responses":{
-          "200":{
-            "description":"OK",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "$ref":"./schemas/user.json"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/user.json"
                 }
               }
             }
           },
-          "400":{
-            "$ref":"#/components/responses/user_exists_400"
+          "400": {
+            "$ref": "#/components/responses/user_exists_400"
           },
-          "401":{
-            "$ref":"#/components/responses/default_401"
+          "401": {
+            "$ref": "#/components/responses/default_401"
           },
-          "403":{
-            "$ref":"#/components/responses/default_403"
+          "403": {
+            "$ref": "#/components/responses/default_403"
           },
-          "404":{
-            "$ref":"#/components/responses/default_404"
+          "404": {
+            "$ref": "#/components/responses/default_404"
           }
         }
       }
     },
-    "/v1/user/{user_id}/tickets":{
-      "get":{
-        "summary":"Obtain a user’s tickets",
-        "description":"Only returns the tickets of the ongoing draw.",
+    "/v1/user/{user_id}/tickets": {
+      "get": {
+        "summary": "Obtain a user’s tickets",
+        "description": "Only returns the tickets of the ongoing draw.",
         "tags":[
           "Users",
           "Tickets"
         ],
         "parameters":[
           {
-            "in":"path",
-            "name":"user_id",
-            "required":true,
-            "schema":{
-              "type":"string",
-              "format":"uuid"
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
-        "responses":{
-          "200":{
-            "description":"OK",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "type":"array",
-                  "items":{
-                    "$ref":"./schemas/ticket.json"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/ticket.json"
                   }
                 }
               }
             }
           },
-          "401":{
-            "$ref":"#/components/responses/default_401"
+          "401": {
+            "$ref": "#/components/responses/default_401"
           },
-          "403":{
-            "$ref":"#/components/responses/default_403"
+          "403": {
+            "$ref": "#/components/responses/default_403"
           },
-          "404":{
-            "$ref":"#/components/responses/default_404"
+          "404": {
+            "$ref": "#/components/responses/default_404"
           }
         }
       }
     },
-    "/v1/draws":{
-      "post":{
-        "summary":"Create a draw [for internal communication only]",
-        "description":"Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
+    "/v1/draws": {
+      "post": {
+        "summary": "Create a draw [for internal communication only]",
+        "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
         "tags":[
           "Draws"
         ],
-        "required":true,
-        "content":{
-          "application/json":{
-            "schema":{
-              "ref":"./schemas/draw.json"
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "ref": "./schemas/draw.json"
             }
           }
         }
       },
-      "responses":{
-        "201":{
-          "content":{
-            "application/json":{
-              "schema":{
-                "$ref":"./schemas/draw.json"
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/draw.json"
               }
             }
           }
         },
-        "401":{
-          "$ref":"#/components/responses/default_401"
+        "401": {
+          "$ref": "#/components/responses/default_401"
         },
-        "403":{
-          "$ref":"#/components/responses/default_403"
+        "403": {
+          "$ref": "#/components/responses/default_403"
         }
       }
-    }
-  },
-  "/v1/draws/ongoing":{
-    "get":{
-      "summary":"Retrieve the ongoing draw",
-      "description":"Returns this week’s draw (there is only one).",
-      "tags":[
-        "Draws"
-      ],
-      "responses":{
-        "200":{
-          "description":"OK",
-          "content":{
-            "application/json":{
-              "schema":{
-                "$ref":"./schemas/draw.json"
+    },
+    "/v1/draws/ongoing": {
+      "get": {
+        "summary": "Retrieve the ongoing draw",
+        "description": "Returns this week’s draw (there is only one).",
+        "tags":[
+          "Draws"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
+                }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/default_401"
+          },
+          "403": {
+            "$ref": "#/components/responses/default_403"
           }
-        },
-        "401":{
-          "$ref":"#/components/responses/default_401"
-        },
-        "403":{
-          "$ref":"#/components/responses/default_403"
         }
       }
-    }
-  },
-  "":{
-    "get":{
-      "summary":"Health check",
-      "tags":[
-        "Misc"
-      ],
-      "responses":{
-        "200":{
-          "description":"OK"
-        },
-        "503":{
-          "description":"Service Unavailable (something’s not right)",
-          "content":{
-            "application/json":{
-              "schema":{
-                "type":"object",
-                "properties":{
-                  "detail":{
-                    "type":"string",
-                    "enum":[
-                      "Can't connect to database.",
-                      "Unknown database problem."
-                    ]
+    },
+    "": {
+      "get": {
+        "summary": "Health check",
+        "tags":[
+          "Misc"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable (something’s not right)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "enum":[
+                        "Can't connect to database.",
+                        "Unknown database problem."
+                      ]
+                    }
                   }
                 }
               }
@@ -336,39 +336,39 @@
           }
         }
       }
-    }
-  },
-  "/error":{
-    "get":{
-      "summary":"Trigger an error",
-      "tags":[
-        "Misc"
-      ],
-      "responses":{
-        "500":{
-          "description":"Internal Server Error"
+    },
+    "/error": {
+      "get": {
+        "summary": "Trigger an error",
+        "tags":[
+          "Misc"
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
       }
     }
   },
-  "components":{
-    "securitySchemes":{
-      "bearerAuth":{
-        "type":"http",
-        "scheme":"bearer",
-        "bearerFormat":"JWT"
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
-    "responses":{
-      "user_exists_400":{
-        "description":"Bad Request",
-        "content":{
-          "application/json":{
-            "schema":{
-              "type":"object",
-              "properties":{
-                "<field>":{
-                  "type":"string",
+    "responses": {
+      "user_exists_400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "<field>": {
+                  "type": "string",
                   "enum":[
                     "user with this <field> already exists."
                   ]
@@ -378,29 +378,29 @@
           }
         }
       },
-      "default_401":{
-        "description":"Unauthorized",
-        "content":{
-          "application/json":{
-            "schema":{
-              "type":"object",
-              "properties":{
-                "detail":{
-                  "type":"string",
+      "default_401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
                   "enum":[
                     "Given token not valid for any token type"
                   ]
                 },
-                "code":{
-                  "type":"string",
+                "code": {
+                  "type": "string",
                   "enum":[
                     "token_not_valid"
                   ]
                 },
-                "messages":{
-                  "type":"array",
-                  "items":{
-                    "type":"object"
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
                   }
                 }
               }
@@ -408,15 +408,15 @@
           }
         }
       },
-      "default_403":{
-        "description":"Forbidden",
-        "content":{
-          "application/json":{
-            "schema":{
-              "type":"object",
-              "properties":{
-                "detail":{
-                  "type":"string",
+      "default_403": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
                   "enum":[
                     "You do not have permission to perform this action."
                   ]
@@ -426,15 +426,15 @@
           }
         }
       },
-      "default_404":{
-        "description":"Not Found",
-        "content":{
-          "application/json":{
-            "schema":{
-              "type":"object",
-              "properties":{
-                "detail":{
-                  "type":"string",
+      "default_404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
                   "enum":[
                     "Not found."
                   ]
