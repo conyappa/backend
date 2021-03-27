@@ -3,6 +3,7 @@ from random import SystemRandom
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
 
 from main.base import BaseModel
@@ -52,8 +53,10 @@ class Draw(BaseModel):
         ordering = ["-created_at"]
 
     start_date = models.DateField(verbose_name="start date")
-    pool = models.JSONField(default=generate_result_pool, verbose_name="result pool")
-    results = models.JSONField(blank=True, default=list, verbose_name="results")
+    pool = ArrayField(
+        base_field=models.PositiveSmallIntegerField(), default=generate_result_pool, verbose_name="result pool"
+    )
+    results = ArrayField(base_field=models.PositiveSmallIntegerField(), blank=True, default=list, verbose_name="results")
 
     objects = DrawManager()
 
@@ -93,7 +96,7 @@ class TicketManager(models.Manager):
 
 
 class Ticket(BaseModel):
-    picks = models.JSONField(default=generate_random_picks)
+    picks = ArrayField(base_field=models.PositiveSmallIntegerField(), default=generate_random_picks)
     draw = models.ForeignKey(
         to="lottery.Draw",
         verbose_name="draw",
@@ -111,8 +114,9 @@ class Ticket(BaseModel):
 
     @property
     def number_of_matches(self):
-        result_set = set(self.draw.results)
-        return len(result_set & set(self.picks))
+        results = set(self.draw.results)
+        picks = set(self.picks)
+        return len(results & picks)
 
     @property
     def prize(self):
