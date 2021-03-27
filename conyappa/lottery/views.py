@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from main.permissions import InternalCommunication, Ownership, ReadOnly
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Draw
@@ -32,8 +33,15 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
+class TicketPagination(PageNumberPagination):
+    page_size = 100
+    max_page_size = 1000
+    page_size_query_param = "page_size"
+
+
 class GenericTicketView(GenericAPIView):
     serializer_class = TicketSerializer
+    pagination_class = TicketPagination
 
 
 class UserTicketsView(ListModelMixin, GenericTicketView):
