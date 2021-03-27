@@ -56,7 +56,9 @@ class Draw(BaseModel):
     pool = ArrayField(
         base_field=models.PositiveSmallIntegerField(), default=generate_result_pool, verbose_name="result pool"
     )
-    results = ArrayField(base_field=models.PositiveSmallIntegerField(), blank=True, default=list, verbose_name="results")
+    results = ArrayField(
+        base_field=models.PositiveSmallIntegerField(), blank=True, default=list, verbose_name="results"
+    )
 
     objects = DrawManager()
 
