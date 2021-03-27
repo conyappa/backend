@@ -7,6 +7,10 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
 
 from main.base import BaseModel
+from django.db import connection
+from django.db.models import F, Func
+from utils import sql
+
 
 WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
@@ -91,7 +95,27 @@ class Draw(BaseModel):
         return str(self.start_date)
 
 
+class TicketQuerySet(models.QuerySet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Create the custom array_intersect SQL function.
+        function_creation = sql.loads("create_array_intersect")
+        sql.execute(function_creation)
+
+    def annotate_matches(self):
+        qs = self
+
+        qs = qs.annotate(matches=Func(F("picks"), F("draw__results"), function="array_intersect", arity=2))
+        qs = qs.annotate(number_of_matches=Func(F("matches"), function="cardinality", arity=1))
+
+        return qs
+
+
 class TicketManager(models.Manager):
+    def get_queryset(self):
+        return TicketQuerySet(self.model, using=self._db)
+
     def ongoing(self):
         draw = Draw.objects.ongoing()
         return self.filter(draw=draw)
@@ -99,6 +123,7 @@ class TicketManager(models.Manager):
 
 class Ticket(BaseModel):
     picks = ArrayField(base_field=models.PositiveSmallIntegerField(), default=generate_random_picks)
+
     draw = models.ForeignKey(
         to="lottery.Draw",
         verbose_name="draw",
@@ -113,16 +138,6 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
-
-    @property
-    def number_of_matches(self):
-        results = set(self.draw.results)
-        picks = set(self.picks)
-        return len(results & picks)
-
-    @property
-    def prize(self):
-        return settings.PRIZES[self.number_of_matches]
 
     def __str__(self):
         return str(self.picks)

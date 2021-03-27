@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import IntegerField, JSONField, ModelSerializer
 
 from .models import Draw, Ticket
 
@@ -24,6 +24,7 @@ class TicketSerializer(ModelSerializer):
 
         fields = [
             "picks",
+            "number_of_matches",
         ]
 
         extra_kwargs = {
@@ -31,3 +32,5 @@ class TicketSerializer(ModelSerializer):
             # For now, and for security reasons, make them read-only.
             "picks": {"read_only": True},
         }
+
+    number_of_matches = IntegerField()
