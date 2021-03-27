@@ -88,8 +88,8 @@ class Draw(BaseModel):
 
 class TicketManager(models.Manager):
     def ongoing(self):
-        current_draw = Draw.objects.ongoing()
-        return self.filter(draw=current_draw)
+        draw = Draw.objects.ongoing()
+        return self.filter(draw=draw)
 
 
 class Ticket(BaseModel):
