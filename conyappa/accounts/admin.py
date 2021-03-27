@@ -100,7 +100,7 @@ class UserAdmin(NumericFilterModelAdmin):
             {
                 "fields": [
                     ("balance", "winnings", "current_prize"),
-                    ("number_of_current_tickets", "extra_tickets_ttl"),
+                    ("current_number_of_tickets", "extra_tickets_ttl"),
                 ],
                 "classes": ["collapse"],
             },
@@ -109,10 +109,10 @@ class UserAdmin(NumericFilterModelAdmin):
 
     readonly_fields = [
         "email",
-        "number_of_current_tickets",
-        "current_prize",
         "balance",
         "winnings",
+        "current_number_of_tickets",
+        "current_prize",
     ]
 
     check_digit = None
