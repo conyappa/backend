@@ -137,7 +137,7 @@ class UserAdmin(NumericFilterModelAdmin):
                 user_id=request.user.pk,
                 content_type_id=content_type.pk,
                 object_id=user.pk,
-                object_repr=repr(user),
+                object_repr=str(user),
                 action_flag=CHANGE,
                 change_message=f"Change Balance ({amount:+})",
             )
