@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "next": {
+      "type": "string",
+      "format": "uri",
+      "example": "http://example.com?page=x"
+    },
+    "previous": {
+      "type": "string",
+      "format": "uri",
+      "example": "http://example.com?page=y"
+    },
+    "results": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 1000,
+      "items": {
+        "$ref": "./ticket.json"
+      }
+    }
+  }
+}
