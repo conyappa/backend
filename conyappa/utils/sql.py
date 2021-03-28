@@ -1,7 +1,7 @@
 import os
 
+from django import db
 from django.conf import settings
-from django.db import connection
 
 LOCATION = ["..", "sql"]
 PATH = os.path.join(settings.BASE_DIR, *LOCATION)
@@ -13,5 +13,5 @@ def loads(name):
 
 
 def execute(code):
-    with connection.cursor() as cursor:
+    with db.connection.cursor() as cursor:
         cursor.execute(code)
