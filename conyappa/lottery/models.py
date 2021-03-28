@@ -17,12 +17,19 @@ WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Do
 rd = SystemRandom()
 
 
-def generate_random_picks():
-    return rd.sample(population=Draw.objects.ongoing().pool, k=7)
-
-
 def generate_result_pool():
     return list(settings.PICK_RANGE)
+
+
+def generate_random_picks():
+    try:
+        draw = Draw.objects.ongoing()
+    except Draw.DoesNotExist:
+        population = generate_result_pool()
+    else:
+        population = draw.pool
+
+    return rd.sample(population=population, k=7)
 
 
 class DrawManager(models.Manager):
