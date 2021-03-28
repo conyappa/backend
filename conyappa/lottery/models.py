@@ -107,10 +107,17 @@ class TicketQuerySet(models.QuerySet):
 
         return self.annotate(matches=function_call)
 
+    def annotate_number_of_matches(self):
+        expressions = [F("matches")]
+        function_call = Func(*expressions, function="cardinality", arity=1)
+
+        return self.annotate(number_of_matches=function_call)
+
 
 class TicketManager(models.Manager):
     def get_queryset(self):
-        return TicketQuerySet(self.model, using=self._db).annotate_matches()
+        qs = TicketQuerySet(self.model, using=self._db)
+        return qs.annotate_matches().annotate_number_of_matches()
 
     def ongoing(self):
         draw = Draw.objects.ongoing()
@@ -134,10 +141,6 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
-
-    @property
-    def number_of_matches(self):
-        return len(self.matches)
 
     @property
     def prize(self):

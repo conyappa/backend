@@ -1,4 +1,9 @@
-from rest_framework.serializers import JSONField, ListSerializer, ModelSerializer
+from rest_framework.serializers import (
+    IntegerField,
+    JSONField,
+    ListSerializer,
+    ModelSerializer,
+)
 
 from .models import Draw, Ticket
 
@@ -54,3 +59,4 @@ class TicketSerializer(ModelSerializer):
         }
 
     matches = JSONField()
+    number_of_matches = IntegerField()
