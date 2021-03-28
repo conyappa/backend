@@ -1,4 +1,4 @@
-from rest_framework.serializers import IntegerField, ModelSerializer
+from rest_framework.serializers import ListSerializer, ModelSerializer
 
 from .models import Draw, Ticket
 
@@ -18,14 +18,26 @@ class DrawSerializer(ModelSerializer):
         }
 
 
+class TicketListSerializer(ListSerializer):
+    def to_representation(self, data):
+        reps = super().to_representation(data)
+
+        draw = Draw.objects.ongoing()
+        results = draw.results
+        picks_repr = lambda n: {"value": n, "in_results": n in results}
+
+        return [{k: (map(picks_repr, v) if (k == "picks") else v) for (k, v) in rep.items()} for rep in reps]
+
+
 class TicketSerializer(ModelSerializer):
     class Meta:
         model = Ticket
+        list_serializer_class = TicketListSerializer
 
         fields = [
-            "picks",
             "number_of_matches",
             "prize",
+            "picks",
         ]
 
         extra_kwargs = {

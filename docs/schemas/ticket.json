@@ -1,19 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "picks": {
-      "type": "array",
-      "uniqueItems": true,
-      "minItems": 7,
-      "maxItems": 7,
-      "items": {
-        "type": "integer",
-        "minimum": 1
-      },
-      "default": [],
-      "readOnly": true,
-      "example": [1, 2, 3, 4, 5, 6, 7]
-    },
     "number_of_matches": {
       "type": "integer",
       "minimum": 0,
@@ -25,6 +12,9 @@
       "minimum": 0,
       "maximum": 2147483647,
       "readOnly": true
+    },
+    "picks": {
+      "$ref": "./ticket__picks.json"
     }
   }
 }
