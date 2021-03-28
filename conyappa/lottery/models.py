@@ -102,7 +102,8 @@ class TicketQuerySet(models.QuerySet):
         sql.execute(function_creation)
 
     def annotate_matches(self):
-        return self.annotate(matches=Func(F("picks"), F("draw__results"), function="array_intersect", arity=2))
+        expressions = [F("picks"), F("draw__results")]
+        return self.annotate(matches=Func(*expressions, function="array_intersect", arity=2))
 
 
 class TicketManager(models.Manager):
