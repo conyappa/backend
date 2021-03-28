@@ -117,7 +117,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/user_exists_400"
+                  "$ref": "#/components/responses/user_400"
                 }
               }
             }
@@ -217,7 +217,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/user_exists_400"
+                  "$ref": "#/components/responses/user_400"
                 }
               }
             }
@@ -491,14 +491,53 @@
       }
     },
     "responses": {
-      "user_exists_400": {
+      "user_400": {
         "type": "object",
         "properties": {
-          "<field>": {
-            "type": "string",
-            "enum":[
-              "user with this <field> already exists."
-            ]
+          "email": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "This field is required.",
+                "user with this email already exists."
+              ]
+            }
+          },
+          "password": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "This field is required.",
+                "Ensure this field has no less than 6 characters."
+              ]
+            }
+          },
+          "rut": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "user with this rut already exists.",
+                "Don't input this field without a RUT check digit."
+              ]
+            }
+          },
+          "check_digit": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Don't input this field without a RUT.",
+                "Ensure this value is less than or equal to 10.",
+                "Ensure this value corresponds to the inputted RUT."
+              ]
+            }
           }
         }
       },
