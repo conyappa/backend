@@ -1,4 +1,4 @@
-from rest_framework.serializers import ListSerializer, ModelSerializer
+from rest_framework.serializers import JSONField, ListSerializer, ModelSerializer
 
 from .models import Draw, Ticket
 
@@ -22,11 +22,14 @@ class TicketListSerializer(ListSerializer):
     def to_representation(self, data):
         reps = super().to_representation(data)
 
-        draw = Draw.objects.ongoing()
-        results = draw.results
-        picks_repr = lambda n: {"value": n, "in_results": n in results}
+        def transform(rep):
+            return {
+                "number_of_matches": rep["number_of_matches"],
+                "prize": rep["prize"],
+                "picks": [{"value": pick, "in_results": pick in rep["matches"]} for pick in rep["picks"]],
+            }
 
-        return [{k: (map(picks_repr, v) if (k == "picks") else v) for (k, v) in rep.items()} for rep in reps]
+        return list(map(transform, reps))
 
 
 class TicketSerializer(ModelSerializer):
@@ -35,6 +38,7 @@ class TicketSerializer(ModelSerializer):
         list_serializer_class = TicketListSerializer
 
         fields = [
+            "matches",
             "number_of_matches",
             "prize",
             "picks",
@@ -45,3 +49,5 @@ class TicketSerializer(ModelSerializer):
             # For now, and for security reasons, make them read-only.
             "picks": {"read_only": True},
         }
+
+    matches = JSONField()
