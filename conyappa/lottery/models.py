@@ -55,6 +55,7 @@ class Draw(BaseModel):
         ordering = ["-created_at"]
 
     start_date = models.DateField(verbose_name="start date")
+
     pool = ArrayField(
         base_field=models.PositiveSmallIntegerField(), default=generate_result_pool, verbose_name="result pool"
     )
@@ -82,12 +83,13 @@ class Draw(BaseModel):
 
     @transaction.atomic
     def conclude(self):
-        result_set = set(self.results)
-        for ticket in self.tickets.all():
-            number_of_matches = len(result_set & set(ticket.picks))
+        qs = self.tickets.all().annotate_matches()
+
+        for ticket in qs:
             user = ticket.user
-            value = settings.PRIZES[number_of_matches]
-            user.award_prize(value)
+            prize = ticket.prize
+
+            user.award_prize(prize)
 
     def __str__(self):
         return str(self.start_date)
@@ -103,12 +105,14 @@ class TicketQuerySet(models.QuerySet):
 
     def annotate_matches(self):
         expressions = [F("picks"), F("draw__results")]
-        return self.annotate(matches=Func(*expressions, function="array_intersect", arity=2))
+        function_call = Func(*expressions, function="array_intersect", arity=2)
+
+        return self.annotate(matches=function_call)
 
 
 class TicketManager(models.Manager):
     def get_queryset(self):
-        return TicketQuerySet(self.model, using=self._db)
+        return TicketQuerySet(self.model, using=self._db).annotate_matches()
 
     def ongoing(self):
         draw = Draw.objects.ongoing()
