@@ -5,12 +5,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
+from django.db.models import F, Func
 
 from main.base import BaseModel
-from django.db import connection
-from django.db.models import F, Func
 from utils import sql
-
 
 WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
@@ -104,12 +102,7 @@ class TicketQuerySet(models.QuerySet):
         sql.execute(function_creation)
 
     def annotate_matches(self):
-        qs = self
-
-        qs = qs.annotate(matches=Func(F("picks"), F("draw__results"), function="array_intersect", arity=2))
-        qs = qs.annotate(number_of_matches=Func(F("matches"), function="cardinality", arity=1))
-
-        return qs
+        return self.annotate(matches=Func(F("picks"), F("draw__results"), function="array_intersect", arity=2))
 
 
 class TicketManager(models.Manager):
@@ -138,6 +131,14 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
+
+    @property
+    def number_of_matches(self):
+        return len(self.matches)
+
+    @property
+    def prize(self):
+        return settings.PRIZES[self.number_of_matches]
 
     def __str__(self):
         return str(self.picks)

@@ -55,8 +55,7 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
         User = get_user_model()
         user = get_object_or_404(User.objects, pk=user_id)
 
-        qs = user.current_tickets
-        return qs.annotate_matches()
+        return user.current_tickets.annotate_matches()
 
     def get(self, request, user_id):
         return self.list(request)
