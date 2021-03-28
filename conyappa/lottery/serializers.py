@@ -23,10 +23,13 @@ class TicketListSerializer(ListSerializer):
         reps = super().to_representation(data)
 
         def transform(rep):
+            matches = rep["matches"]
+            sorted_picks = sorted(rep["picks"])
+
             return {
                 "number_of_matches": rep["number_of_matches"],
                 "prize": rep["prize"],
-                "picks": [{"value": pick, "in_results": pick in rep["matches"]} for pick in rep["picks"]],
+                "picks": [{"value": pick, "in_results": pick in matches} for pick in sorted_picks],
             }
 
         return list(map(transform, reps))
