@@ -113,7 +113,14 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/user_exists_400"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/user_exists_400"
+                }
+              }
+            }
           }
         }
       }
@@ -147,13 +154,34 @@
             }
           },
           "401": {
-            "$ref": "#/components/responses/default_401"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
           },
           "403": {
-            "$ref": "#/components/responses/default_403"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/default_404"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
           }
         }
       },
@@ -185,16 +213,44 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/user_exists_400"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/user_exists_400"
+                }
+              }
+            }
           },
           "401": {
-            "$ref": "#/components/responses/default_401"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
           },
           "403": {
-            "$ref": "#/components/responses/default_403"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/default_404"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
           }
         }
       }
@@ -251,13 +307,41 @@
             }
           },
           "401": {
-            "$ref": "#/components/responses/default_401"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
           },
           "403": {
-            "$ref": "#/components/responses/default_403"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/default_404"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/responses/default_404"
+                    },
+                    {
+                      "$ref": "#/components/responses/invalid_page_404"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -280,6 +364,7 @@
       },
       "responses": {
         "201": {
+          "description": "Created",
           "content": {
             "application/json": {
               "schema": {
@@ -289,10 +374,24 @@
           }
         },
         "401": {
-          "$ref": "#/components/responses/default_401"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/responses/default_401"
+              }
+            }
+          }
         },
         "403": {
-          "$ref": "#/components/responses/default_403"
+          "description": "Forbidden",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/responses/default_403"
+              }
+            }
+          }
         }
       }
     },
@@ -315,10 +414,24 @@
             }
           },
           "401": {
-            "$ref": "#/components/responses/default_401"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
           },
           "403": {
-            "$ref": "#/components/responses/default_403"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
           }
         }
       }
@@ -379,86 +492,69 @@
     },
     "responses": {
       "user_exists_400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "<field>": {
-                  "type": "string",
-                  "enum":[
-                    "user with this <field> already exists."
-                  ]
-                }
-              }
-            }
+        "type": "object",
+        "properties": {
+          "<field>": {
+            "type": "string",
+            "enum":[
+              "user with this <field> already exists."
+            ]
           }
         }
       },
       "default_401": {
-        "description": "Unauthorized",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "detail": {
-                  "type": "string",
-                  "enum":[
-                    "Given token not valid for any token type"
-                  ]
-                },
-                "code": {
-                  "type": "string",
-                  "enum":[
-                    "token_not_valid"
-                  ]
-                },
-                "messages": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum":[
+              "Given token not valid for any token type"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "enum":[
+              "token_not_valid"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object"
             }
           }
         }
       },
       "default_403": {
-        "description": "Forbidden",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "detail": {
-                  "type": "string",
-                  "enum":[
-                    "You do not have permission to perform this action."
-                  ]
-                }
-              }
-            }
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum":[
+              "You do not have permission to perform this action."
+            ]
           }
         }
       },
       "default_404": {
-        "description": "Not Found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "detail": {
-                  "type": "string",
-                  "enum":[
-                    "Not found."
-                  ]
-                }
-              }
-            }
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum":[
+              "Not found."
+            ]
+          }
+        }
+      },
+      "invalid_page_404": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum": [
+              "Invalid page."
+            ]
           }
         }
       }
