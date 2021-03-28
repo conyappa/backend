@@ -10,9 +10,6 @@ from django.db.models import F, Func
 from main.base import BaseModel
 from utils import sql
 
-WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-
-
 # Alternative random generator that uses os.urandom (therefore, it’s better).
 rd = SystemRandom()
 
@@ -21,15 +18,8 @@ def generate_result_pool():
     return list(settings.PICK_RANGE)
 
 
-def generate_random_picks():
-    try:
-        draw = Draw.objects.ongoing()
-    except Draw.DoesNotExist:
-        population = generate_result_pool()
-    else:
-        population = draw.pool
-
-    return rd.sample(population=population, k=7)
+def generate_random_picks(pool):
+    return rd.sample(population=pool, k=7)
 
 
 class DrawManager(models.Manager):
@@ -73,7 +63,10 @@ class Draw(BaseModel):
     objects = DrawManager()
 
     def generate_user_tickets(self, user):
-        return [Ticket(draw=self, user=user) for _ in range(user.number_of_tickets)]
+        return [
+            Ticket(draw=self, user=user, picks=generate_random_picks(pool=self.pool))
+            for _ in range(user.number_of_tickets)
+        ]
 
     def include_new_user(self, user):
         user_tickets = self.generate_user_tickets(user=user)
@@ -132,7 +125,7 @@ class TicketManager(models.Manager):
 
 
 class Ticket(BaseModel):
-    picks = ArrayField(base_field=models.PositiveSmallIntegerField(), default=generate_random_picks)
+    picks = ArrayField(base_field=models.PositiveSmallIntegerField(), null=True)
 
     draw = models.ForeignKey(
         to="lottery.Draw",
