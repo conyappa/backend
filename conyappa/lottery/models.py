@@ -83,9 +83,7 @@ class Draw(BaseModel):
 
     @transaction.atomic
     def conclude(self):
-        qs = self.tickets.all().annotate_matches()
-
-        for ticket in qs:
+        for ticket in self.tickets.all():
             user = ticket.user
             prize = ticket.prize
 
