@@ -4,6 +4,7 @@
 # Include application files.
 !conyappa/
 !docs/
+!sql/
 
 # Include build files.
 !pyproject.toml

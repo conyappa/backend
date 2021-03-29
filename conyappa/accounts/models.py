@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
 from django.db.models import F
 
@@ -51,8 +52,11 @@ class User(BaseModel, AbstractUser):
 
     balance = models.PositiveIntegerField(default=0, verbose_name="balance")
     winnings = models.PositiveIntegerField(default=0, verbose_name="winnings")
-    extra_tickets_ttl = models.JSONField(
-        blank=True, default=generate_initial_extra_tickets_ttl, verbose_name="extra tickets TTL"
+    extra_tickets_ttl = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        default=generate_initial_extra_tickets_ttl,
+        verbose_name="extra tickets TTL",
     )
 
     objects = UserManager()
@@ -97,7 +101,7 @@ class User(BaseModel, AbstractUser):
         return self.tickets.ongoing()
 
     @property
-    def number_of_current_tickets(self):
+    def current_number_of_tickets(self):
         return self.current_tickets.count()
 
     @property

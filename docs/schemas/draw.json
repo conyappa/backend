@@ -9,7 +9,6 @@
     "results": {
       "type": "array",
       "uniqueItems": true,
-      "minItems": 0,
       "maxItems": 7,
       "items": {
         "type": "integer",

@@ -1,0 +1,20 @@
+{
+  "type": "array",
+  "uniqueItems": true,
+  "minItems": 7,
+  "maxItems": 7,
+  "items": {
+    "type": "object",
+    "properties": {
+      "value": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "in_results": {
+        "type": "boolean",
+        "description": "Whether the draw’s results contain this value"
+      }
+    }
+  },
+  "readOnly": true
+}
