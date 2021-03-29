@@ -1,7 +1,9 @@
-from main.base import BaseModel
+from logging import getLogger
+
 from django.db import models, transaction
 
-from logging import getLogger
+from main.base import BaseModel
+
 logger = getLogger(__name__)
 
 
