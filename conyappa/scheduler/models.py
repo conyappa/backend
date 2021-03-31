@@ -50,3 +50,6 @@ class Rule(BaseModel):
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
         self.delete_remote()
+
+    def __str__(self):
+        return self.name
