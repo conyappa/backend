@@ -16,7 +16,9 @@ class RuleQuerySet(models.QuerySet):
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
+        for obj in self:
+            obj.delete()
+
         self.delete_remote()
 
 
@@ -46,7 +48,8 @@ class Rule(BaseModel):
         self.save_remote()
 
     def delete_remote(self):
-        pass
+        logger.info(f"DELETE {self}")
+        eventbridge.Interface().delete(self)
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
