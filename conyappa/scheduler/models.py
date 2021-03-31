@@ -28,8 +28,12 @@ class Rule(BaseModel):
 
     objects = RuleManager()
 
+    def init_remote(self):
+        pass
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.init_remote()
 
     def save_remote(self):
         pass
