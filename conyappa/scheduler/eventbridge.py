@@ -12,3 +12,9 @@ class Interface(metaclass=Singleton):
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
             region_name=settings.AWS_REGION_NAME,
         )
+
+    def put(self, rule):
+        target_arn = settings.AWS_ARN(service_name="lambda", resource_type="function", resource_id=rule.function)
+
+        self.client.put_rule(Name=rule.name, ScheduleExpression=rule.schedule_expression)
+        self.client.put_targets(Rule=rule.name, Targets=[{"Id": rule.function, "Arn": target_arn}])

@@ -4,6 +4,8 @@ from django.db import models, transaction
 
 from main.base import BaseModel
 
+from . import eventbridge
+
 logger = getLogger(__name__)
 
 
@@ -28,15 +30,15 @@ class Rule(BaseModel):
 
     objects = RuleManager()
 
-    def init_remote(self):
+    def init_remote(self, **kwargs):
         pass
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.init_remote()
+        super().__init__(*args, **kwargs)
 
     def save_remote(self):
-        pass
+        eventbridge.Interface().put(self)
 
     @transaction.atomic
     def save(self, *args, **kwargs):

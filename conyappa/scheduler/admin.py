@@ -1,9 +1,15 @@
+from logging import getLogger
+
+from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import CharField, ChoiceField, ModelForm, TextInput
 
 import cron_descriptor
+
 from .models import Rule
+
+logger = getLogger(__name__)
 
 
 class RuleForm(ModelForm):
@@ -12,8 +18,10 @@ class RuleForm(ModelForm):
         fields = ["name", "function", "schedule_expression"]
 
     FUNCTION_CHOICES = [
-        ("CREATE_DRAW", "Create draw"),
+        (settings.AWS_CREATE_DRAW_LAMBDA, "Create draw"),
     ]
+
+    function = ChoiceField(choices=FUNCTION_CHOICES, required=True)
 
     SCHEDULE_EXPRESSION_EXAMPLES = [
         "cron(0/5 * * * * *)",
@@ -22,8 +30,6 @@ class RuleForm(ModelForm):
         "cron(0 * 2 3 * *)",
         "cron(0 */10 * * * *)",
     ]
-
-    function = ChoiceField(choices=FUNCTION_CHOICES, required=True)
 
     schedule_expression = CharField(
         required=True,
@@ -89,3 +95,12 @@ class RuleAdmin(admin.ModelAdmin):
     ]
 
     form = RuleForm
+
+    def save_model(self, request, obj, form, change):
+        function = form.cleaned_data["function"]
+        type_, expression = form.cleaned_data["schedule_expression"]
+
+        obj.function = function
+        obj.schedule_expression = f"{type_}({expression})"
+
+        super().save_model(request, obj, form, change)
