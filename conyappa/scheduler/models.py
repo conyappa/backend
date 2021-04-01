@@ -1,5 +1,3 @@
-from logging import getLogger
-
 from django.db import models, transaction
 
 from main.base import BaseModel
@@ -7,20 +5,11 @@ from main.base import BaseModel
 from . import eventbridge
 from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
 
-logger = getLogger(__name__)
-
 
 class RuleQuerySet(models.QuerySet):
-    def delete_remote(self):
-        for obj in self:
-            obj.delete_remote()
-
-    @transaction.atomic
     def delete(self, *args, **kwargs):
         for obj in self:
             obj.delete()
-
-        self.delete_remote()
 
 
 class RuleManager(models.Manager):
@@ -43,7 +32,6 @@ class Rule(BaseModel):
             self.init_remote()
 
     def save_remote(self):
-        logger.info(self.schedule_expression)
         eventbridge.Interface().put(self)
 
     @transaction.atomic
@@ -56,8 +44,14 @@ class Rule(BaseModel):
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
+        pk = self.pk
         super().delete(*args, **kwargs)
+        self.pk = pk
         self.delete_remote()
+
+    @property
+    def unique_name(self):
+        return f"{self.name}_{self.pk}"
 
     @property
     def schedule(self):

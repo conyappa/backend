@@ -1,5 +1,3 @@
-from logging import getLogger
-
 from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -9,8 +7,6 @@ import cron_descriptor
 
 from .models import Rule
 from .utils import CRON, RATE, SCHEDULE_DESCRIPTORS, parse_schedule
-
-logger = getLogger(__name__)
 
 
 class RuleForm(ModelForm):
