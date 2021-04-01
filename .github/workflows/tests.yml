@@ -19,7 +19,7 @@ jobs:
         run: make localsettings
 
       - name: Build Docker images
-        run: COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --parallel
+        run: make build
 
       - name: Test running functionality
         run: |
@@ -27,4 +27,4 @@ jobs:
           docker-compose down
 
       - name: Run unit tests
-        run: make test
+        run: make tests

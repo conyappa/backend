@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+          make get-poetry
           echo $HOME/.poetry/bin >> $GITHUB_PATH
 
       # Cache the .venv directory
@@ -35,7 +35,7 @@ jobs:
         run: poetry install
 
       - name: Lint with Black
-        run: poetry run black conyappa --check
+        run: make black
 
   flake8:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+          make get-poetry
           echo $HOME/.poetry/bin >> $GITHUB_PATH
 
       # Cache the .venv directory
@@ -66,7 +66,7 @@ jobs:
         run: poetry install
 
       - name: Lint with Flake8
-        run: poetry run flake8 conyappa
+        run: make flake8
 
   isort:
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+          make get-poetry
           echo $HOME/.poetry/bin >> $GITHUB_PATH
 
       # Cache the .venv directory
@@ -97,4 +97,4 @@ jobs:
         run: poetry install
 
       - name: Lint with Isort
-        run: poetry run isort conyappa --check
+        run: make isort
