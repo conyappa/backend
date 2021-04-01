@@ -12,7 +12,12 @@ from .utils import CRON, RATE, SCHEDULE_DESCRIPTORS, parse_schedule
 class RuleForm(ModelForm):
     class Meta:
         model = Rule
-        fields = ["name", "function", "schedule_expression"]
+
+        fields = [
+            "name",
+            "function",
+            "schedule_expression",
+        ]
 
     FUNCTION_CHOICES = [
         (settings.AWS_CREATE_DRAW_LAMBDA, "Create draw"),

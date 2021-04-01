@@ -2,12 +2,15 @@ from django.db import models, transaction
 
 from main.base import BaseModel
 
-from . import eventbridge
+from .eventbridge import Interface as EventBridge
 from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
 
 
 class RuleQuerySet(models.QuerySet):
     def delete(self, *args, **kwargs):
+        # Don’t use QuerySet deletion here;
+        # each rule deletion must be
+        # atomic and independent.
         for obj in self:
             obj.delete()
 
@@ -23,7 +26,7 @@ class Rule(BaseModel):
     objects = RuleManager()
 
     def init_remote(self, **kwargs):
-        eventbridge.Interface().fetch(self)
+        EventBridge().fetch(self)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -32,7 +35,7 @@ class Rule(BaseModel):
             self.init_remote()
 
     def save_remote(self):
-        eventbridge.Interface().put(self)
+        EventBridge().put(self)
 
     @transaction.atomic
     def save(self, *args, **kwargs):
@@ -40,17 +43,20 @@ class Rule(BaseModel):
         self.save_remote()
 
     def delete_remote(self):
-        eventbridge.Interface().delete(self)
+        EventBridge().delete(self)
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
+        # Don’t lose the ID
+        # because it’s used by eventbridge_name in delete_remote.
         pk = self.pk
         super().delete(*args, **kwargs)
         self.pk = pk
         self.delete_remote()
 
     @property
-    def unique_name(self):
+    def eventbridge_name(self):
+        # Each rule name (and target ID) must be unique.
         return f"{self.name}_{self.pk}"
 
     @property
