@@ -8,6 +8,7 @@ from django.forms import CharField, ChoiceField, ModelForm, TextInput
 import cron_descriptor
 
 from .models import Rule
+from .utils import CRON, RATE, SCHEDULE_DESCRIPTORS, parse_schedule
 
 logger = getLogger(__name__)
 
@@ -24,8 +25,8 @@ class RuleForm(ModelForm):
     function = ChoiceField(choices=FUNCTION_CHOICES, required=True)
 
     SCHEDULE_EXPRESSION_EXAMPLES = [
-        "cron(0/5 * * * * *)",
-        "cron(0 20 * * * *)",
+        "cron(0/5 * * * ? *)",
+        "cron(0 20 * * ? *)",
         "rate(5 minutes)",
         "cron(0 * 2 3 * *)",
         "cron(0 */10 * * * *)",
@@ -41,22 +42,10 @@ class RuleForm(ModelForm):
         ),
     )
 
-    @property
-    def parsed_schedule_expression(self):
-        EXPRESSION_TYPES = "cron", "rate"
-        schedule_expression = self.cleaned_data["schedule_expression"]
-
-        for type_ in EXPRESSION_TYPES:
-            if schedule_expression.startswith(type_):
-                expression = schedule_expression.lstrip(f"{type_}(").rstrip(")")
-                return type_, expression
-
-        raise ValidationError("Enter cron or rate expressions only.")
-
     @staticmethod
     def validate_cron(expression):
         try:
-            cron_descriptor.get_description(expression)
+            SCHEDULE_DESCRIPTORS[CRON](expression)
         except cron_descriptor.FormatException as e:
             raise ValidationError(f"Invalid cron expression: {e}")
 
@@ -71,9 +60,10 @@ class RuleForm(ModelForm):
             raise ValidationError("Invalid rate expression: ensure the inputted value is a whole number.")
 
     def clean_schedule_expression(self):
-        type_, expression = self.parsed_schedule_expression
+        schedule_expression = self.cleaned_data["schedule_expression"]
+        type_, expression = parse_schedule(schedule_expression)
 
-        validators = {"cron": self.validate_cron, "rate": self.validate_rate}
+        validators = {CRON: self.validate_cron, RATE: self.validate_rate}
         validators[type_](expression)
 
         return type_, expression
@@ -87,6 +77,7 @@ class RuleAdmin(admin.ModelAdmin):
 
     list_display = [
         "name",
+        "schedule",
         "updated_at",
     ]
 
@@ -95,6 +86,10 @@ class RuleAdmin(admin.ModelAdmin):
     ]
 
     form = RuleForm
+
+    readonly_fields = [
+        "schedule",
+    ]
 
     def save_model(self, request, obj, form, change):
         function = form.cleaned_data["function"]

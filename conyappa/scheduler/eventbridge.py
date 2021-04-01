@@ -13,6 +13,12 @@ class Interface(metaclass=Singleton):
             region_name=settings.AWS_REGION_NAME,
         )
 
+    def fetch(self, rule):
+        data = self.client.list_rules(NamePrefix=rule.name, Limit=1)
+        rule_data = data["Rules"][0]
+
+        rule.schedule_expression = rule_data["ScheduleExpression"]
+
     def put(self, rule):
         target_arn = settings.AWS_ARN(service_name="lambda", resource_type="function", resource_id=rule.function)
 

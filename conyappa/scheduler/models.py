@@ -5,6 +5,7 @@ from django.db import models, transaction
 from main.base import BaseModel
 
 from . import eventbridge
+from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
 
 logger = getLogger(__name__)
 
@@ -33,13 +34,16 @@ class Rule(BaseModel):
     objects = RuleManager()
 
     def init_remote(self, **kwargs):
-        pass
+        eventbridge.Interface().fetch(self)
 
     def __init__(self, *args, **kwargs):
-        self.init_remote()
         super().__init__(*args, **kwargs)
 
+        if self.name:
+            self.init_remote()
+
     def save_remote(self):
+        logger.info(self.schedule_expression)
         eventbridge.Interface().put(self)
 
     @transaction.atomic
@@ -48,13 +52,19 @@ class Rule(BaseModel):
         self.save_remote()
 
     def delete_remote(self):
-        logger.info(f"DELETE {self}")
         eventbridge.Interface().delete(self)
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
         self.delete_remote()
+
+    @property
+    def schedule(self):
+        type_, expression = parse_schedule(self.schedule_expression)
+
+        description = SCHEDULE_DESCRIPTORS[type_](expression)
+        return f"{self.schedule_expression} => {description}"
 
     def __str__(self):
         return self.name
