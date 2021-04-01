@@ -6,10 +6,6 @@ CRON = "cron"
 RATE = "rate"
 
 
-CRON_DESCRIPTOR_OPTIONS = cron_descriptor.Options()
-CRON_DESCRIPTOR_OPTIONS.day_of_week_start_index_zero = False
-
-
 def parse_schedule(schedule_expression):
     for type_ in [CRON, RATE]:
         if schedule_expression.startswith(type_):
