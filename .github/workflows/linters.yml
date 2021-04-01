@@ -2,8 +2,12 @@ name: linters
 
 on:
   pull_request:
-    branches:
-      - master
+    paths:
+      - ".github/workflows/linters.yml"
+      - "Makefile"
+      - "**.py"
+      - "pyproject.toml"
+      - "poetry.lock"
 
 jobs:
   black:

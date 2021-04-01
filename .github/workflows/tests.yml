@@ -1,12 +1,14 @@
 name: tests
 
 on:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
       - master
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - ".vscode/**"
+      - "docs/**"
 
 jobs:
   tests:
