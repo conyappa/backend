@@ -4,7 +4,7 @@ from django.db.utils import OperationalError
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
+from rest_framework.status import HTTP_200_OK, HTTP_500_INTERNAL_SERVER_ERROR
 
 admin_site.site_header = "Con Yappa"
 admin_site.site_title = "Con Yappa"
@@ -16,11 +16,11 @@ def health_check(request):
     try:
         db_conn.cursor()
     except OperationalError:
-        return Response(data={"detail": "Can't connect to database."}, status=HTTP_503_SERVICE_UNAVAILABLE)
+        return Response(data={"detail": "Can't connect to database."}, status=HTTP_500_INTERNAL_SERVER_ERROR)
     except Exception:
         return Response(
             data={"detail": "Unknown database problem."},
-            status=HTTP_503_SERVICE_UNAVAILABLE,
+            status=HTTP_500_INTERNAL_SERVER_ERROR,
         )
     return Response(status=HTTP_200_OK)
 

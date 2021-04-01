@@ -71,3 +71,15 @@ FINTOC_IS_ENABLED = False
 FINTOC_SECRET_KEY = "sk_example_WXUFqk8hMPQ4UA7HafJtZDsPZvabS5af"
 FINTOC_LINK_TOKEN = "bsdnsLxwLg4hvIiu_token_MqtIXPNibVqK3XtPBOvmUI1m"
 FINTOC_ACCOUNT_ID = "AzrEVH1tFG4z4kTT"
+
+AWS_ACCESS_KEY_ID = "AKIA4AWHNDASTGTJVSZA"
+AWS_SECRET_ACCESS_KEY = "KnZB+StfliRAvr7TX283URDgprv0gZ+IHx8x6JW2"
+
+AWS_REGION_NAME = "example-region"
+AWS_ACCOUNT_ID = "0123456789"
+
+AWS_CREATE_DRAW_LAMBDA = "conyappa-stage-functionName"
+
+AWS_ARN = lambda service_name, resource_type, resource_id: ":".join(
+    ["arn", AWS_PARTITION, service_name, AWS_REGION_NAME, AWS_ACCOUNT_ID, resource_type, resource_id]  # noqa: F405
+)

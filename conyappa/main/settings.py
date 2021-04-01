@@ -14,19 +14,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # APPLICATION DEFINITION #
 ##########################
 
-INSTALLED_APPS = [
-    # Third party apps.
+THIRD_PARTY = [
     "rest_framework",
     "corsheaders",
     "whitenoise.runserver_nostatic",
     "django_extensions",
     "admin_numeric_filter",
-    # First party apps.
+]
+
+FIRST_PARTY = [
     "accounts.apps.AccountsConfig",
     "banking.apps.BankingConfig",
     "docs.apps.DocsConfig",
     "lottery.apps.LotteryConfig",
-    # Built-in apps.
+    "scheduler.apps.SchedulerConfig",
+]
+
+BUILT_IN = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -35,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
 ]
+
+INSTALLED_APPS = THIRD_PARTY + FIRST_PARTY + BUILT_IN
 
 
 ##################
@@ -207,6 +213,19 @@ FINTOC_IS_ENABLED = bool(int(os.environ.get("FINTOC_IS_ENABLED", "0")))
 FINTOC_SECRET_KEY = os.environ.get("FINTOC_SECRET_KEY")
 FINTOC_LINK_TOKEN = os.environ.get("FINTOC_LINK_TOKEN")
 FINTOC_ACCOUNT_ID = os.environ.get("FINTOC_ACCOUNT_ID")
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+AWS_PARTITION = "aws"
+AWS_REGION_NAME = os.environ.get("AWS_REGION_NAME")
+AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
+
+AWS_CREATE_DRAW_LAMBDA = os.environ.get("AWS_CREATE_DRAW_LAMBDA")
+
+AWS_ARN = lambda service_name, resource_type, resource_id: ":".join(
+    ["arn", AWS_PARTITION, service_name, AWS_REGION_NAME, AWS_ACCOUNT_ID, resource_type, resource_id]
+)
 
 
 ##########

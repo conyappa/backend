@@ -446,8 +446,8 @@
           "200": {
             "description": "OK"
           },
-          "503": {
-            "description": "Service Unavailable (something’s not right)",
+          "500": {
+            "description": "Internal Server Error (something’s not right)",
             "content": {
               "application/json": {
                 "schema": {
