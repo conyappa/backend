@@ -9,8 +9,7 @@ from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
 class RuleQuerySet(models.QuerySet):
     def delete(self, *args, **kwargs):
         # Don’t use QuerySet deletion here;
-        # each rule deletion must be
-        # atomic and independent.
+        # each rule deletion must be atomic and independent.
         for obj in self:
             obj.delete()
 

@@ -77,6 +77,7 @@ class Draw(BaseModel):
 
         # Eventual race conditions are not avoided by the following code.
         # Note that F expressions are not compatible with JSONField.
+        # Anyway, this method should be called only once a day.
         self.pool = list(set(self.pool) - set(results))
         self.results += results
         self.save()

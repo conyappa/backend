@@ -9,7 +9,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     expose:
-      - "5432"
+      - "5431"
   web:
     build:
       context: .
