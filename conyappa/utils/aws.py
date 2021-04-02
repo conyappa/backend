@@ -1,5 +1,7 @@
-from django.conf import settings
 import json
+
+from django.conf import settings
+
 import boto3
 from botocore.response import StreamingBody
 

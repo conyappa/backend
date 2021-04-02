@@ -1,6 +1,8 @@
-from . import aws
-from django.conf import settings
 import random as rd
+
+from django.conf import settings
+
+from . import aws
 
 
 def fetch_verifiable_seed():
@@ -20,4 +22,5 @@ def get_generator():
         return rd
 
     except Exception:
+        # Alternative random generator that uses os.urandom.
         return rd.SystemRandom()

@@ -1,5 +1,4 @@
 import datetime as dt
-from random import SystemRandom
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -10,8 +9,9 @@ from django.db.models import F, Func
 from main.base import BaseModel
 from utils import sql
 
-# Alternative random generator that uses os.urandom (therefore, it’s better).
-rd = SystemRandom()
+from .utils import random
+
+rd = random.get_generator()
 
 
 def generate_result_pool():
