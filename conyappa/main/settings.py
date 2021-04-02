@@ -222,6 +222,7 @@ AWS_REGION_NAME = os.environ.get("AWS_REGION_NAME")
 AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 AWS_CREATE_DRAW_LAMBDA = os.environ.get("AWS_CREATE_DRAW_LAMBDA")
+AWS_RANDOM_SEED_LAMBDA = os.environ.get("AWS_RANDOM_SEED_LAMBDA")
 
 
 ##########

@@ -1,6 +1,7 @@
 from django.conf import settings
-
+import json
 import boto3
+from botocore.response import StreamingBody
 
 
 def get_client(service_name):
@@ -24,3 +25,12 @@ def get_arn(service_name, resource_name, omit_region_name=False, omit_account_id
 
     base_arn = ":".join(elements)
     return base_arn + path
+
+
+def access_json(obj, key):
+    data = obj[key]
+
+    if isinstance(data, StreamingBody):
+        data = data.read()
+
+    return json.loads(data)
