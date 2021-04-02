@@ -223,10 +223,6 @@ AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 AWS_CREATE_DRAW_LAMBDA = os.environ.get("AWS_CREATE_DRAW_LAMBDA")
 
-AWS_ARN = lambda service_name, resource_type, resource_id: ":".join(
-    ["arn", AWS_PARTITION, service_name, AWS_REGION_NAME, AWS_ACCOUNT_ID, resource_type, resource_id]
-)
-
 
 ##########
 # SENTRY #

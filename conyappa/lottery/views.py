@@ -32,6 +32,12 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
     def get(self, request):
         return self.retrieve(request)
 
+    def patch(self, request):
+        draw = self.get_object()
+        draw.choose_result()
+
+        return self.retrieve(request)
+
 
 class TicketPagination(PageNumberPagination):
     page_size = 100
