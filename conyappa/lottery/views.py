@@ -24,7 +24,7 @@ class DrawListView(CreateModelMixin, GenericDrawView):
 
 
 class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
-    permission_classes = [IsAuthenticated & ReadOnly]
+    permission_classes = [(IsAuthenticated & ReadOnly) | InternalCommunication]
 
     def get_object(self):
         return Draw.objects.ongoing()

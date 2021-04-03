@@ -7,11 +7,7 @@ from django.db import models, transaction
 from django.db.models import F, Func
 
 from main.base import BaseModel
-from utils import sql
-
-from .utils import random
-
-rd = random.get_generator()
+from utils import random, sql
 
 
 def generate_result_pool():
@@ -19,6 +15,7 @@ def generate_result_pool():
 
 
 def generate_random_picks(pool):
+    rd = random.get()
     return rd.sample(population=pool, k=7)
 
 
@@ -29,6 +26,9 @@ class DrawManager(models.Manager):
 
     @transaction.atomic
     def create(self, **fields):
+        random.update()
+        rd = random.get()
+
         User = get_user_model()
         users = User.objects.all()
 
@@ -69,10 +69,15 @@ class Draw(BaseModel):
         ]
 
     def include_new_user(self, user):
+        random.update()
+
         user_tickets = self.generate_user_tickets(user=user)
         Ticket.objects.bulk_create(objs=user_tickets)
 
     def choose_result(self):
+        random.update()
+        rd = random.get()
+
         results = rd.sample(population=self.pool, k=1)
 
         # Eventual race conditions are not avoided by the following code.

@@ -1,13 +1,17 @@
-import random as rd
+import random as random_
 
 from django.conf import settings
 
-from . import aws
+from utils import aws
 
 
-def fetch_verifiable_seed():
-    lambda_client = aws.get_client(service_name="lambda")
-    response = lambda_client.invoke(FunctionName=settings.AWS_RANDOM_SEED_LAMBDA)
+class _container:
+    pass
+
+
+def fetch_seed():
+    client = aws.get_client(service_name="lambda")
+    response = client.invoke(FunctionName=settings.AWS_RANDOM_SEED_LAMBDA)
 
     payload = aws.access_json(obj=response, key="Payload")
     body = aws.access_json(obj=payload, key="body")
@@ -15,12 +19,15 @@ def fetch_verifiable_seed():
     return body["value"]
 
 
-def get_generator():
+def update():
     try:
-        value = fetch_verifiable_seed()
-        rd.seed(value)
-        return rd
+        a = fetch_seed()
+        random_.seed(a)
+        _container.value = random_
 
     except Exception:
-        # Alternative random generator that uses os.urandom.
-        return rd.SystemRandom()
+        _container.value = random_.SystemRandom()
+
+
+def get():
+    return _container.value
