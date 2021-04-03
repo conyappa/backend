@@ -27,7 +27,6 @@ class DrawManager(models.Manager):
     @transaction.atomic
     def create(self, **fields):
         random.update()
-        rd = random.get()
 
         User = get_user_model()
         users = User.objects.all()
