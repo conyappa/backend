@@ -26,6 +26,7 @@ def update():
         _container.value = random_
 
     except Exception:
+        # An alternative random generator that uses os.urandom.
         _container.value = random_.SystemRandom()
 
 
