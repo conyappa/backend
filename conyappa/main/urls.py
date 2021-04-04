@@ -10,6 +10,7 @@ urlpatterns = [
         include(
             [
                 path("", include("accounts.urls")),
+                path("", include("banking.urls")),
                 path("", include("lottery.urls")),
             ]
         ),
