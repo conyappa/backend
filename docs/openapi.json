@@ -33,6 +33,9 @@
       "name": "Tickets"
     },
     {
+      "name": "Internal comunication"
+    },
+    {
       "name": "Misc"
     }
   ],
@@ -348,10 +351,10 @@
     },
     "/v1/draws": {
       "post": {
-        "summary": "Create a draw [for internal communication only]",
+        "summary": "Create a draw",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
         "tags":[
-          "Draws"
+          "Internal comunication"
         ],
         "required": true,
         "content": {
@@ -412,6 +415,79 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/draws/ongoing/choose": {
+      "post": {
+        "summary": "Choose a result for the ongoing draw",
+        "tags":[
+          "Internal comunication"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "movements/fetch": {
+      "post": {
+        "summary": "Fetch bank movements using Fintoc",
+        "tags":[
+          "Internal comunication"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "401": {
             "description": "Unauthorized",
@@ -542,27 +618,62 @@
         }
       },
       "default_401": {
-        "type": "object",
-        "properties": {
-          "detail": {
-            "type": "string",
-            "enum":[
-              "Given token not valid for any token type"
-            ]
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Missing credentials",
+            "properties": {
+              "detail": {
+                "type": "string",
+                "enum":[
+                  "Authentication credentials were not provided."
+                ]
+              }
+            }
           },
-          "code": {
-            "type": "string",
-            "enum":[
-              "token_not_valid"
-            ]
+          {
+            "type": "object",
+            "title": "Bad header",
+            "properties": {
+              "detail": {
+                "type": "string",
+                "enum":[
+                  "Authorization header must contain two space-delimited values"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "enum":[
+                  "bad_authorization_header"
+                ]
+              }
+            }
           },
-          "messages": {
-            "type": "array",
-            "items": {
-              "type": "object"
+          {
+            "type": "object",
+            "title": "Invalid token",
+            "properties": {
+              "detail": {
+                "type": "string",
+                "enum":[
+                  "Given token not valid for any token type"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "enum":[
+                  "token_not_valid"
+                ]
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
             }
           }
-        }
+        ]
       },
       "default_403": {
         "type": "object",
@@ -577,6 +688,7 @@
       },
       "default_404": {
         "type": "object",
+        "title": "Resource not found",
         "properties": {
           "detail": {
             "type": "string",
@@ -588,6 +700,7 @@
       },
       "invalid_page_404": {
         "type": "object",
+        "title": "Invalid page",
         "properties": {
           "detail": {
             "type": "string",

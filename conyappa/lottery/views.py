@@ -2,13 +2,28 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from main.permissions import InternalCommunication, Ownership, ReadOnly
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
 from .models import Draw
 from .serializers import DrawSerializer, TicketSerializer
+
+
+@api_view(["POST"])
+@permission_classes([InternalCommunication])
+def choose_result(request):
+    draw = Draw.objects.ongoing()
+    draw.choose_result()
+
+    serializer_context = {"request": request}
+    serializer = DrawSerializer(instance=draw, context=serializer_context)
+
+    return Response(data=serializer.data, status=HTTP_200_OK)
 
 
 class GenericDrawView(GenericAPIView):
@@ -24,18 +39,12 @@ class DrawListView(CreateModelMixin, GenericDrawView):
 
 
 class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
-    permission_classes = [(IsAuthenticated & ReadOnly) | InternalCommunication]
+    permission_classes = [IsAuthenticated & ReadOnly]
 
     def get_object(self):
         return Draw.objects.ongoing()
 
     def get(self, request):
-        return self.retrieve(request)
-
-    def patch(self, request):
-        draw = self.get_object()
-        draw.choose_result()
-
         return self.retrieve(request)
 
 
