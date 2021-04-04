@@ -10,4 +10,5 @@ from .fintoc import Interface as Fintoc
 @permission_classes([InternalCommunication])
 def fetch_movements(request):
     Fintoc().fetch_movements()
+
     return Response(status=HTTP_204_NO_CONTENT)
