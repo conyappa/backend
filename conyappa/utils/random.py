@@ -1,7 +1,8 @@
 import random as random_
+from logging import getLogger
 
 from django.conf import settings
-from logging import getLogger
+
 from utils import aws
 
 logger = getLogger(__name__)
