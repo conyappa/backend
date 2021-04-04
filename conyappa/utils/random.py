@@ -1,4 +1,4 @@
-import random as random_
+import random as _random
 from logging import getLogger
 
 from django.conf import settings
@@ -25,14 +25,14 @@ def fetch_seed():
 def update():
     try:
         a = fetch_seed()
-        random_.seed(a)
-        _container.value = random_
+        _random.seed(a)
+        _container.value = _random
 
         logger.info(f"Random generator seed successfully updated to '{a}'.")
 
     except Exception as e:
         # An alternative random generator that uses os.urandom.
-        _container.value = random_.SystemRandom()
+        _container.value = _random.SystemRandom()
 
         logger.warning(f"Using SystemRandom as the random generator. Failed to update seed: {e}")
 
