@@ -1,17 +1,10 @@
-from django.conf import settings
-
-import boto3
+from utils import aws
 from utils.metaclasses import Singleton
 
 
 class Interface(metaclass=Singleton):
     def __init__(self):
-        self.client = boto3.client(
-            service_name="events",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION_NAME,
-        )
+        self.client = aws.get_client(service_name="events")
 
     def fetch(self, rule):
         data = self.client.list_rules(NamePrefix=rule.eventbridge_name, Limit=1)
@@ -20,7 +13,7 @@ class Interface(metaclass=Singleton):
         rule.schedule_expression = rule_data["ScheduleExpression"]
 
     def put(self, rule):
-        target_arn = settings.AWS_ARN(service_name="lambda", resource_type="function", resource_id=rule.function)
+        target_arn = aws.get_arn(service_name="lambda", resource_name=f"function:{rule.function}")
 
         self.client.put_rule(Name=rule.eventbridge_name, ScheduleExpression=rule.schedule_expression)
         self.client.put_targets(Rule=rule.eventbridge_name, Targets=[{"Id": rule.eventbridge_name, "Arn": target_arn}])

@@ -79,7 +79,4 @@ AWS_REGION_NAME = "example-region"
 AWS_ACCOUNT_ID = "0123456789"
 
 AWS_CREATE_DRAW_LAMBDA = "conyappa-stage-functionName"
-
-AWS_ARN = lambda service_name, resource_type, resource_id: ":".join(
-    ["arn", AWS_PARTITION, service_name, AWS_REGION_NAME, AWS_ACCOUNT_ID, resource_type, resource_id]  # noqa: F405
-)
+AWS_RANDOM_SEED_LAMBDA = "conyappa-stage-functionName"
