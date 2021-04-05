@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
+
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import User
