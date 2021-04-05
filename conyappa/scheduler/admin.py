@@ -20,7 +20,9 @@ class RuleForm(ModelForm):
         ]
 
     FUNCTION_CHOICES = [
+        (settings.AWS_FETCH_MOVEMENTS_LAMBDA, "Fetch bank movements"),
         (settings.AWS_CREATE_DRAW_LAMBDA, "Create draw"),
+        (settings.AWS_CHOOSE_RESULT_LAMBDA, "Choose result"),
     ]
 
     function = ChoiceField(choices=FUNCTION_CHOICES, required=True)
