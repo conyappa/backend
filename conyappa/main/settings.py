@@ -122,7 +122,8 @@ EMAIL_USE_LOCALTIME = True
 ###############
 
 TEST = "test" in sys.argv
-DEBUG = os.environ.get("DJANGO_ENV") == "development"
+DJANGO_ENV = os.environ.get("DJANGO_ENV")
+DEBUG = DJANGO_ENV == "development"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 
 
@@ -229,7 +230,7 @@ AWS_RANDOM_SEED_LAMBDA = os.environ.get("AWS_RANDOM_SEED_LAMBDA")
 # SENTRY #
 ##########
 
-sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegration()])
+sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegration()], environment=DJANGO_ENV)
 
 
 ################
