@@ -7,6 +7,7 @@ from django.db import transaction
 from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
+
 from banking.models import Movement
 from lottery.models import Ticket
 
