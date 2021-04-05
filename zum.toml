@@ -1,0 +1,68 @@
+[metadata]
+server = "http://localhost:8000"
+
+# Misc
+[endpoints.error]
+route = "/error"
+method = "get"
+
+[endpoints.health-check]  # Doesn't really show anything
+route = "/"
+method = "get"
+
+# Session
+[endpoints.login]
+route = "/v1/login"
+method = "post"
+body = ["email", "password"]
+
+# Users
+[endpoints.create-user]
+route = "/v1/users"
+method = "post"
+body = [
+  "email",
+  "first_name",
+  "last_name",
+  { name = "rut", type = "integer" },
+  { name = "check_digit", type = "integer" },
+  "password"
+]
+
+[endpoints.get-user]
+route = "/v1/users/{user_id}"
+method = "get"
+params = ["user_id"]
+headers = ["Authorization"]
+
+[endpoints.get-tickets]
+route = "/v1/users/{user_id}/tickets"
+method = "get"
+params = ["user_id"]
+headers = ["Authorization"]
+body = [
+  { name = "page", type = "integer" },
+  { name = "page_size", type = "integer" }
+]
+
+# Draws
+[endpoints.get-draws]
+route = "/v1/draws/ongoing"
+method = "get"
+headers = ["Authorization"]
+
+# Internal
+[endpoints.create-draw]
+route = "/v1/draws"
+method = "post"
+headers = ["Authorization"]
+
+[endpoints.choose-draw]
+route = "/v1/draws/ongoing/choose"
+method = "post"
+headers = ["Authorization"]
+
+[endpoints.fintoc]
+route = "/v1/movements/fetch"
+method = "post"
+headers = ["Authorization"]
