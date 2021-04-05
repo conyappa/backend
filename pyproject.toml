@@ -3,8 +3,10 @@ name = "conyappa"
 version = "1.0.0"
 description = "Latam’s first prize-linked savings account."
 authors = [
-  "Alex Apt Iberkleid <aapt@uc.cl>",
-  "Ariel Martínez Silberstein <amartinez5@uc.cl>",
+  "Diego Andai <diego.andai@platan.us>",
+  "Alex Apt <alex@conyappa.cl>",
+  "Daniel Leal <dlleal@uc.cl>",
+  "Ariel Martínez <ariel@conyappa.cl>",
 ]
 
 [tool.poetry.dependencies]
