@@ -36,7 +36,7 @@ make localsettings
 Build the Docker images:
 
 ```bash
-docker-compose build --parallel
+make build
 ```
 
 ---
@@ -89,7 +89,7 @@ If new dependencies are added, update your virtual environment and re-build the 
 
 ```bash
 make createvenv
-docker-compose build --parallel
+make build
 ```
 
 ---
@@ -97,7 +97,7 @@ docker-compose build --parallel
 If you are adding any files or folders that should be considered by Docker, unignore them at the `.dockerignore`. Then, re-build the images:
 
 ```bash
-docker-compose build --parallel
+make build
 ```
 
 ---
