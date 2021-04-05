@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "properties": {
+    "prizes": {
+      "$ref": "./draws_metadata__prizes.json"
+    }
+  },
+  "readOnly": true
+}
