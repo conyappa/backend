@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from logging import getLogger
 
 from django.conf import settings
 from django.db.models import Count
@@ -7,8 +6,6 @@ from django.utils.functional import cached_property
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
-logger = getLogger(__name__)
 
 
 class TicketPaginator(PageNumberPagination.django_paginator_class):
