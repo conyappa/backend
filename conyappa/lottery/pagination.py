@@ -14,11 +14,11 @@ logger = getLogger(__name__)
 class TicketPaginator(PageNumberPagination.django_paginator_class):
     @cached_property
     def total_prize(self):
-        ticket_per_number_of_matches = self.object_list.values("number_of_matches").annotate(Count("id"))
-        ticket_per_number_of_matches = ticket_per_number_of_matches.annotate(Count("id"))
+        tickets_per_number_of_matches = self.object_list.values("number_of_matches")
+        tickets_per_number_of_matches = tickets_per_number_of_matches.annotate(Count("id"))
 
         prizes = map(
-            lambda el: settings.PRIZES[el["number_of_matches"]] * el["id__count"], ticket_per_number_of_matches
+            lambda el: settings.PRIZES[el["number_of_matches"]] * el["id__count"], tickets_per_number_of_matches
         )
         return sum(prizes)
 
