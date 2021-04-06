@@ -1,10 +1,8 @@
 from collections import OrderedDict
-from functools import reduce
 from logging import getLogger
-from operator import add
 
 from django.conf import settings
-from django.db.models import Count, F
+from django.db.models import Count
 from django.utils.functional import cached_property
 
 from rest_framework.pagination import PageNumberPagination
