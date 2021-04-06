@@ -11,11 +11,11 @@ from rest_framework.response import Response
 class TicketPaginator(PageNumberPagination.django_paginator_class):
     @cached_property
     def total_prize(self):
-        tickets_per_number_of_matches = self.object_list.values("number_of_matches")
-        tickets_per_number_of_matches = tickets_per_number_of_matches.annotate(Count("id"))
+        number_of_matches = self.object_list.values("number_of_matches")
+        ticket_count_per_number_of_matches = number_of_matches.annotate(Count("id"))
 
         prizes = map(
-            lambda el: settings.PRIZES[el["number_of_matches"]] * el["id__count"], tickets_per_number_of_matches
+            lambda el: settings.PRIZES[el["number_of_matches"]] * el["id__count"], ticket_count_per_number_of_matches
         )
         return sum(prizes)
 
