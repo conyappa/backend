@@ -21,7 +21,8 @@ def get_cron_description(expression):
     descriptor_options = cron_descriptor.Options()
     descriptor_options.day_of_week_start_index_zero = False
 
-    return cron_descriptor.get_description(expression=normal_form, options=descriptor_options)
+    description = cron_descriptor.get_description(expression=normal_form, options=descriptor_options)
+    return f"{description} (UTC)"
 
 
 def get_rate_description(expression):
