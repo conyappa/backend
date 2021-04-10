@@ -140,7 +140,7 @@ class UserAdmin(NumericFilterModelAdmin):
                 object_id=user.pk,
                 object_repr=str(user),
                 action_flag=CHANGE,
-                change_message=f"Change Balance ({amount:+})",
+                change_message=f"Changed Balance ({amount:+})",
             )
 
     def deposit(self, request, queryset):
