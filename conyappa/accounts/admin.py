@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.admin.models import CHANGE, LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 
@@ -19,8 +20,6 @@ class TicketInline(admin.TabularInline):
     readonly_fields = ["picks"]
     fields = ["picks", "draw"]
     extra = 0
-
-    classes = ["collapse"]
 
     def has_view_or_change_permission(self, request, obj=None):
         return False
@@ -50,7 +49,9 @@ class UserBalanceChangeForm(admin.helpers.ActionForm):
 
 
 @admin.register(User)
-class UserAdmin(NumericFilterModelAdmin):
+class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
+    ordering = ["email"]
+
     action_form = UserBalanceChangeForm
 
     actions = [
@@ -91,6 +92,7 @@ class UserAdmin(NumericFilterModelAdmin):
                     "is_staff",
                     "is_superuser",
                     "groups",
+                    "user_permissions",
                 ],
                 "classes": ["collapse"],
             },
@@ -100,20 +102,23 @@ class UserAdmin(NumericFilterModelAdmin):
             {
                 "fields": [
                     "email",
-                    ("rut", "check_digit"),
-                    ("first_name", "last_name"),
+                    "rut",
+                    "check_digit",
+                    "first_name",
+                    "last_name",
                 ],
-                "classes": ["collapse"],
             },
         ),
         (
             "FINANCIAL",
             {
                 "fields": [
-                    ("balance", "winnings", "current_prize"),
-                    ("current_number_of_tickets", "extra_tickets_ttl"),
+                    "balance",
+                    "winnings",
+                    "current_prize",
+                    "current_number_of_tickets",
+                    "extra_tickets_ttl",
                 ],
-                "classes": ["collapse"],
             },
         ),
     ]
@@ -164,3 +169,8 @@ class UserAdmin(NumericFilterModelAdmin):
         for user in queryset:
             user.withdraw(amount)
             self.log_change(request, user, message=f"Withdrawed {amount}")
+
+
+# Re-register UserAdmin
+# admin.site.unregister(User)
+# admin.site.register(User, BaseUserAdmin)

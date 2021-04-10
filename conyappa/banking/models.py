@@ -1,9 +1,10 @@
+from logging import getLogger
+
+from django.contrib.auth import get_user_model
 from django.db import models, transaction
 
 from main.base import BaseModel
-from django.contrib.auth import get_user_model
 
-from logging import getLogger
 logger = getLogger(__name__)
 
 
