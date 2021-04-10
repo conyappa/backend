@@ -1,6 +1,9 @@
-from django.db import models
+from django.db import models, transaction
 
 from main.base import BaseModel
+
+from logging import getLogger
+logger = getLogger(__name__)
 
 
 class Movement(BaseModel):
@@ -21,13 +24,38 @@ class Movement(BaseModel):
         on_delete=models.PROTECT,
     )
 
+    def set_original_values(self):
+        self.__original_user = self.user
+        self.__original_amount = self.amount
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_original_values()
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        if self.user != self.__original_user:
+            self.user.deposit(self.amount)
+
+            if self.__original_user is not None:
+                self.__original_user.withdraw(self.__original_amount)
+
+        elif self.amount != self.__original_amount:
+            self.user.withdraw(self.__original_amount)
+            self.user.deposit(self.amount)
+
+        super().save(*args, **kwargs)
+        self.set_original_values()
+
     @property
     def amount(self):
-        return self.fintoc_data.get("amount")
+        fintoc_data = self.fintoc_data or {}
+        return fintoc_data.get("amount")
 
     @property
     def raw_rut(self):
-        sender_account = self.fintoc_data.get("sender_account") or {}
+        fintoc_data = self.fintoc_data or {}
+        sender_account = fintoc_data.get("sender_account") or {}
         return sender_account.get("holder_id")
 
     @property
@@ -37,7 +65,8 @@ class Movement(BaseModel):
 
     @property
     def name(self):
-        sender_account = self.fintoc_data.get("sender_account") or {}
+        fintoc_data = self.fintoc_data or {}
+        sender_account = fintoc_data.get("sender_account") or {}
         return sender_account.get("holder_name")
 
     def __str__(self):

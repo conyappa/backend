@@ -126,28 +126,31 @@ class UserAdmin(NumericFilterModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return super().has_add_permission(request) and settings.DEBUG
 
+    @staticmethod
+    def log_change(request, user, message):
+        content_type = ContentType.objects.get_for_model(user)
+
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=content_type.pk,
+            object_id=user.pk,
+            object_repr=str(user),
+            action_flag=CHANGE,
+            change_message=message,
+        )
+
     @transaction.atomic
-    def change_balance(self, request, queryset, amount):
-        for user in queryset:
-            user.balance = F("balance") + amount
-            user.save()
-
-            content_type = ContentType.objects.get_for_model(user)
-
-            LogEntry.objects.log_action(
-                user_id=request.user.pk,
-                content_type_id=content_type.pk,
-                object_id=user.pk,
-                object_repr=str(user),
-                action_flag=CHANGE,
-                change_message=f"Changed Balance ({amount:+})",
-            )
-
     def deposit(self, request, queryset):
         amount = int(request.POST["amount"])
-        self.change_balance(request, queryset, amount)
 
+        for user in queryset:
+            user.deposit(amount)
+            self.log_change(request, user, message=f"Deposited {amount}")
+
+    @transaction.atomic
     def withdraw(self, request, queryset):
         amount = int(request.POST["amount"])
-        amount *= -1
-        self.change_balance(request, queryset, amount)
+
+        for user in queryset:
+            user.withdraw(amount)
+            self.log_change(request, user, message=f"Withdrawed {amount}")

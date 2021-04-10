@@ -72,6 +72,14 @@ class User(BaseModel, AbstractUser):
     def hard_delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
 
+    def deposit(self, amount):
+        self.balance = F("balance") + amount
+        self.save()
+
+    def withdraw(self, amount):
+        self.balance = F("balance") - amount
+        self.save()
+
     def consume_extra_tickets(self):
         self.extra_tickets_ttl = [(x - 1) for x in self.extra_tickets_ttl]
         self.save()
