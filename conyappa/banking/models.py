@@ -1,6 +1,7 @@
 from django.db import models, transaction
 
 from main.base import BaseModel
+from django.contrib.auth import get_user_model
 
 from logging import getLogger
 logger = getLogger(__name__)
@@ -24,28 +25,47 @@ class Movement(BaseModel):
         on_delete=models.PROTECT,
     )
 
-    def set_original_values(self):
-        self.__original_user = self.user
-        self.__original_amount = self.amount
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_original_values()
+        self.__original_user = self.user
+
+    def lookup_associated_user(self):
+        User = get_user_model()
+
+        try:
+            return User.objects.get(rut=self.rut)
+
+        except (User.DoesNotExist, User.MultipleObjectsReturned) as e:
+            logger.warning(f"Couldn’t associate movement to user: {e}")
 
     @transaction.atomic
     def save(self, *args, **kwargs):
-        if self.user != self.__original_user:
+        if (not self.__original_user) and (not self.user):
+            # There is no information about the associated user,
+            # so we must try to find one that matches the movement.
+            self.user = self.lookup_associated_user()
+
+        # Now we must check which action to perform.
+
+        if (not self.__original_user) and (not self.user):
+            # There is no associated user.
+            pass
+
+        elif self.__original_user and (not self.user):
+            # The associated user is being removed.
+            self.__original_user.withdraw(self.amount)
+
+        elif (not self.__original_user) and self.user:
+            # The associated user is being added.
             self.user.deposit(self.amount)
 
-            if self.__original_user is not None:
-                self.__original_user.withdraw(self.__original_amount)
-
-        elif self.amount != self.__original_amount:
-            self.user.withdraw(self.__original_amount)
+        elif self.__original_user != self.user:
+            # The associated user is being corrected (changed).
+            self.__original_user.withdraw(self.amount)
             self.user.deposit(self.amount)
 
         super().save(*args, **kwargs)
-        self.set_original_values()
+        self.__original_user = self.user
 
     @property
     def amount(self):
