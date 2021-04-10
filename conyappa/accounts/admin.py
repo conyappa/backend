@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.contrib.admin.models import CHANGE, LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 
@@ -85,6 +84,17 @@ class UserAdmin(NumericFilterModelAdmin):
     ]
 
     fieldsets = [
+        (
+            "PERMISSIONS",
+            {
+                "fields": [
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                ],
+                "classes": ["collapse"],
+            },
+        ),
         (
             "PERSONAL",
             {
