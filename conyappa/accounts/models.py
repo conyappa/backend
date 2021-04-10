@@ -52,6 +52,7 @@ class User(BaseModel, AbstractUser):
 
     balance = models.PositiveIntegerField(default=0, verbose_name="balance")
     winnings = models.PositiveIntegerField(default=0, verbose_name="winnings")
+
     extra_tickets_ttl = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
