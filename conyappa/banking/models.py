@@ -48,11 +48,7 @@ class Movement(BaseModel):
 
         # Now we must check which action to perform.
 
-        if (not self.__original_user) and (not self.user):
-            # There is no associated user.
-            pass
-
-        elif self.__original_user and (not self.user):
+        if self.__original_user and (not self.user):
             # The associated user is being removed.
             self.__original_user.withdraw(self.amount)
 
