@@ -6,6 +6,7 @@ from django.db import models, transaction
 from django.db.models import F
 
 from main.base import BaseModel
+from lottery.models import get_number_of_tickets, Draw
 
 
 def generate_initial_extra_tickets_ttl():
@@ -73,26 +74,26 @@ class User(BaseModel, AbstractUser):
     def hard_delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
 
-    def deposit(self, amount):
-        self.balance = F("balance") + amount
-        self.save()
+    @property
+    def current_tickets(self):
+        # This method assumes there is an ongoing draw.
+        return self.tickets.ongoing()
 
-    def withdraw(self, amount):
-        self.balance = F("balance") - amount
-        self.save()
+    @property
+    def current_prize(self):
+        return sum(map(lambda x: x.prize, self.current_tickets))
 
-    def consume_extra_tickets(self):
-        self.extra_tickets_ttl = [(x - 1) for x in self.extra_tickets_ttl]
-        self.save()
+    @property
+    def owners(self):
+        return {self}
 
-    def award_prize(self, value):
-        self.balance = F("balance") + value
-        self.winnings = F("winnings") + value
-        self.save()
+    #####################
+    # NUMBER OF TICKETS #
+    #####################
 
     @property
     def number_of_standard_tickets(self):
-        return min(settings.MAX_TICKETS, self.balance // settings.TICKET_COST)
+        return get_number_of_tickets(self.balance)
 
     @property
     def number_of_extra_tickets(self):
@@ -105,17 +106,53 @@ class User(BaseModel, AbstractUser):
         return self.number_of_standard_tickets + self.number_of_extra_tickets
 
     @property
-    def current_tickets(self):
-        # This method assumes that there is an ongoing draw.
-        return self.tickets.ongoing()
-
-    @property
     def current_number_of_tickets(self):
         return self.current_tickets.count()
 
-    @property
-    def current_prize(self):
-        return sum(map(lambda x: x.prize, self.current_tickets))
+    ##############
+    # OPERATIONS #
+    ##############
+
+    @transaction.atomic
+    def deposit(self, amount):
+        self.balance = F("balance") + amount
+        self.save()
+
+        draw = Draw.objects.ongoing()
+        delta_tickets = get_number_of_tickets(amount)
+        draw.add_tickets(user=self, n=delta_tickets)
+
+    @transaction.atomic
+    def withdraw(self, amount):
+        # Avoid race conditions by locking the tickets until the end of the transaction.
+        # This means that the selected tickets will only be modified (or deleted)
+        # by a single instance of the back end at a time.
+        # The transaction will proceed unless these tickets were already locked by another instance.
+        # In that case, the transaction will block until they are released.
+        tickets = self.current_tickets.select_for_update()
+
+        self.balance = F("balance") - amount
+        self.save()
+
+        ordered_tickets = tickets.order_by("number_of_matches")
+        delta_tickets = get_number_of_tickets(amount)
+        pks_to_remove = ordered_tickets[:delta_tickets].values_list("pk")
+
+        tickets_to_remove = self.current_tickets.filter(pk__in=pks_to_remove)
+        tickets_to_remove.delete()
+
+    def consume_extra_tickets(self):
+        self.extra_tickets_ttl = [(x - 1) for x in self.extra_tickets_ttl]
+        self.save()
+
+    def award_prize(self, value):
+        self.balance = F("balance") + value
+        self.winnings = F("winnings") + value
+        self.save()
+
+    ###################
+    # REPRESENTATIONS #
+    ###################
 
     @property
     def full_name(self):
@@ -131,10 +168,6 @@ class User(BaseModel, AbstractUser):
         rut_w_thousands_sep = "{:,}".format(self.rut).replace(",", ".")
         formatted_check_digit = "K" if (self.check_digit == 10) else self.check_digit
         return f"{rut_w_thousands_sep}-{formatted_check_digit}"
-
-    @property
-    def owners(self):
-        return {self}
 
     def __str__(self):
         return self.email

@@ -184,7 +184,6 @@ LOGGING = {
 # PARAMETERS #
 ##############
 
-MAX_TICKETS = int(os.environ.get("MAX_TICKETS", "4"))
 TICKET_COST = int(os.environ.get("TICKET_COST", "5000"))
 INITIAL_EXTRA_TICKETS_TTL = list(map(int, os.environ.get("INITIAL_EXTRA_TICKETS_TTL", "1").split(" ")))
 PICK_RANGE = tuple(range(int(os.environ.get("MIN_PICK", "1")), int(os.environ.get("MAX_PICK", "30")) + 1))

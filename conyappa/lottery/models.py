@@ -19,6 +19,10 @@ def generate_random_picks(pool):
     return rd.sample(population=pool, k=7)
 
 
+def get_number_of_tickets(balance):
+    return balance // settings.TICKET_COST
+
+
 class DrawManager(models.Manager):
     def ongoing(self):
         # This method assumes that there is an ongoing draw.
@@ -38,7 +42,7 @@ class DrawManager(models.Manager):
         tickets = []
 
         for user in users:
-            user_tickets = draw.generate_user_tickets(user=user)
+            user_tickets = draw.generate_tickets(user=user, n=user.number_of_tickets)
             tickets += user_tickets
             user.consume_extra_tickets()
 
@@ -61,17 +65,14 @@ class Draw(BaseModel):
 
     objects = DrawManager()
 
-    def generate_user_tickets(self, user):
-        return [
-            Ticket(draw=self, user=user, picks=generate_random_picks(pool=self.pool))
-            for _ in range(user.number_of_tickets)
-        ]
+    def generate_tickets(self, user, n):
+        return [Ticket(draw=self, user=user, picks=generate_random_picks(pool=self.pool)) for _ in range(n)]
 
-    def include_new_user(self, user):
+    def add_tickets(self, user, n):
         random.update()
 
-        user_tickets = self.generate_user_tickets(user=user)
-        Ticket.objects.bulk_create(objs=user_tickets)
+        tickets = self.generate_tickets(user=user, n=n)
+        Ticket.objects.bulk_create(objs=tickets)
 
     def choose_result(self):
         random.update()

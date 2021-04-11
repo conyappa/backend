@@ -43,7 +43,7 @@ class Interface(metaclass=Singleton):
                 fintoc_post_date = fintoc_post_datetime.split("T")[0]
 
                 if data["amount"] > 0:
-                    # Use the regular create method instead of bulk_create so the post_save signal is sent.
+                    # Use the regular create method instead of bulk_create so the save method is called.
                     # Don’t worry, though. These creations all ocurr in an atomic transaction.
                     Movement.objects.create(fintoc_data=data, fintoc_id=fintoc_id, fintoc_post_date=fintoc_post_date)
 
