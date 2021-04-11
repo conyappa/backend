@@ -1,6 +1,11 @@
-from django.db import models
+from logging import getLogger
+
+from django.contrib.auth import get_user_model
+from django.db import models, transaction
 
 from main.base import BaseModel
+
+logger = getLogger(__name__)
 
 
 class Movement(BaseModel):
@@ -21,13 +26,53 @@ class Movement(BaseModel):
         on_delete=models.PROTECT,
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_user = self.user
+
+    def lookup_associated_user(self):
+        User = get_user_model()
+
+        try:
+            return User.objects.get(rut=self.rut)
+
+        except (User.DoesNotExist, User.MultipleObjectsReturned) as e:
+            logger.warning(f"Couldn’t associate movement to user: {e}")
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        if (not self.__original_user) and (not self.user):
+            # There is no information about the associated user,
+            # so we must try to find one that matches the movement.
+            self.user = self.lookup_associated_user()
+
+        # Now we must check which action to perform.
+
+        if self.__original_user and (not self.user):
+            # The associated user is being removed.
+            self.__original_user.withdraw(self.amount)
+
+        elif (not self.__original_user) and self.user:
+            # The associated user is being added.
+            self.user.deposit(self.amount)
+
+        elif self.__original_user != self.user:
+            # The associated user is being corrected (changed).
+            self.__original_user.withdraw(self.amount)
+            self.user.deposit(self.amount)
+
+        super().save(*args, **kwargs)
+        self.__original_user = self.user
+
     @property
     def amount(self):
-        return self.fintoc_data.get("amount")
+        fintoc_data = self.fintoc_data or {}
+        return fintoc_data.get("amount")
 
     @property
     def raw_rut(self):
-        sender_account = self.fintoc_data.get("sender_account") or {}
+        fintoc_data = self.fintoc_data or {}
+        sender_account = fintoc_data.get("sender_account") or {}
         return sender_account.get("holder_id")
 
     @property
@@ -37,7 +82,8 @@ class Movement(BaseModel):
 
     @property
     def name(self):
-        sender_account = self.fintoc_data.get("sender_account") or {}
+        fintoc_data = self.fintoc_data or {}
+        sender_account = fintoc_data.get("sender_account") or {}
         return sender_account.get("holder_name")
 
     def __str__(self):

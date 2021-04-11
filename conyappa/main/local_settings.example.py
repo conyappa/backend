@@ -53,13 +53,6 @@ PLATANUS = "192.168.xxx.yyy"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", HOME, PLATANUS]
 
 
-##############
-# PARAMETERS #
-##############
-
-MAX_TICKETS = float("inf")
-
-
 ###########
 # SECRETS #
 ###########
