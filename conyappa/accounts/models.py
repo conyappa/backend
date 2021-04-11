@@ -129,16 +129,16 @@ class User(BaseModel, AbstractUser):
         # by a single instance of the back end at a time.
         # The transaction will proceed unless these tickets were already locked by another instance.
         # In that case, the transaction will block until they are released.
-        tickets = self.current_tickets.select_for_update()
+        locked_tickets = self.current_tickets.select_for_update()
 
         self.balance = F("balance") - amount
         self.save()
 
-        ordered_tickets = tickets.order_by("number_of_matches")
+        ordered_tickets = locked_tickets.order_by("number_of_matches")
         delta_tickets = get_number_of_tickets(amount)
         pks_to_remove = ordered_tickets[:delta_tickets].values_list("pk")
 
-        tickets_to_remove = self.current_tickets.filter(pk__in=pks_to_remove)
+        tickets_to_remove = locked_tickets.filter(pk__in=pks_to_remove)
         tickets_to_remove.delete()
 
     def consume_extra_tickets(self):
