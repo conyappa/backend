@@ -160,7 +160,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
 
         for user in queryset:
             user.deposit(amount)
-            self.log_change(request, user, message=f"Deposited {amount}")
+            self.log_change(request, user, message=f"Deposited {amount}.")
 
     @transaction.atomic
     def withdraw(self, request, queryset):
@@ -168,9 +168,4 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
 
         for user in queryset:
             user.withdraw(amount)
-            self.log_change(request, user, message=f"Withdrawed {amount}")
-
-
-# Re-register UserAdmin
-# admin.site.unregister(User)
-# admin.site.register(User, BaseUserAdmin)
+            self.log_change(request, user, message=f"Withdrawed {amount}.")
