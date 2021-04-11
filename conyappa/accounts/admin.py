@@ -2,9 +2,9 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.models import CHANGE, LogEntry
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 

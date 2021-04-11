@@ -5,8 +5,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
 from django.db.models import F
 
+from lottery.models import Draw, get_number_of_tickets
 from main.base import BaseModel
-from lottery.models import get_number_of_tickets, Draw
 
 
 def generate_initial_extra_tickets_ttl():
