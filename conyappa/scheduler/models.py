@@ -1,10 +1,10 @@
 from django.db import models, transaction
 
 from main.base import BaseModel
+from utils import aws
 
 from .eventbridge import Interface as EventBridge
 from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
-from utils import aws
 
 
 class RuleQuerySet(models.QuerySet):
