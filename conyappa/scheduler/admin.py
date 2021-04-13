@@ -82,7 +82,7 @@ class RuleAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "schedule",
-        "eventbridge",
+        "eventbridge_url",
         "updated_at",
     ]
 
@@ -94,7 +94,7 @@ class RuleAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         "schedule",
-        "eventbridge",
+        "eventbridge_url",
     ]
 
     def get_readonly_fields(self, request, obj=None):
@@ -111,5 +111,7 @@ class RuleAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-    def eventbridge(self, obj):
+    def eventbridge_url(self, obj):
         return format_html("<a href='{url}' target='_blank'>Open</a>", url=obj.eventbridge_url)
+
+    eventbridge_url.short_description = "EventBridge"
