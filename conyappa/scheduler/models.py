@@ -41,7 +41,7 @@ class Rule(BaseModel):
     @transaction.atomic
     def save(self, *args, **kwargs):
         if self.__original_name and (self.name != self.__original_name):
-            raise NotImplementedError("Please don’t to change the rule’s name.")
+            raise NotImplementedError("Please don’t change the rule’s name.")
 
         super().save(*args, **kwargs)
         self.save_remote()
