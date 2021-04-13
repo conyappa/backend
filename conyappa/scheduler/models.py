@@ -45,6 +45,7 @@ class Rule(BaseModel):
 
         super().save(*args, **kwargs)
         self.save_remote()
+        self.__original_name = self.name
 
     def delete_remote(self):
         EventBridge().delete(self)
