@@ -29,6 +29,7 @@ class Rule(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__original_name = self.name
 
         if self.name:
             self.init_remote()
@@ -38,6 +39,9 @@ class Rule(BaseModel):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        if self.__original_name and (self.name != self.__original_name):
+            raise NotImplementedError("Please don’t to change the rule’s name.")
+
         super().save(*args, **kwargs)
         self.save_remote()
 

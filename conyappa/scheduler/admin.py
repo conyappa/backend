@@ -94,6 +94,11 @@ class RuleAdmin(admin.ModelAdmin):
         "schedule",
     ]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["name"] + self.readonly_fields
+        return self.readonly_fields
+
     def save_model(self, request, obj, form, change):
         function = form.cleaned_data["function"]
         type_, expression = form.cleaned_data["schedule_expression"]
