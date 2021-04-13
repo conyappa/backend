@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import CharField, ChoiceField, ModelForm, TextInput
+from django.utils.html import format_html
 
 import cron_descriptor
 
@@ -81,6 +82,7 @@ class RuleAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "schedule",
+        "eventbridge",
         "updated_at",
     ]
 
@@ -92,6 +94,7 @@ class RuleAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         "schedule",
+        "eventbridge",
     ]
 
     def get_readonly_fields(self, request, obj=None):
@@ -107,3 +110,6 @@ class RuleAdmin(admin.ModelAdmin):
         obj.schedule_expression = f"{type_}({expression})"
 
         super().save_model(request, obj, form, change)
+
+    def eventbridge(self, obj):
+        return format_html("<a href='{url}' target='_blank'>Open</a>", url=obj.eventbridge_url)

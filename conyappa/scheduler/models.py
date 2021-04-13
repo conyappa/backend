@@ -4,6 +4,7 @@ from main.base import BaseModel
 
 from .eventbridge import Interface as EventBridge
 from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
+from utils import aws
 
 
 class RuleQuerySet(models.QuerySet):
@@ -61,6 +62,10 @@ class Rule(BaseModel):
     def eventbridge_name(self):
         # Each rule name (and target ID) must be unique.
         return f"{self.name}_{self.pk}"
+
+    @property
+    def eventbridge_url(self):
+        return aws.get_url(service_name="events", resource_name=f"rules/{self.eventbridge_name}")
 
     @property
     def schedule(self):
