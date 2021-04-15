@@ -1,7 +1,7 @@
 [metadata]
 server = "http://localhost:8000"
 
-# Misc
+# Misc.
 [endpoints.error]
 route = "/error"
 method = "get"
@@ -10,13 +10,13 @@ method = "get"
 route = "/"
 method = "get"
 
-# Session
+# Session.
 [endpoints.login]
 route = "/v1/login"
 method = "post"
 body = ["email", "password"]
 
-# Users
+# Users.
 [endpoints.create-user]
 route = "/v1/users"
 method = "post"
@@ -45,8 +45,8 @@ body = [
   { name = "page_size", type = "integer" }
 ]
 
-# Draws
-[endpoints.get-draws]
+# Draws.
+[endpoints.get-ongoing-draw]
 route = "/v1/draws/ongoing"
 method = "get"
 headers = ["Authorization"]
@@ -55,14 +55,14 @@ headers = ["Authorization"]
 [endpoints.create-draw]
 route = "/v1/draws"
 method = "post"
-headers = ["Authorization"]
+headers = ["Internal-Key"]
 
-[endpoints.choose-draw]
+[endpoints.choose-result]
 route = "/v1/draws/ongoing/choose"
 method = "post"
-headers = ["Authorization"]
+headers = ["Internal-Key"]
 
-[endpoints.fintoc]
+[endpoints.fetch-movements]
 route = "/v1/movements/fetch"
 method = "post"
-headers = ["Authorization"]
+headers = ["Internal-Key"]
