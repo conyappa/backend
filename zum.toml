@@ -36,14 +36,10 @@ params = ["user_id"]
 headers = ["Authorization"]
 
 [endpoints.get-tickets]
-route = "/v1/users/{user_id}/tickets"
+route = "/v1/users/{user_id}/tickets?page={page}&page_size={page_size}"
 method = "get"
-params = ["user_id"]
+params = ["user_id", "page", "page_size"]
 headers = ["Authorization"]
-body = [
-  { name = "page", type = "integer" },
-  { name = "page_size", type = "integer" }
-]
 
 # Draws.
 [endpoints.get-ongoing-draw]
