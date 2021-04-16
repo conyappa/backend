@@ -149,7 +149,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
 
     check_digit = None
 
-    inlines = [TicketInline, MovementInline]
+    inlines = [TicketInline, MovementInline, DeviceInline]
 
     def has_add_permission(self, request):
         return super().has_add_permission(request) and settings.DEBUG
@@ -185,3 +185,36 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
         for user in queryset:
             user.withdraw(amount)
             self.log_change(request, user, message=f"Withdrawed {amount}.")
+
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    search_fields = [
+        "user__email",
+        "user__first_name",
+        "user__last_name",
+        "user__rut",
+    ]
+
+    list_display = [
+        "user",
+        "expo_push_token",
+        "created_at",
+        "updated_at",
+    ]
+
+    list_filter = [
+        "created_at",
+        "updated_at",
+    ]
+
+    readonly_fields = [
+        "user",
+        "expo_push_token",
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
