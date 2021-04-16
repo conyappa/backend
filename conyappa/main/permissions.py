@@ -16,10 +16,10 @@ class ObjectOwnership(BasePermission):
 
 class ListOwnership(BasePermission):
     def has_permission(self, request, view):
-        owner = getattr(view, "owner", None)
+        owners = getattr(view, "owners", set())
 
         # Ownership over a user gives you ownership over that user’s resources.
-        return (owner is not None) and ObjectOwnership().has_object_permission(request, view, obj=owner)
+        return owners and any([ObjectOwnership().has_object_permission(request, view, obj=user) for user in owners])
 
 
 class ReadOnly(BasePermission):

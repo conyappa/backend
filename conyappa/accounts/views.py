@@ -43,11 +43,13 @@ class UserDeviceListView(CreateModelMixin, GenericAPIView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
     def initial(self, request, user_id):
-        self.owner = get_object_or_404(User.objects, pk=user_id)
+        self.user = get_object_or_404(User.objects, pk=user_id)
+        self.owners = {self.user}
+
         return super().initial(request, user_id)
 
     def get_queryset(self):
-        return self.owner.devices
+        return self.user.devices
 
     def get(self, request, user_id):
         request.data["user"] = user_id

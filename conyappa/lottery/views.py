@@ -75,11 +75,13 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
 
     def initial(self, request, user_id):
         User = get_user_model()
-        self.owner = get_object_or_404(User.objects, pk=user_id)
+        self.user = get_object_or_404(User.objects, pk=user_id)
+        self.owners = {self.user}
+
         return super().initial(request, user_id)
 
     def get_queryset(self):
-        return self.owner.current_tickets.order_by("-number_of_matches")
+        return self.user.current_tickets.order_by("-number_of_matches")
 
     def get(self, request, user_id):
         return self.list(request)
