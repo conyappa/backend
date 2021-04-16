@@ -5,7 +5,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainSlidingView
 
-from main.permissions import Ownership
+from main.permissions import ObjectOwnership, ListOwnership
 
 from .models import User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
@@ -26,7 +26,7 @@ class UserListView(CreateModelMixin, GenericUserView):
 
 
 class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
-    permission_classes = [IsAuthenticated & Ownership]
+    permission_classes = [IsAuthenticated & ObjectOwnership]
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -40,12 +40,16 @@ class GenericDeviceView(GenericAPIView):
 
 
 class UserDeviceListView(CreateModelMixin, GenericAPIView):
-    permission_classes = [IsAuthenticated & Ownership]
+    permission_classes = [IsAuthenticated & ListOwnership]
+
+    def initial(self, request, *args, **kwargs):
+        user_id = self.kwargs["user_id"]
+        self.user = get_object_or_404(User.objects, pk=user_id)
+
+        return super().initial(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_id = self.kwargs["user_id"]
-        user = get_object_or_404(User.objects, pk=user_id)
-        return user.devices
+        return self.user.devices
 
     def get(self, request, user_id):
         request.data["user"] = user_id
