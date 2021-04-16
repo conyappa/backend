@@ -171,3 +171,8 @@ class User(BaseModel, AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Device(BaseModel):
+    user = models.ForeignKey(to="accounts.User", verbose_name="user", related_name="devices", on_delete=models.CASCADE)
+    expo_push_token = models.CharField(unique=True, null=True, max_length=255, verbose_name="Expo push token")

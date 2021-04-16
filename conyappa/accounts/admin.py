@@ -11,7 +11,7 @@ from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFil
 from banking.models import Movement
 from lottery.models import Ticket
 
-from .models import User
+from .models import Device, User
 
 
 class TicketInline(admin.TabularInline):
@@ -32,6 +32,22 @@ class MovementInline(admin.TabularInline):
     model = Movement
 
     readonly_fields = ["rut", "fintoc_post_date"]
+    fields = [tuple(readonly_fields)]
+    extra = 0
+
+    classes = ["collapse"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class DeviceInline(admin.TabularInline):
+    model = Device
+
+    readonly_fields = ["expo_push_token"]
     fields = [tuple(readonly_fields)]
     extra = 0
 

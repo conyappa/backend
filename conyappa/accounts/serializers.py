@@ -3,7 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
 
 from utils.serializers import SetOnlyFieldsMixin
 
-from .models import User
+from .models import Device, User
 
 
 class TokenLoginSerializer(TokenObtainSlidingSerializer):
@@ -102,3 +102,12 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             raise ValidationError(f"Ensure this field has no less than {PASSWORD_MIN_LENGTH} characters.")
 
         return value
+
+
+class DeviceSerializer(ModelSerializer):
+    class Meta:
+        model = Device
+
+        fields = [
+            "expo_push_token",
+        ]
