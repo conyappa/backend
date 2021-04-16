@@ -5,7 +5,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainSlidingView
 
-from main.permissions import ObjectOwnership, ListOwnership
+from main.permissions import ListOwnership, ObjectOwnership
 
 from .models import User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
