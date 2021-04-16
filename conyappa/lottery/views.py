@@ -73,15 +73,13 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
     # For now, and for security reasons, make this viewset read-only.
     permission_classes = [IsAuthenticated & ListOwnership & ReadOnly]
 
-    def initial(self, request, *args, **kwargs):
-        user_id = self.kwargs["user_id"]
+    def initial(self, request, user_id):
         User = get_user_model()
-        self.user = get_object_or_404(User.objects, pk=user_id)
-
-        return super().initial(request, *args, **kwargs)
+        self.owner = get_object_or_404(User.objects, pk=user_id)
+        return super().initial(request, user_id)
 
     def get_queryset(self):
-        return self.user.current_tickets.order_by("-number_of_matches")
+        return self.owner.current_tickets.order_by("-number_of_matches")
 
     def get(self, request, user_id):
         return self.list(request)
