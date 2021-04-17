@@ -39,7 +39,7 @@ class GenericDeviceView(GenericAPIView):
     serializer_class = DeviceSerializer
 
 
-class UserDeviceListView(CreateModelMixin, GenericAPIView):
+class UserDeviceListView(CreateModelMixin, GenericDeviceView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
     def initial(self, request, user_id):
@@ -51,6 +51,6 @@ class UserDeviceListView(CreateModelMixin, GenericAPIView):
     def get_queryset(self):
         return self.user.devices
 
-    def get(self, request, user_id):
+    def post(self, request, user_id):
         request.data["user"] = user_id
         return self.create(request)

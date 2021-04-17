@@ -83,7 +83,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
     ]
 
     list_display = [
-        "email",
+        "__str__",
         "full_name",
         "formatted_rut",
         "balance",

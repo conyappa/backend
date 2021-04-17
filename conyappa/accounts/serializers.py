@@ -109,5 +109,6 @@ class DeviceSerializer(ModelSerializer):
         model = Device
 
         fields = [
+            "user",
             "expo_push_token",
         ]
