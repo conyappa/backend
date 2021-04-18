@@ -46,7 +46,8 @@ class User(BaseModel, AbstractUser):
     REQUIRED_FIELDS = []
 
     username = None
-    email = models.EmailField(unique=True, max_length=254, verbose_name="email address")
+    email = models.EmailField(unique=True, null=True, max_length=254, verbose_name="email address")
+    password = models.CharField(null=True, max_length=128, verbose_name="password")
 
     rut = models.PositiveIntegerField(unique=True, null=True, default=None, verbose_name="RUT")
     check_digit = models.PositiveSmallIntegerField(null=True, default=None, verbose_name="RUT check digit")

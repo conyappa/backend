@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer, ValidationError, CharField
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
 
 from utils.serializers import SetOnlyFieldsMixin
@@ -29,6 +29,7 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "full_name",
             "balance",
             "winnings",
+            "token",
         ]
 
         # These fields can only be set once.
@@ -45,6 +46,13 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "balance": {"read_only": True},
             "winnings": {"read_only": True},
         }
+
+    token = CharField(read_only=True, required=False)
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        user.token = TokenLoginSerializer.get_token(user)
+        return user
 
     @staticmethod
     def expected_check_digit(rut):
@@ -110,5 +118,7 @@ class DeviceSerializer(ModelSerializer):
 
         fields = [
             "user",
+            "android_id",
+            "ios_id",
             "expo_push_token",
         ]
