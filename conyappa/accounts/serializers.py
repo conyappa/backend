@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, CharField
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
-
+from django.db import transaction
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import Device, User
@@ -52,6 +52,17 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
     def create(self, validated_data):
         user = super().create(validated_data)
         user.token = TokenLoginSerializer.get_token(user)
+        return user
+
+    @transaction.atomic
+    def save(self, **kwargs):
+        user = super().save(**kwargs)
+
+        if "password" in self.validated_data:
+            password = self.validated_data["password"]
+            user.set_password(password)
+            user.save()
+
         return user
 
     @staticmethod
