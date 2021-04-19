@@ -1,7 +1,8 @@
-from main.permissions import InternalCommunication
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
+
+from main.permissions import InternalCommunication
 
 from .fintoc import Interface as Fintoc
 

@@ -53,7 +53,12 @@ tests:
 
 .PHONY: shell
 shell:
-	docker-compose run web python manage.py shell_plus
+	docker-compose run web python manage.py shell_plus --plain
+
+
+.PHONY: ipython
+ipython:
+	docker-compose run web python manage.py shell_plus --ipython
 
 
 # Database interactions

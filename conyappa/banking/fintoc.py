@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import transaction
 
 from fintoc import Client
+
 from utils.metaclasses import Singleton
 
 from .models import Movement
@@ -41,8 +42,9 @@ class Interface(metaclass=Singleton):
                 fintoc_post_datetime = data.get("post_date")
                 fintoc_post_date = fintoc_post_datetime.split("T")[0]
 
-                # Use the regular create method instead of bulk_create so the post_save signal is sent.
-                # Don’t worry, though. These creations all ocurr in an atomic transaction.
-                Movement.objects.create(fintoc_data=data, fintoc_id=fintoc_id, fintoc_post_date=fintoc_post_date)
+                if data["amount"] > 0:
+                    # Use the regular create method instead of bulk_create so the save method is called.
+                    # Don’t worry, though. These creations all ocurr in an atomic transaction.
+                    Movement.objects.create(fintoc_data=data, fintoc_id=fintoc_id, fintoc_post_date=fintoc_post_date)
 
             query_params["page"] += 1

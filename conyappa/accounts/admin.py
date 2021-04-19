@@ -2,11 +2,12 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.models import CHANGE, LogEntry
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.db.models import F
 
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
+
 from banking.models import Movement
 from lottery.models import Ticket
 
@@ -19,8 +20,6 @@ class TicketInline(admin.TabularInline):
     readonly_fields = ["picks"]
     fields = ["picks", "draw"]
     extra = 0
-
-    classes = ["collapse"]
 
     def has_view_or_change_permission(self, request, obj=None):
         return False
@@ -50,7 +49,9 @@ class UserBalanceChangeForm(admin.helpers.ActionForm):
 
 
 @admin.register(User)
-class UserAdmin(NumericFilterModelAdmin):
+class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
+    ordering = ["email"]
+
     action_form = UserBalanceChangeForm
 
     actions = [
@@ -85,24 +86,39 @@ class UserAdmin(NumericFilterModelAdmin):
 
     fieldsets = [
         (
+            "PERMISSIONS",
+            {
+                "fields": [
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ],
+                "classes": ["collapse"],
+            },
+        ),
+        (
             "PERSONAL",
             {
                 "fields": [
                     "email",
-                    ("rut", "check_digit"),
-                    ("first_name", "last_name"),
+                    "rut",
+                    "check_digit",
+                    "first_name",
+                    "last_name",
                 ],
-                "classes": ["collapse"],
             },
         ),
         (
             "FINANCIAL",
             {
                 "fields": [
-                    ("balance", "winnings", "current_prize"),
-                    ("current_number_of_tickets", "extra_tickets_ttl"),
+                    "balance",
+                    "winnings",
+                    "current_prize",
+                    "current_number_of_tickets",
+                    "extra_tickets_ttl",
                 ],
-                "classes": ["collapse"],
             },
         ),
     ]
@@ -125,28 +141,31 @@ class UserAdmin(NumericFilterModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return super().has_add_permission(request) and settings.DEBUG
 
+    @staticmethod
+    def log_change(request, user, message):
+        content_type = ContentType.objects.get_for_model(user)
+
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=content_type.pk,
+            object_id=user.pk,
+            object_repr=str(user),
+            action_flag=CHANGE,
+            change_message=message,
+        )
+
     @transaction.atomic
-    def change_balance(self, request, queryset, amount):
-        for user in queryset:
-            user.balance = F("balance") + amount
-            user.save()
-
-            content_type = ContentType.objects.get_for_model(user)
-
-            LogEntry.objects.log_action(
-                user_id=request.user.pk,
-                content_type_id=content_type.pk,
-                object_id=user.pk,
-                object_repr=str(user),
-                action_flag=CHANGE,
-                change_message=f"Change Balance ({amount:+})",
-            )
-
     def deposit(self, request, queryset):
         amount = int(request.POST["amount"])
-        self.change_balance(request, queryset, amount)
 
+        for user in queryset:
+            user.deposit(amount)
+            self.log_change(request, user, message=f"Deposited {amount}.")
+
+    @transaction.atomic
     def withdraw(self, request, queryset):
         amount = int(request.POST["amount"])
-        amount *= -1
-        self.change_balance(request, queryset, amount)
+
+        for user in queryset:
+            user.withdraw(amount)
+            self.log_change(request, user, message=f"Withdrawed {amount}.")

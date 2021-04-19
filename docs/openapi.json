@@ -398,6 +398,46 @@
         }
       }
     },
+    "/v1/draws/metadata": {
+      "get": {
+        "summary": "Retrieve the draws’ metadata",
+        "tags":[
+          "Draws"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draws_metadata.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/draws/ongoing": {
       "get": {
         "summary": "Retrieve the ongoing draw",
