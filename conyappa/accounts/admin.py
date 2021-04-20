@@ -28,14 +28,12 @@ class TicketInline(admin.TabularInline):
         return False
 
 
-class MovementInline(admin.TabularInline):
-    model = Movement
+class DeviceInline(admin.TabularInline):
+    model = Device
 
-    readonly_fields = ["rut", "fintoc_post_date"]
+    readonly_fields = ["os_id", "expo_push_token"]
     fields = [tuple(readonly_fields)]
     extra = 0
-
-    classes = ["collapse"]
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -44,10 +42,10 @@ class MovementInline(admin.TabularInline):
         return False
 
 
-class DeviceInline(admin.TabularInline):
-    model = Device
+class MovementInline(admin.TabularInline):
+    model = Movement
 
-    readonly_fields = ["expo_push_token"]
+    readonly_fields = ["rut", "fintoc_post_date"]
     fields = [tuple(readonly_fields)]
     extra = 0
 
@@ -149,7 +147,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
 
     check_digit = None
 
-    inlines = [TicketInline, MovementInline, DeviceInline]
+    inlines = [TicketInline, DeviceInline, MovementInline]
 
     def has_add_permission(self, request):
         return super().has_add_permission(request) and settings.DEBUG

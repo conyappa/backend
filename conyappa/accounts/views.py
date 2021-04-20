@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import GenericAPIView
@@ -53,13 +52,12 @@ class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
         android_id = self.request.data.get("android_id")
         ios_id = self.request.data.get("ios_id")
 
-        query = Q(android_id=android_id) | Q(ios_id=ios_id)
-        return Device.objects.get(query)
+        return Device.objects.get(android_id=android_id, ios_id=ios_id)
 
     def post(self, request, user_id):
         request.data["user"] = user_id
 
         try:
             return self.partial_update(request)
-        except User.DoesNotExist:
+        except Device.DoesNotExist:
             return self.create(request)
