@@ -8,8 +8,10 @@
     },
     "email": {
       "type": "string",
+      "description": "nullable only for lazy registration",
       "format": "email",
-      "maxLength": 254
+      "maxLength": 254,
+      "nullable": true
     },
     "first_name": {
       "type": "string",
@@ -28,17 +30,19 @@
     },
     "rut": {
       "type": "integer",
-      "description": "**set-only** (can only be set once, but not changed)",
+      "description": "nullable only for lazy registration; **set-only** (can only be set once, but not changed)",
       "minimum": 0,
       "maximum": 2147483647,
-      "example": 19659234
+      "example": 19659234,
+      "nullable": true
     },
     "check_digit": {
       "type": "integer",
-      "description": "**set-only** (can only be set once, but not changed), must correspond to the RUT",
+      "description": "nullable only for lazy registration; **set-only** (can only be set once, but not changed); must correspond to the RUT",
       "minimum": 0,
       "maximum": 10,
-      "example": 2
+      "example": 2,
+      "nullable": true
     },
     "formatted_rut": {
       "type": "string",

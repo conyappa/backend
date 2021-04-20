@@ -27,6 +27,9 @@
       "name": "Users"
     },
     {
+      "name": "Devices"
+    },
+    {
       "name": "Draws"
     },
     {
@@ -110,7 +113,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "./schemas/user.json"
+                  "$ref": "./schemas/user(created).json"
                 }
               }
             }
@@ -221,6 +224,78 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/responses/user_400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}/devices": {
+      "post": {
+        "summary": "Register a user’s device",
+        "tags":[
+          "Users",
+          "Devices"
+        ],
+        "parameters":[
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK (updated if a device with the same OS ID already exists)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/device.json"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/device.json"
                 }
               }
             }
