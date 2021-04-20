@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conyappa"
-version = "1.0.0"
+version = "1.1.0"
 description = "Latam’s first prize-linked savings account."
 authors = [
   "Diego Andai <diego.andai@platan.us>",
