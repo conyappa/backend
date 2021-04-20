@@ -207,3 +207,14 @@ class Device(BaseModel):
     ios_id = models.CharField(unique=True, null=True, max_length=255, verbose_name="iOS ID")
 
     expo_push_token = models.CharField(unique=True, null=True, max_length=255, verbose_name="Expo push token")
+
+    @property
+    def os(self):
+        return (self.android_id and "Android") or (self.ios_id and "iOS")
+
+    @property
+    def os_id(self):
+        return self.android_id or self.ios_id
+
+    def __str__(self):
+        return f"{self.user or 'No one'}’s {self.os}"

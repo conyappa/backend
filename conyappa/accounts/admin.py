@@ -198,6 +198,8 @@ class DeviceAdmin(admin.ModelAdmin):
 
     list_display = [
         "user",
+        "os",
+        "os_id",
         "expo_push_token",
         "created_at",
         "updated_at",
@@ -210,8 +212,12 @@ class DeviceAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         "user",
+        "os",
+        "os_id",
         "expo_push_token",
     ]
+
+    fields = readonly_fields
 
     def has_add_permission(self, request):
         return False
