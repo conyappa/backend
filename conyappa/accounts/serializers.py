@@ -1,6 +1,8 @@
-from rest_framework.serializers import ModelSerializer, ValidationError, CharField
-from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
 from django.db import transaction
+
+from rest_framework.serializers import CharField, ModelSerializer, ValidationError
+from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
+
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import Device, User

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import GenericAPIView
@@ -7,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 from main.permissions import ListOwnership, ObjectOwnership
 
-from .models import User
+from .models import Device, User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
 
 
@@ -39,7 +40,7 @@ class GenericDeviceView(GenericAPIView):
     serializer_class = DeviceSerializer
 
 
-class UserDeviceListView(CreateModelMixin, GenericDeviceView):
+class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
     def initial(self, request, user_id):
@@ -48,9 +49,17 @@ class UserDeviceListView(CreateModelMixin, GenericDeviceView):
 
         return super().initial(request, user_id)
 
-    def get_queryset(self):
-        return self.user.devices
+    def get_object(self):
+        android_id = self.request.data.get("android_id")
+        ios_id = self.request.data.get("ios_id")
+
+        query = Q(android_id=android_id) | Q(ios_id=ios_id)
+        return Device.objects.get(query)
 
     def post(self, request, user_id):
         request.data["user"] = user_id
-        return self.create(request)
+
+        try:
+            return self.partial_update(request)
+        except User.DoesNotExist:
+            return self.create(request)
