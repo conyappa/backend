@@ -51,8 +51,10 @@
     },
     "password": {
       "type": "string",
+      "description": "nullable only for lazy registration",
       "format": "password",
-      "writeOnly": true
+      "writeOnly": true,
+      "nullable": true
     },
     "balance": {
       "type": "integer",
