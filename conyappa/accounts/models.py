@@ -217,4 +217,4 @@ class Device(BaseModel):
         return self.android_id or self.ios_id
 
     def __str__(self):
-        return f"{self.user or 'No one'}’s {self.os}"
+        return f"{self.user or 'Some one'}’s {self.os}"
