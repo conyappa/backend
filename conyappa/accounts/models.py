@@ -6,7 +6,7 @@ from django.db import models, transaction
 from django.db.models import F
 
 from lottery.models import Draw, get_number_of_tickets
-from main.base import BaseModel
+from main.base import BaseModel, ExtendedQ
 
 
 def generate_initial_extra_tickets_ttl():
@@ -46,7 +46,8 @@ class User(BaseModel, AbstractUser):
     REQUIRED_FIELDS = []
 
     username = None
-    email = models.EmailField(unique=True, max_length=254, verbose_name="email address")
+    email = models.EmailField(unique=True, null=True, max_length=254, verbose_name="email address")
+    password = models.CharField(null=True, max_length=128, verbose_name="password")
 
     rut = models.PositiveIntegerField(unique=True, null=True, default=None, verbose_name="RUT")
     check_digit = models.PositiveSmallIntegerField(null=True, default=None, verbose_name="RUT check digit")
@@ -150,6 +151,22 @@ class User(BaseModel, AbstractUser):
         self.winnings = F("winnings") + value
         self.save()
 
+    #####################
+    # LAZY REGISTRATION #
+    #####################
+
+    @property
+    def is_registered(self):
+        return bool(self.email) or bool(self.rut)
+
+    @property
+    def is_abandoned(self):
+        return self.devices.count() == 0
+
+    @property
+    def is_null(self):
+        return (not self.is_registered) and self.is_abandoned
+
     ###################
     # REPRESENTATIONS #
     ###################
@@ -170,4 +187,34 @@ class User(BaseModel, AbstractUser):
         return f"{rut_w_thousands_sep}-{formatted_check_digit}"
 
     def __str__(self):
-        return self.email
+        return self.email if self.is_registered else "<anonymous>"
+
+
+class Device(BaseModel):
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=ExtendedQ(android_id__isnull=False) ^ ExtendedQ(ios_id__isnull=False),
+                name="exactly_one_os_id",
+            )
+        ]
+
+    user = models.ForeignKey(
+        to="accounts.User", null=True, verbose_name="user", related_name="devices", on_delete=models.SET_NULL
+    )
+
+    android_id = models.CharField(unique=True, null=True, max_length=255, verbose_name="Android ID")
+    ios_id = models.CharField(unique=True, null=True, max_length=255, verbose_name="iOS ID")
+
+    expo_push_token = models.CharField(unique=True, null=True, max_length=255, verbose_name="Expo push token")
+
+    @property
+    def os(self):
+        return (self.android_id and "Android") or (self.ios_id and "iOS")
+
+    @property
+    def os_id(self):
+        return self.android_id or self.ios_id
+
+    def __str__(self):
+        return f"{self.user or 'No one'}’s {self.os}"

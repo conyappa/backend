@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "android_id": {
+      "type": "string",
+      "description": "uses Expo’s [`Application.androidId`](https://docs.expo.io/versions/latest/sdk/application/#applicationandroidid)",
+      "format": "hexadecimal",
+      "nullable": true,
+      "example": "dd96dec43fb81c97"
+    },
+    "ios_id": {
+      "type": "string",
+      "description": "uses Expo’s [`Application.getIosIdForVendorAsync()`](https://docs.expo.io/versions/latest/sdk/application/#applicationgetiosidforvendorasync)",
+      "format": "hexadecimal",
+      "nullable": true,
+      "example": "68753A44-4D6F-1226-9C60-0050E4C00067"
+    },
+    "expo_push_token": {
+      "type": "string",
+      "description": "uses Expo’s [`Notifications.getExpoPushTokenAsync()`](https://docs.expo.io/versions/latest/sdk/notifications/#getexpopushtokenasyncoptions-expotokenoptions-expopushtoken)",
+      "nullable": true,
+      "example": "ExponentPushToken[0w_gV4MVHgDrwDyOl-s0A7]"
+    }
+  }
+}

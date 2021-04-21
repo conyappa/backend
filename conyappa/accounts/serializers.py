@@ -1,9 +1,11 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from django.db import transaction
+
+from rest_framework.serializers import CharField, ModelSerializer, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
 
 from utils.serializers import SetOnlyFieldsMixin
 
-from .models import User
+from .models import Device, User
 
 
 class TokenLoginSerializer(TokenObtainSlidingSerializer):
@@ -29,6 +31,7 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "full_name",
             "balance",
             "winnings",
+            "token",
         ]
 
         # These fields can only be set once.
@@ -45,6 +48,24 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "balance": {"read_only": True},
             "winnings": {"read_only": True},
         }
+
+    token = CharField(read_only=True, required=False)
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        user.token = TokenLoginSerializer.get_token(user)
+        return user
+
+    @transaction.atomic
+    def save(self, **kwargs):
+        user = super().save(**kwargs)
+
+        if "password" in self.validated_data:
+            password = self.validated_data["password"]
+            user.set_password(password)
+            user.save()
+
+        return user
 
     @staticmethod
     def expected_check_digit(rut):
@@ -102,3 +123,15 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             raise ValidationError(f"Ensure this field has no less than {PASSWORD_MIN_LENGTH} characters.")
 
         return value
+
+
+class DeviceSerializer(ModelSerializer):
+    class Meta:
+        model = Device
+
+        fields = [
+            "user",
+            "android_id",
+            "ios_id",
+            "expo_push_token",
+        ]
