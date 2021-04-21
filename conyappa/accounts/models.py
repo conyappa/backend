@@ -14,9 +14,16 @@ def generate_initial_extra_tickets_ttl():
     return settings.INITIAL_EXTRA_TICKETS_TTL
 
 
+class UserQuerySet(models.QuerySet):
+    def send_push_notifications(self, body, data=None):
+        for user in self:
+            user.send_push_notification(body=body, data=data)
+
+
 class UserManager(BaseUserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
+        qs = UserQuerySet(self.model, using=self._db)
+        return qs.filter(is_active=True)
 
     def everything(self):
         return super().get_queryset()
@@ -194,7 +201,7 @@ class User(BaseModel, AbstractUser):
         return self.email if self.is_registered else "<anonymous>"
 
 
-class DeviceQuerySet(models.Manager):
+class DeviceQuerySet(models.QuerySet):
     def send_push_notifications(self, body, data=None):
         interface = PushNotificationsInterface()
 
