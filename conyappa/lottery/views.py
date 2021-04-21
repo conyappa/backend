@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from main.permissions import InternalCommunication, Ownership, ReadOnly
+from main.permissions import InternalCommunication, ListOwnership, ReadOnly
 
 from .models import Draw
 from .pagination import TicketPagination
@@ -71,15 +71,17 @@ class GenericTicketView(GenericAPIView):
 class UserTicketsView(ListModelMixin, GenericTicketView):
     # Changing tickets is a feature we would like to have in the near future.
     # For now, and for security reasons, make this viewset read-only.
-    permission_classes = [IsAuthenticated & Ownership & ReadOnly]
+    permission_classes = [IsAuthenticated & ListOwnership & ReadOnly]
+
+    def initial(self, request, user_id):
+        User = get_user_model()
+        self.user = get_object_or_404(User.objects, pk=user_id)
+        self.owners = {self.user}
+
+        return super().initial(request, user_id)
 
     def get_queryset(self):
-        user_id = self.kwargs["user_id"]
-
-        User = get_user_model()
-        user = get_object_or_404(User.objects, pk=user_id)
-
-        return user.current_tickets.order_by("-number_of_matches")
+        return self.user.current_tickets.order_by("-number_of_matches")
 
     def get(self, request, user_id):
         return self.list(request)

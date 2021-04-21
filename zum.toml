@@ -41,13 +41,20 @@ method = "get"
 params = ["user_id", "page", "page_size"]
 headers = ["Authorization"]
 
+[endpoints.register-device]
+route = "/v1/users/{user_id}/devices"
+method = "post"
+params = ["user_id"]
+body = ["android_id", "expo_push_token"]
+headers = ["Authorization"]
+
 # Draws.
 [endpoints.get-ongoing-draw]
 route = "/v1/draws/ongoing"
 method = "get"
 headers = ["Authorization"]
 
-# Internal
+# Internal.
 [endpoints.create-draw]
 route = "/v1/draws"
 method = "post"
