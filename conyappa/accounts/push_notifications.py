@@ -1,5 +1,5 @@
-from logging import getLogger
 import threading as th
+from logging import getLogger
 
 from exponent_server_sdk import (
     DeviceNotRegisteredError,
