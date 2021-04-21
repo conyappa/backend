@@ -76,6 +76,9 @@ class User(BaseModel, AbstractUser):
     def hard_delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
 
+    def send_push_notification(self, body, data=None):
+        self.devices.all().send_push_notifications(body=body, data=data)
+
     @property
     def current_tickets(self):
         # This method assumes there is an ongoing draw.
