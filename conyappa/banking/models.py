@@ -2,7 +2,7 @@ from logging import getLogger
 
 from django.contrib.auth import get_user_model
 from django.db import models, transaction
-
+from utils.numbers import format_pesos
 from main.base import BaseModel
 
 logger = getLogger(__name__)
@@ -87,4 +87,5 @@ class Movement(BaseModel):
         return sender_account.get("holder_name")
 
     def __str__(self):
-        return f"{self.name} | ${self.amount}"
+        formatted_amount = format_pesos(self.amount)
+        return f"{self.name} | {formatted_amount}"
