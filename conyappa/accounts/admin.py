@@ -11,7 +11,7 @@ from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFil
 from banking.models import Movement
 from lottery.models import Ticket
 
-from .models import User
+from .models import Device, User
 
 
 class TicketInline(admin.TabularInline):
@@ -22,6 +22,20 @@ class TicketInline(admin.TabularInline):
     extra = 0
 
     def has_view_or_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class DeviceInline(admin.TabularInline):
+    model = Device
+
+    readonly_fields = ["os_id", "expo_push_token"]
+    fields = [tuple(readonly_fields)]
+    extra = 0
+
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):
@@ -67,7 +81,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
     ]
 
     list_display = [
-        "email",
+        "__str__",
         "full_name",
         "formatted_rut",
         "balance",
@@ -133,7 +147,7 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
 
     check_digit = None
 
-    inlines = [TicketInline, MovementInline]
+    inlines = [TicketInline, DeviceInline, MovementInline]
 
     def has_add_permission(self, request):
         return super().has_add_permission(request) and settings.DEBUG
@@ -169,3 +183,42 @@ class UserAdmin(NumericFilterModelAdmin, BaseUserAdmin):
         for user in queryset:
             user.withdraw(amount)
             self.log_change(request, user, message=f"Withdrawed {amount}.")
+
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    search_fields = [
+        "user__email",
+        "user__first_name",
+        "user__last_name",
+        "user__rut",
+    ]
+
+    list_display = [
+        "user",
+        "os",
+        "os_id",
+        "expo_push_token",
+        "created_at",
+        "updated_at",
+    ]
+
+    list_filter = [
+        "created_at",
+        "updated_at",
+    ]
+
+    readonly_fields = [
+        "user",
+        "os",
+        "os_id",
+        "expo_push_token",
+    ]
+
+    fields = readonly_fields
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
