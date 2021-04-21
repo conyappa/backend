@@ -15,7 +15,7 @@ def generate_initial_extra_tickets_ttl():
 
 
 class UserQuerySet(models.QuerySet):
-    def send_push_notifications(self, body, data=None):
+    def send_push_notification(self, body, data=None):
         for user in self:
             user.send_push_notification(body=body, data=data)
 
@@ -84,7 +84,7 @@ class User(BaseModel, AbstractUser):
         super().delete(*args, **kwargs)
 
     def send_push_notification(self, body, data=None):
-        self.devices.all().send_push_notifications(body=body, data=data)
+        self.devices.all().send_push_notification(body=body, data=data)
 
     @property
     def current_tickets(self):
@@ -202,7 +202,7 @@ class User(BaseModel, AbstractUser):
 
 
 class DeviceQuerySet(models.QuerySet):
-    def send_push_notifications(self, body, data=None):
+    def send_push_notification(self, body, data=None):
         interface = PushNotificationsInterface()
 
         for device in self:
