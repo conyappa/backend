@@ -1,4 +1,5 @@
 from logging import getLogger
+import threading as th
 
 from exponent_server_sdk import (
     DeviceNotRegisteredError,
@@ -22,7 +23,7 @@ class Interface(metaclass=Singleton):
         message = PushMessage(to=token, body=body, data=data)
         return self.client.publish(message)
 
-    def send(self, device, body, data=None):
+    def _send(self, device, body, data):
         try:
             response = self._publish_message(self, token=device.expo_push_token, body=body, data=data)
         except Exception as e:
@@ -34,3 +35,11 @@ class Interface(metaclass=Singleton):
             logger.warning(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
         except PushTicketError as e:
             logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
+
+    def send(self, device, body, data=None, async_=True):
+        if async_:
+            thread = th.Thread(target=self._send, kwargs={"device": device, "body": body, "data": data})
+            thread.start()
+
+        else:
+            self._send(device=device, body=body, data=data)
