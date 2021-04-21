@@ -7,6 +7,7 @@ from django.db.models import F
 
 from lottery.models import Draw, get_number_of_tickets
 from main.base import BaseModel, ExtendedQ
+from .push_notifications import Interface as PushNotificationsInterface
 
 
 def generate_initial_extra_tickets_ttl():
@@ -190,6 +191,19 @@ class User(BaseModel, AbstractUser):
         return self.email if self.is_registered else "<anonymous>"
 
 
+class DeviceQuerySet(models.Manager):
+    def send_push_notifications(self, body, data=None):
+        interface = PushNotificationsInterface()
+
+        for device in self:
+            interface.send(device=device, body=body, data=data)
+
+
+class DeviceManager(models.Manager):
+    def get_queryset(self):
+        return DeviceQuerySet(self.model, using=self._db)
+
+
 class Device(BaseModel):
     class Meta:
         constraints = [
@@ -207,6 +221,8 @@ class Device(BaseModel):
     ios_id = models.CharField(unique=True, null=True, max_length=255, verbose_name="iOS ID")
 
     expo_push_token = models.CharField(unique=True, null=True, max_length=255, verbose_name="Expo push token")
+
+    objects = DeviceManager()
 
     @property
     def os(self):
