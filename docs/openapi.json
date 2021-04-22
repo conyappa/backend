@@ -137,6 +137,11 @@
         "tags":[
           "Users"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters":[
           {
             "in": "path",
@@ -195,6 +200,11 @@
         "summary": "Update a user",
         "tags":[
           "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters":[
           {
@@ -268,6 +278,11 @@
           "Users",
           "Devices"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters":[
           {
             "in": "path",
@@ -340,6 +355,11 @@
         "tags":[
           "Users",
           "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters":[
           {
@@ -479,6 +499,11 @@
         "tags":[
           "Draws"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -519,6 +544,11 @@
         "description": "Returns this week’s draw (there is only one).",
         "tags":[
           "Draws"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "responses": {
           "200": {
@@ -594,7 +624,7 @@
         }
       }
     },
-    "movements/fetch": {
+    "/movements/fetch": {
       "post": {
         "summary": "Fetch bank movements using Fintoc",
         "tags":[
@@ -627,7 +657,7 @@
         }
       }
     },
-    "": {
+    "/": {
       "get": {
         "summary": "Health check",
         "tags":[
