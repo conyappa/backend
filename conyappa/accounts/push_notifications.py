@@ -25,7 +25,7 @@ class Interface(metaclass=Singleton):
 
     def _send(self, device, body, data):
         try:
-            response = self._publish_message(self, token=device.expo_push_token, body=body, data=data)
+            response = self._publish_message(token=device.expo_push_token, body=body, data=data)
         except Exception as e:
             logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
 
