@@ -37,9 +37,11 @@ class Interface(metaclass=Singleton):
             logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
 
     def send(self, device, body, data=None, async_=True):
+        kwargs = {"device": device, "body": body, "data": data}
+
         if async_:
-            thread = th.Thread(target=self._send, kwargs={"device": device, "body": body, "data": data})
+            thread = th.Thread(target=self._send, kwargs=kwargs)
             thread.start()
 
         else:
-            self._send(device=device, body=body, data=data)
+            self._send(**kwargs)
