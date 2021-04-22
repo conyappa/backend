@@ -11,6 +11,10 @@ def render_redoc(request):
     return render(request, "docs/redoc.html")
 
 
+def render_swagger_ui(request):
+    return render(request, "docs/swagger_ui.html")
+
+
 def json_loader(filename, subfix):
     def view(request, *args, **kwargs):
         prefix = kwargs.get("prefix")
