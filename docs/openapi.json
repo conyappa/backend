@@ -451,42 +451,34 @@
         "tags":[
           "Internal comunication"
         ],
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "ref": "./schemas/draw.json"
-            }
-          }
-        }
-      },
-      "responses": {
-        "201": {
-          "description": "Created",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "./schemas/draw.json"
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
+                }
               }
             }
-          }
-        },
-        "401": {
-          "description": "Unauthorized",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/responses/default_401"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
               }
             }
-          }
-        },
-        "403": {
-          "description": "Forbidden",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/responses/default_403"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
               }
             }
           }
