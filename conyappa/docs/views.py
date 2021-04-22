@@ -7,8 +7,12 @@ from django.shortcuts import render
 from .responses import AttachmentJsonResponse
 
 
-def render_docs(request):
+def render_redoc(request):
     return render(request, "docs/redoc.html")
+
+
+def render_swagger_ui(request):
+    return render(request, "docs/swagger_ui.html")
 
 
 def json_loader(filename, subfix):

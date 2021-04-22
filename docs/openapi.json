@@ -137,6 +137,11 @@
         "tags":[
           "Users"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters":[
           {
             "in": "path",
@@ -196,7 +201,12 @@
         "tags":[
           "Users"
         ],
-        "parameters":[
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
           {
             "in": "path",
             "name": "user_id",
@@ -207,6 +217,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/user.json"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -268,6 +288,11 @@
           "Users",
           "Devices"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters":[
           {
             "in": "path",
@@ -279,6 +304,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/device.json"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK (updated if a device with the same OS ID already exists)",
@@ -333,13 +368,18 @@
         }
       }
     },
-    "/v1/user/{user_id}/tickets": {
+    "/v1/users/{user_id}/tickets": {
       "get": {
         "summary": "Obtain a user’s tickets",
         "description": "Only returns the tickets of the ongoing draw.",
         "tags":[
           "Users",
           "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters":[
           {
@@ -431,42 +471,39 @@
         "tags":[
           "Internal comunication"
         ],
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "ref": "./schemas/draw.json"
-            }
+        "security": [
+          {
+            "internalKey": []
           }
-        }
-      },
-      "responses": {
-        "201": {
-          "description": "Created",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "./schemas/draw.json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/draw.json"
+                }
               }
             }
-          }
-        },
-        "401": {
-          "description": "Unauthorized",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/responses/default_401"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
               }
             }
-          }
-        },
-        "403": {
-          "description": "Forbidden",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/responses/default_403"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
               }
             }
           }
@@ -478,6 +515,11 @@
         "summary": "Retrieve the draws’ metadata",
         "tags":[
           "Draws"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "responses": {
           "200": {
@@ -520,6 +562,11 @@
         "tags":[
           "Draws"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -560,6 +607,11 @@
         "tags":[
           "Internal comunication"
         ],
+        "security": [
+          {
+            "internalKey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -594,11 +646,16 @@
         }
       }
     },
-    "movements/fetch": {
+    "/v1/movements/fetch": {
       "post": {
         "summary": "Fetch bank movements using Fintoc",
         "tags":[
           "Internal comunication"
+        ],
+        "security": [
+          {
+            "internalKey": []
+          }
         ],
         "responses": {
           "204": {
@@ -627,7 +684,7 @@
         }
       }
     },
-    "": {
+    "/": {
       "get": {
         "summary": "Health check",
         "tags":[
@@ -679,6 +736,11 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      },
+      "internalKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Internal-Key"
       }
     },
     "responses": {

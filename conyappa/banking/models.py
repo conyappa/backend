@@ -12,7 +12,6 @@ logger = getLogger(__name__)
 class Movement(BaseModel):
     class Meta:
         ordering = ["-fintoc_post_date"]
-        indexes = [models.Index(fields=["fintoc_id"])]
 
     fintoc_data = models.JSONField(verbose_name="Fintoc object")
     fintoc_id = models.CharField(unique=True, verbose_name="Fintoc ID", max_length=32)

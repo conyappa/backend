@@ -49,9 +49,6 @@ class UserManager(BaseUserManager):
 
 
 class User(BaseModel, AbstractUser):
-    class Meta:
-        indexes = [models.Index(fields=["rut"])]
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
