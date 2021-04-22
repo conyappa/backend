@@ -196,7 +196,7 @@
         "tags":[
           "Users"
         ],
-        "parameters":[
+        "parameters": [
           {
             "in": "path",
             "name": "user_id",
@@ -207,6 +207,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/user.json"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -279,6 +289,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/device.json"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK (updated if a device with the same OS ID already exists)",
