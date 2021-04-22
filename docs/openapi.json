@@ -348,7 +348,7 @@
         }
       }
     },
-    "/v1/user/{user_id}/tickets": {
+    "/v1/users/{user_id}/tickets": {
       "get": {
         "summary": "Obtain a user’s tickets",
         "description": "Only returns the tickets of the ongoing draw.",
@@ -626,7 +626,7 @@
         }
       }
     },
-    "/movements/fetch": {
+    "/v1/movements/fetch": {
       "post": {
         "summary": "Fetch bank movements using Fintoc",
         "tags":[
