@@ -7,15 +7,25 @@ from django.db.models import F
 
 from lottery.models import Draw, get_number_of_tickets
 from main.base import BaseModel, ExtendedQ
+from utils.numbers import format_integer, format_pesos
+
+from .push_notifications import Interface as PushNotificationsInterface
 
 
 def generate_initial_extra_tickets_ttl():
     return settings.INITIAL_EXTRA_TICKETS_TTL
 
 
+class UserQuerySet(models.QuerySet):
+    def send_push_notification(self, body, data=None):
+        for user in self:
+            user.send_push_notification(body=body, data=data)
+
+
 class UserManager(BaseUserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
+        qs = UserQuerySet(self.model, using=self._db)
+        return qs.filter(is_active=True)
 
     def everything(self):
         return super().get_queryset()
@@ -72,6 +82,9 @@ class User(BaseModel, AbstractUser):
     def hard_delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
 
+    def send_push_notification(self, body, data=None):
+        self.devices.all().send_push_notification(body=body, data=data)
+
     @property
     def current_tickets(self):
         # This method assumes there is an ongoing draw.
@@ -111,33 +124,39 @@ class User(BaseModel, AbstractUser):
     # OPERATIONS #
     ##############
 
-    @transaction.atomic
     def deposit(self, amount):
-        self.balance = F("balance") + amount
-        self.save()
+        with transaction.atomic():
+            self.balance = F("balance") + amount
+            self.save()
 
-        draw = Draw.objects.ongoing()
-        delta_tickets = get_number_of_tickets(amount)
-        draw.add_tickets(user=self, n=delta_tickets)
+            draw = Draw.objects.ongoing()
+            delta_tickets = get_number_of_tickets(amount)
+            draw.add_tickets(user=self, n=delta_tickets)
 
-    @transaction.atomic
+        formatted_amount = format_pesos(amount)
+        self.send_push_notification(body=f"Se ha efectuado tu depósito de {formatted_amount}.")
+
     def withdraw(self, amount):
-        # Avoid race conditions by locking the tickets until the end of the transaction.
-        # This means that the selected tickets will only be modified (or deleted)
-        # by a single instance of the back end at a time.
-        # The transaction will proceed unless these tickets were already locked by another instance.
-        # In that case, the transaction will block until they are released.
-        locked_tickets = self.current_tickets.select_for_update()
+        with transaction.atomic():
+            # Avoid race conditions by locking the tickets until the end of the transaction.
+            # This means that the selected tickets will only be modified (or deleted)
+            # by a single instance of the back end at a time.
+            # The transaction will proceed unless these tickets were already locked by another instance.
+            # In that case, the transaction will block until they are released.
+            locked_tickets = self.current_tickets.select_for_update()
 
-        self.balance = F("balance") - amount
-        self.save()
+            self.balance = F("balance") - amount
+            self.save()
 
-        ordered_tickets = locked_tickets.order_by("number_of_matches")
-        delta_tickets = get_number_of_tickets(amount)
-        pks_to_remove = ordered_tickets[:delta_tickets].values_list("pk")
+            ordered_tickets = locked_tickets.order_by("number_of_matches")
+            delta_tickets = get_number_of_tickets(amount)
+            pks_to_remove = ordered_tickets[:delta_tickets].values_list("pk")
 
-        tickets_to_remove = locked_tickets.filter(pk__in=pks_to_remove)
-        tickets_to_remove.delete()
+            tickets_to_remove = locked_tickets.filter(pk__in=pks_to_remove)
+            tickets_to_remove.delete()
+
+        formatted_amount = format_pesos(amount)
+        self.send_push_notification(body=f"Se ha efectuado tu retiro de {formatted_amount}.")
 
     def consume_extra_tickets(self):
         self.extra_tickets_ttl = [(x - 1) for x in self.extra_tickets_ttl]
@@ -179,12 +198,25 @@ class User(BaseModel, AbstractUser):
         if (self.rut is None) or (self.check_digit is None):
             return
 
-        rut_w_thousands_sep = "{:,}".format(self.rut).replace(",", ".")
+        formatted_rut_integer = format_integer(self.rut)
         formatted_check_digit = "K" if (self.check_digit == 10) else self.check_digit
-        return f"{rut_w_thousands_sep}-{formatted_check_digit}"
+        return f"{formatted_rut_integer}-{formatted_check_digit}"
 
     def __str__(self):
         return self.email if self.is_registered else "<anonymous>"
+
+
+class DeviceQuerySet(models.QuerySet):
+    def send_push_notification(self, body, data=None):
+        interface = PushNotificationsInterface()
+
+        for device in self:
+            interface.send(device=device, body=body, data=data)
+
+
+class DeviceManager(models.Manager):
+    def get_queryset(self):
+        return DeviceQuerySet(self.model, using=self._db)
 
 
 class Device(BaseModel):
@@ -205,6 +237,8 @@ class Device(BaseModel):
 
     expo_push_token = models.CharField(unique=True, null=True, max_length=255, verbose_name="Expo push token")
 
+    objects = DeviceManager()
+
     @property
     def os(self):
         return (self.android_id and "Android") or (self.ios_id and "iOS")
@@ -214,4 +248,4 @@ class Device(BaseModel):
         return self.android_id or self.ios_id
 
     def __str__(self):
-        return f"{self.user or 'No one'}’s {self.os}"
+        return f"{self.user or 'Some one'}’s {self.os}"

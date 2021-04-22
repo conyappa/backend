@@ -222,6 +222,18 @@ python-jose = ["python-jose (==3.0.0)"]
 test = ["cryptography", "pytest-cov", "pytest-django", "pytest-xdist", "pytest", "tox"]
 
 [[package]]
+name = "exponent-server-sdk"
+version = "2.0.0"
+description = "Expo Server SDK for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = "*"
+six = "*"
+
+[[package]]
 name = "fintoc"
 version = "0.3.1"
 description = "The official Python client for the Fintoc API."
@@ -753,7 +765,7 @@ tomlkit = ">=0.7.0,<0.8.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.9"
-content-hash = "c5d8313ed531c1e5a21edafb8076286dd24106abbe0871f2b5c97ba3eb086ab0"
+content-hash = "61bf14d4aff9e77af62bd9de66c9c62710bc9517a4a181765a6b2664ddc01dd9"
 
 [metadata.files]
 appdirs = [
@@ -832,6 +844,10 @@ djangorestframework = [
 djangorestframework-simplejwt = [
     {file = "djangorestframework_simplejwt-4.6.0-py3-none-any.whl", hash = "sha256:bd587700b6ab34a6c6b12d426cce4fa580d57ef1952ad4ba3b79707784619ed3"},
     {file = "djangorestframework_simplejwt-4.6.0.tar.gz", hash = "sha256:7adc913ba0d2ed7f46e0b9bf6e86f9bd9248f1c4201722b732b8213e0ea66f9f"},
+]
+exponent-server-sdk = [
+    {file = "exponent_server_sdk-2.0.0-py3-none-any.whl", hash = "sha256:99428eba4e964a1bf019a53eeab09d7d8a1775ec975f607336419ef23f029cc1"},
+    {file = "exponent_server_sdk-2.0.0.tar.gz", hash = "sha256:2e8d0818d568e88f6e4f583c3d0ba21e424f1d279a94c41373b6439049e96186"},
 ]
 fintoc = [
     {file = "fintoc-0.3.1-py3-none-any.whl", hash = "sha256:d7e112a344dc7781787bbeb1383a4426c06ab61fa7e27c7935063b7d095119ce"},

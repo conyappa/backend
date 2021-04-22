@@ -1,3 +1,5 @@
+import threading as th
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -9,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
+from accounts.models import Device
 from main.permissions import InternalCommunication, ListOwnership, ReadOnly
 
 from .models import Draw
@@ -38,7 +41,15 @@ def choose_result(request):
     serializer_context = {"request": request}
     serializer = DrawSerializer(instance=draw, context=serializer_context)
 
-    return Response(data=serializer.data, status=HTTP_200_OK)
+    response = Response(data=serializer.data, status=HTTP_200_OK)
+
+    thread = th.Thread(
+        target=Device.objects.all().send_push_notification,
+        kwargs={"body": "Ya está disponible el número de hoy."},
+    )
+    thread.start()
+
+    return response
 
 
 class GenericDrawView(GenericAPIView):
@@ -50,7 +61,15 @@ class DrawListView(CreateModelMixin, GenericDrawView):
     permission_classes = [InternalCommunication]
 
     def post(self, request):
-        return self.create(request)
+        response = self.create(request)
+
+        thread = th.Thread(
+            target=Device.objects.all().send_push_notification,
+            kwargs={"body": "Se han generado los boletos del sorteo."},
+        )
+        thread.start()
+
+        return response
 
 
 class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
