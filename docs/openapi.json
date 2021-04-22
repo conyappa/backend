@@ -451,6 +451,11 @@
         "tags":[
           "Internal comunication"
         ],
+        "security": [
+          {
+            "internalKey": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created",
@@ -582,6 +587,11 @@
         "tags":[
           "Internal comunication"
         ],
+        "security": [
+          {
+            "internalKey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -621,6 +631,11 @@
         "summary": "Fetch bank movements using Fintoc",
         "tags":[
           "Internal comunication"
+        ],
+        "security": [
+          {
+            "internalKey": []
+          }
         ],
         "responses": {
           "204": {
@@ -701,6 +716,11 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      },
+      "internalKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Internal-Key"
       }
     },
     "responses": {
