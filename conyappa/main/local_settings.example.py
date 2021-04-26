@@ -53,13 +53,6 @@ PLATANUS = "192.168.xxx.yyy"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", HOME, PLATANUS]
 
 
-##############
-# PARAMETERS #
-##############
-
-MAX_TICKETS = float("inf")
-
-
 ###########
 # SECRETS #
 ###########
@@ -78,5 +71,7 @@ AWS_SECRET_ACCESS_KEY = "KnZB+StfliRAvr7TX283URDgprv0gZ+IHx8x6JW2"
 AWS_REGION_NAME = "example-region"
 AWS_ACCOUNT_ID = "0123456789"
 
+AWS_CHOOSE_RESULT_LAMBDA = "conyappa-stage-functionName"
 AWS_CREATE_DRAW_LAMBDA = "conyappa-stage-functionName"
+AWS_FETCH_MOVEMENTS_LAMBDA = "conyappa-stage-functionName"
 AWS_RANDOM_SEED_LAMBDA = "conyappa-stage-functionName"

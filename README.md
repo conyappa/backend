@@ -36,7 +36,7 @@ make localsettings
 Build the Docker images:
 
 ```bash
-docker-compose build --parallel
+make build
 ```
 
 ---
@@ -89,7 +89,7 @@ If new dependencies are added, update your virtual environment and re-build the 
 
 ```bash
 make createvenv
-docker-compose build --parallel
+make build
 ```
 
 ---
@@ -97,7 +97,7 @@ docker-compose build --parallel
 If you are adding any files or folders that should be considered by Docker, unignore them at the `.dockerignore`. Then, re-build the images:
 
 ```bash
-docker-compose build --parallel
+make build
 ```
 
 ---
@@ -107,3 +107,7 @@ Format your code with [Black](https://pypi.org/project/black/) and [iSort](https
 ```bash
 make format
 ```
+
+## Interacting with the API with Zum
+
+There is an integrated `zum.toml` file that allows the developer to interact with the API using Zum. For now, there is a version collision of `httpx` between `zum` and `fintoc`, so `zum` isn't installed on the `pyproject.toml` as a _dev-dependency_, and you will probably have to empty your `.venv` to be able to install `zum`. To use `zum` with the API, install it using `pip` and run the CLI with the `zum` CLI interface. The `zum.toml` includes all the possible commands that can be used. To learn more about how to expand that file and how to read it to use the CLI, head to the [official documentation](https://zum.daleal.dev), or contact `@daleal`.

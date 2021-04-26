@@ -12,7 +12,7 @@
       },
       "in_results": {
         "type": "boolean",
-        "description": "Whether the draw’s results contain this value"
+        "description": "whether the draw’s results contain this value"
       }
     }
   },

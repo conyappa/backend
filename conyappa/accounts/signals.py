@@ -8,6 +8,6 @@ from .models import User
 
 @receiver(signal=signals.post_save, sender=User)
 def user_join_current_draw(sender, instance, created, *args, **kwargs):
-    if created:
-        if Draw.objects.exists():
-            Draw.objects.ongoing().include_new_user(user=instance)
+    if created and Draw.objects.exists():
+        draw = Draw.objects.ongoing()
+        draw.add_tickets(user=instance, n=instance.number_of_tickets)

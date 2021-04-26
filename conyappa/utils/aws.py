@@ -29,6 +29,12 @@ def get_arn(service_name, resource_name, omit_region_name=False, omit_account_id
     return base_arn + path
 
 
+def get_url(service_name, resource_name):
+    base_url = f"https://{settings.AWS_REGION_NAME}.console.{settings.AWS_PARTITION}.amazon.com"
+
+    return f"{base_url}/{service_name}#{resource_name}"
+
+
 def access_json(obj, key):
     data = obj[key]
 

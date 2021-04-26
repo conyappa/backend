@@ -184,7 +184,6 @@ LOGGING = {
 # PARAMETERS #
 ##############
 
-MAX_TICKETS = int(os.environ.get("MAX_TICKETS", "4"))
 TICKET_COST = int(os.environ.get("TICKET_COST", "5000"))
 INITIAL_EXTRA_TICKETS_TTL = list(map(int, os.environ.get("INITIAL_EXTRA_TICKETS_TTL", "1").split(" ")))
 PICK_RANGE = tuple(range(int(os.environ.get("MIN_PICK", "1")), int(os.environ.get("MAX_PICK", "30")) + 1))
@@ -222,7 +221,9 @@ AWS_PARTITION = "aws"
 AWS_REGION_NAME = os.environ.get("AWS_REGION_NAME")
 AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
+AWS_CHOOSE_RESULT_LAMBDA = os.environ.get("AWS_CHOOSE_RESULT_LAMBDA")
 AWS_CREATE_DRAW_LAMBDA = os.environ.get("AWS_CREATE_DRAW_LAMBDA")
+AWS_FETCH_MOVEMENTS_LAMBDA = os.environ.get("AWS_FETCH_MOVEMENTS_LAMBDA")
 AWS_RANDOM_SEED_LAMBDA = os.environ.get("AWS_RANDOM_SEED_LAMBDA")
 
 

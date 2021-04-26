@@ -1,6 +1,7 @@
 from django.db import models, transaction
 
 from main.base import BaseModel
+from utils import aws
 
 from .eventbridge import Interface as EventBridge
 from .utils import SCHEDULE_DESCRIPTORS, parse_schedule
@@ -29,6 +30,7 @@ class Rule(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__original_name = self.name
 
         if self.name:
             self.init_remote()
@@ -38,8 +40,12 @@ class Rule(BaseModel):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        if self.__original_name and (self.name != self.__original_name):
+            raise NotImplementedError("Please don’t change the rule’s name.")
+
         super().save(*args, **kwargs)
         self.save_remote()
+        self.__original_name = self.name
 
     def delete_remote(self):
         EventBridge().delete(self)
@@ -57,6 +63,10 @@ class Rule(BaseModel):
     def eventbridge_name(self):
         # Each rule name (and target ID) must be unique.
         return f"{self.name}_{self.pk}"
+
+    @property
+    def eventbridge_url(self):
+        return aws.get_url(service_name="events", resource_name=f"rules/{self.eventbridge_name}")
 
     @property
     def schedule(self):

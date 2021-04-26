@@ -1,3 +1,6 @@
+import threading as th
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
@@ -8,11 +11,25 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from main.permissions import InternalCommunication, Ownership, ReadOnly
+from accounts.models import Device
+from main.permissions import InternalCommunication, ListOwnership, ReadOnly
 
 from .models import Draw
 from .pagination import TicketPagination
 from .serializers import DrawSerializer, TicketSerializer
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def metadata(request):
+    prizes = {str(i): value for (i, value) in enumerate(settings.PRIZES)}
+
+    return Response(
+        data={
+            "prizes": prizes,
+        },
+        status=HTTP_200_OK,
+    )
 
 
 @api_view(["POST"])
@@ -24,7 +41,15 @@ def choose_result(request):
     serializer_context = {"request": request}
     serializer = DrawSerializer(instance=draw, context=serializer_context)
 
-    return Response(data=serializer.data, status=HTTP_200_OK)
+    response = Response(data=serializer.data, status=HTTP_200_OK)
+
+    thread = th.Thread(
+        target=Device.objects.all().send_push_notification,
+        kwargs={"body": "Ya está disponible el número de hoy."},
+    )
+    thread.start()
+
+    return response
 
 
 class GenericDrawView(GenericAPIView):
@@ -36,7 +61,15 @@ class DrawListView(CreateModelMixin, GenericDrawView):
     permission_classes = [InternalCommunication]
 
     def post(self, request):
-        return self.create(request)
+        response = self.create(request)
+
+        thread = th.Thread(
+            target=Device.objects.all().send_push_notification,
+            kwargs={"body": "Se han generado los boletos del sorteo."},
+        )
+        thread.start()
+
+        return response
 
 
 class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
@@ -57,15 +90,17 @@ class GenericTicketView(GenericAPIView):
 class UserTicketsView(ListModelMixin, GenericTicketView):
     # Changing tickets is a feature we would like to have in the near future.
     # For now, and for security reasons, make this viewset read-only.
-    permission_classes = [IsAuthenticated & Ownership & ReadOnly]
+    permission_classes = [IsAuthenticated & ListOwnership & ReadOnly]
+
+    def initial(self, request, user_id):
+        User = get_user_model()
+        self.user = get_object_or_404(User.objects, pk=user_id)
+        self.owners = {self.user}
+
+        return super().initial(request, user_id)
 
     def get_queryset(self):
-        user_id = self.kwargs["user_id"]
-
-        User = get_user_model()
-        user = get_object_or_404(User.objects, pk=user_id)
-
-        return user.current_tickets.order_by("-number_of_matches")
+        return self.user.current_tickets.order_by("-number_of_matches")
 
     def get(self, request, user_id):
         return self.list(request)
