@@ -7,7 +7,6 @@ from .models import Movement
 @admin.register(Movement)
 class MovementAdmin(admin.ModelAdmin):
     search_fields = [
-        "name",
         "raw_rut",
         "user__email",
         "user__first_name",
