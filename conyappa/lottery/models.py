@@ -146,9 +146,7 @@ class TicketQuerySet(RelatedQuerySetMixin, models.QuerySet):
             else 1
         )
 
-        return sum(
-            map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drill_down_count().items())
-        )
+        return sum(map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drill_down_count().items()))
 
 
 class TicketManager(models.Manager):
