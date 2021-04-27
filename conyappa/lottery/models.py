@@ -4,10 +4,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
-from django.db.models import F, Func
+from django.db.models import Count, F, Func
 
 from main.base import BaseModel
 from utils import random, sql
+from utils.query import RelatedQuerySetMixin
 
 
 def generate_result_pool():
@@ -89,17 +90,16 @@ class Draw(BaseModel):
 
     @transaction.atomic
     def conclude(self):
-        for ticket in self.tickets.all():
-            user = ticket.user
-            prize = ticket.prize
-
+        for user in self.users.all():
+            tickets = user.current_tickets
+            prize = tickets.prize()
             user.award_prize(prize)
 
     def __str__(self):
         return str(self.start_date)
 
 
-class TicketQuerySet(models.QuerySet):
+class TicketQuerySet(RelatedQuerySetMixin, models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -119,15 +119,51 @@ class TicketQuerySet(models.QuerySet):
 
         return self.annotate(number_of_matches=function_call)
 
+    def drill_down_count(self):
+        ticket_count = {i: 0 for i in range(8)}
+        number_of_matches = self.values("number_of_matches")
+
+        ticket_count.update(
+            {el["number_of_matches"]: el["count"] for el in number_of_matches.annotate(count=Count("pk"))}
+        )
+
+        return ticket_count
+
+    def prize(self):
+        is_related_to_draw = self.is_related_to_instance and isinstance(self.instance, Draw)
+
+        if not is_related_to_draw:
+            raise AttributeError("Ensure the QuerySet is related to a Draw.")
+
+        draw = self.instance
+        total_drill_down_count = draw.tickets.all().drill_down_count()
+
+        base_prize = lambda number_of_matches, count: settings.PRIZES[number_of_matches] * count
+
+        denominator = (
+            lambda number_of_matches: total_drill_down_count[number_of_matches]
+            if (settings.PRIZE_IS_SHARED[number_of_matches] and total_drill_down_count[number_of_matches])
+            else 1
+        )
+
+        return sum(
+            map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drill_down_count().items())
+        )
+
 
 class TicketManager(models.Manager):
     def get_queryset(self):
-        qs = TicketQuerySet(self.model, using=self._db)
+        qs_extra_kwargs = {}
+
+        if hasattr(self, "instance"):
+            qs_extra_kwargs["instance"] = self.instance
+
+        qs = TicketQuerySet(self.model, using=self._db, **qs_extra_kwargs)
         return qs.annotate_matches().annotate_number_of_matches()
 
     def ongoing(self):
         draw = Draw.objects.ongoing()
-        return self.filter(draw=draw)
+        return draw.tickets(pk__in=self.values_list("pk"))
 
 
 class Ticket(BaseModel):
@@ -148,9 +184,16 @@ class Ticket(BaseModel):
 
     objects = TicketManager()
 
-    @property
-    def prize(self):
-        return settings.PRIZES[self.number_of_matches]
+    def get_prize(self, reference_draw):
+        total_counts_per_number_of_matches = reference_draw.tickets.all().counts_per_number_of_matches
+
+        number_of_matches = self.number_of_matches
+        value = settings.PRIZES[number_of_matches]
+
+        if settings.PRIZE_IS_SHARED[number_of_matches]:
+            value /= total_counts_per_number_of_matches[number_of_matches]
+
+        return value
 
     def __str__(self):
         return str(self.picks)
