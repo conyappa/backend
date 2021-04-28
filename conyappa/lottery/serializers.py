@@ -58,5 +58,5 @@ class TicketSerializer(ModelSerializer):
             "picks": {"read_only": True},
         }
 
-    matches = JSONField()
-    number_of_matches = IntegerField()
+    matches = JSONField(read_only=True)
+    number_of_matches = IntegerField(read_only=True)
