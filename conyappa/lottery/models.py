@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
 from django.db.models import Count, F, Func
+from django.db.models.functions import Cast
 
 from main.base import BaseModel
 from utils import random, sql
@@ -117,9 +118,13 @@ class TicketQuerySet(RelatedQuerySetMixin, models.QuerySet):
         expressions = [F("matches")]
         function_call = Func(*expressions, function="cardinality", arity=1)
 
-        return self.annotate(number_of_matches=function_call)
+        return self.annotate(number_of_matches=Cast(function_call, output_field=models.IntegerField()))
 
-    def drill_down_count(self):
+    def drilled_down_count(self):
+        """
+        Returns a dictionary with the ticket count per number of matches.
+        """
+
         ticket_count = {i: 0 for i in range(8)}
         number_of_matches = self.values("number_of_matches")
 
@@ -130,23 +135,28 @@ class TicketQuerySet(RelatedQuerySetMixin, models.QuerySet):
         return ticket_count
 
     def prize(self):
+        """
+        Computes the prize of many tickets in an aggregated way, which, at a large scale,
+        is much more efficient than the naive way: sum(ticket.prize for ticket in self).
+        """
+
         is_related_to_draw = self.is_related_to_instance and isinstance(self.instance, Draw)
 
         if not is_related_to_draw:
             raise AttributeError("Ensure the QuerySet is related to a Draw.")
 
         draw = self.instance
-        total_drill_down_count = draw.tickets.all().drill_down_count()
+        total_drilled_down_count = draw.tickets.all().drilled_down_count()
 
         base_prize = lambda number_of_matches, count: settings.PRIZES[number_of_matches] * count
 
         denominator = (
-            lambda number_of_matches: total_drill_down_count[number_of_matches]
-            if (settings.PRIZE_IS_SHARED[number_of_matches] and total_drill_down_count[number_of_matches])
+            lambda number_of_matches: total_drilled_down_count[number_of_matches]
+            if (settings.PRIZE_IS_SHARED[number_of_matches] and total_drilled_down_count[number_of_matches])
             else 1
         )
 
-        return sum(map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drill_down_count().items()))
+        return sum(map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drilled_down_count().items()))
 
 
 class TicketManager(models.Manager):
@@ -161,7 +171,7 @@ class TicketManager(models.Manager):
 
     def ongoing(self):
         draw = Draw.objects.ongoing()
-        return draw.tickets(pk__in=self.values_list("pk"))
+        return draw.tickets.filter(pk__in=self.values_list("pk"))
 
 
 class Ticket(BaseModel):
@@ -182,14 +192,15 @@ class Ticket(BaseModel):
 
     objects = TicketManager()
 
-    def get_prize(self, reference_draw):
-        total_counts_per_number_of_matches = reference_draw.tickets.all().counts_per_number_of_matches
-
+    @property
+    def prize(self):
         number_of_matches = self.number_of_matches
         value = settings.PRIZES[number_of_matches]
 
         if settings.PRIZE_IS_SHARED[number_of_matches]:
-            value /= total_counts_per_number_of_matches[number_of_matches]
+            tickets = self.draw.tickets
+            tickets_with_same_number_of_matches = tickets.filter(number_of_matches=number_of_matches)
+            value /= tickets_with_same_number_of_matches.count()
 
         return value
 
