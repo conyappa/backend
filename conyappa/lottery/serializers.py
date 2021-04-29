@@ -1,13 +1,4 @@
-from django.conf import settings
-
-from rest_framework.serializers import (
-    BooleanField,
-    Field,
-    IntegerField,
-    JSONField,
-    ListSerializer,
-    ModelSerializer,
-)
+from rest_framework.serializers import Field, IntegerField, ModelSerializer
 
 from .models import Draw, Ticket
 
