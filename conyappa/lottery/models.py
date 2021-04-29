@@ -89,10 +89,11 @@ class Draw(BaseModel):
 
     @transaction.atomic
     def conclude(self):
+        User = get_user_model()
         drilled_down_count = self.tickets.all().drilled_down_count()
 
-        for user in self.users.all():
-            tickets = user.current_tickets
+        for user in User.objects.all():
+            tickets = user.tickets.filter(draw=self)
             prize_after_sharing = tickets.prize(total_drilled_down_count=drilled_down_count)
             user.award_prize(prize_after_sharing)
 
