@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainSlidingView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.permissions import ListOwnership, ObjectOwnership
 
@@ -11,7 +11,7 @@ from .models import Device, User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
 
 
-class TokenLoginView(TokenObtainSlidingView):
+class TokenLoginView(TokenObtainPairView):
     serializer_class = TokenLoginSerializer
 
 
