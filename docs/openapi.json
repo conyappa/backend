@@ -118,6 +118,25 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refresh": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["This field is required."]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -127,9 +146,14 @@
                   "properties": {
                     "detail": {
                       "type": "string",
-                      "enum":[
-                        "No active account found with the given credentials"
+                      "enum": [
+                        "Token is invalid or expired",
+                        "Token is blacklisted"
                       ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": ["token_not_valid"]
                     }
                   }
                 }

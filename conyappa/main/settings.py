@@ -20,6 +20,7 @@ THIRD_PARTY = [
     "whitenoise.runserver_nostatic",
     "django_extensions",
     "admin_numeric_filter",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 FIRST_PARTY = [
