@@ -43,9 +43,9 @@
     }
   ],
   "paths": {
-    "/v1/login": {
+    "/v1/auth/login": {
       "post": {
-        "summary": "Obtain JSON Web Sliding Token",
+        "summary": "Obtain JSON Web Token",
         "tags":[
           "Users"
         ],
@@ -66,6 +66,54 @@
               "application/json": {
                 "schema": {
                   "$ref": "./schemas/login.json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "enum":[
+                        "No active account found with the given credentials"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "summary": "Refresh JSON Web Token",
+        "tags":[
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/token_refresh.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/token_refresh.json"
                 }
               }
             }
