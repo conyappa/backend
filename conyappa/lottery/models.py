@@ -140,6 +140,7 @@ class TicketQuerySet(models.QuerySet):
         Computes the prize of many tickets in an aggregated way, which, at a large scale,
         is much more efficient than the naive way: computing the prize of each ticket and then adding the results.
         """
+
         def base_prize(number_of_matches, count):
             prize = settings.PRIZES[number_of_matches]
             return count * prize
@@ -185,14 +186,6 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
-
-    @property
-    def prize(self):
-        return settings.PRIZES[self.number_of_matches]
-
-    @property
-    def is_shared_prize(self):
-        return settings.IS_SHARED_PRIZE[self.number_of_matches]
 
     def __str__(self):
         return str(self.picks)

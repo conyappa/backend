@@ -1,6 +1,16 @@
+from django.conf import settings
+
 from rest_framework.serializers import Field, IntegerField, ModelSerializer
 
 from .models import Draw, Ticket
+
+
+class PrizeField(Field):
+    def to_representation(self, value):
+        return {
+            "value": settings.PRIZES[value],
+            "is_shared": settings.IS_SHARED_PRIZE[value],
+        }
 
 
 class DrawSerializer(ModelSerializer):
@@ -16,6 +26,11 @@ class DrawSerializer(ModelSerializer):
             "start_date": {"read_only": True},
             "results": {"read_only": True},
         }
+
+
+class TicketPrizeField(PrizeField):
+    def get_attribute(self, instance):
+        return instance.number_of_matches
 
 
 class TicketPicksField(Field):
@@ -34,7 +49,6 @@ class TicketSerializer(ModelSerializer):
         fields = [
             "number_of_matches",
             "prize",
-            "is_shared_prize",
             "picks",
         ]
 
@@ -45,4 +59,5 @@ class TicketSerializer(ModelSerializer):
         }
 
     number_of_matches = IntegerField(read_only=True)
+    prize = TicketPrizeField(read_only=True)
     picks = TicketPicksField(read_only=True)
