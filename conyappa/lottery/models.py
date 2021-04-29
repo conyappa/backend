@@ -149,7 +149,10 @@ class TicketQuerySet(models.QuerySet):
 
             return (prize_is_shared and total_count) or 1
 
-        return sum(map(lambda el: base_prize(el[0], el[1]) / denominator(el[0]), self.drilled_down_count().items()))
+        return sum(
+            (base_prize(number_of_matches, count) / denominator(number_of_matches))
+            for (number_of_matches, count) in self.drilled_down_count().items()
+        )
 
 
 class TicketManager(models.Manager):
@@ -159,7 +162,7 @@ class TicketManager(models.Manager):
 
     def ongoing(self):
         draw = Draw.objects.ongoing()
-        return draw.tickets.filter(pk__in=self.values_list("pk"))
+        return self.filter(draw=draw)
 
 
 class Ticket(BaseModel):
