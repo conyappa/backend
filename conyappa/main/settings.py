@@ -49,13 +49,15 @@ INSTALLED_APPS = THIRD_PARTY + FIRST_PARTY + BUILT_IN
 
 AUTH_USER_MODEL = "accounts.User"
 
-SLIDING_TOKEN_LIFETIME = os.environ.get("SLIDING_TOKEN_LIFETIME", 365)
+ACCESS_TOKEN_LIFETIME = int(os.environ.get("ACCESS_TOKEN_LIFETIME", "15"))  # minutes
+REFRESH_TOKEN_LIFETIME = int(os.environ.get("REFRESH_TOKEN_LIFETIME", "336"))  # hours
 
 SIMPLE_JWT = {
-    "SLIDING_TOKEN_LIFETIME": dt.timedelta(days=SLIDING_TOKEN_LIFETIME),
+    "ACCESS_TOKEN_LIFETIME": dt.timedelta(minutes=ACCESS_TOKEN_LIFETIME),
+    "REFRESH_TOKEN_LIFETIME": dt.timedelta(hours=REFRESH_TOKEN_LIFETIME),
     "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY"),
     "ALGORITHM": os.environ.get("JWT_ALGORITHM"),
-    "AUTH_TOKEN_CLASSES": ["rest_framework_simplejwt.tokens.SlidingToken"],
+    "ROTATE_REFRESH_TOKENS": True,
 }
 
 
