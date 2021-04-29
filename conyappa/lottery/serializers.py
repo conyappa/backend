@@ -1,11 +1,16 @@
-from rest_framework.serializers import (
-    IntegerField,
-    JSONField,
-    ListSerializer,
-    ModelSerializer,
-)
+from django.conf import settings
+
+from rest_framework.serializers import Field, IntegerField, ModelSerializer
 
 from .models import Draw, Ticket
+
+
+class PrizeField(Field):
+    def to_representation(self, value):
+        return {
+            "value": settings.PRIZES[value],
+            "is_shared": settings.IS_SHARED_PRIZE[value],
+        }
 
 
 class DrawSerializer(ModelSerializer):
@@ -23,30 +28,25 @@ class DrawSerializer(ModelSerializer):
         }
 
 
-class TicketListSerializer(ListSerializer):
-    def to_representation(self, data):
-        reps = super().to_representation(data)
+class TicketPrizeField(PrizeField):
+    def get_attribute(self, instance):
+        return instance.number_of_matches
 
-        def transform(rep):
-            matches = rep["matches"]
-            sorted_picks = sorted(rep["picks"])
 
-            return {
-                "number_of_matches": rep["number_of_matches"],
-                "prize": rep["prize"],
-                "picks": [{"value": pick, "in_results": pick in matches} for pick in sorted_picks],
-            }
+class TicketPicksField(Field):
+    def get_attribute(self, instance):
+        return instance
 
-        return list(map(transform, reps))
+    def to_representation(self, value):
+        sorted_picks = sorted(value.picks)
+        return [{"value": pick, "in_results": (pick in value.matches)} for pick in sorted_picks]
 
 
 class TicketSerializer(ModelSerializer):
     class Meta:
         model = Ticket
-        list_serializer_class = TicketListSerializer
 
         fields = [
-            "matches",
             "number_of_matches",
             "prize",
             "picks",
@@ -58,5 +58,6 @@ class TicketSerializer(ModelSerializer):
             "picks": {"read_only": True},
         }
 
-    matches = JSONField()
-    number_of_matches = IntegerField()
+    number_of_matches = IntegerField(read_only=True)
+    prize = TicketPrizeField(read_only=True)
+    picks = TicketPicksField(read_only=True)

@@ -1,6 +1,5 @@
 import threading as th
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
@@ -16,17 +15,20 @@ from main.permissions import InternalCommunication, ListOwnership, ReadOnly
 
 from .models import Draw
 from .pagination import TicketPagination
-from .serializers import DrawSerializer, TicketSerializer
+from .serializers import DrawSerializer, PrizeField, TicketSerializer
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def metadata(request):
-    prizes = {str(i): value for (i, value) in enumerate(settings.PRIZES)}
+def draws_metadata(request):
+    prize_field = PrizeField()
 
     return Response(
         data={
-            "prizes": prizes,
+            "prizes": {
+                str(number_of_matches): prize_field.to_representation(number_of_matches)
+                for number_of_matches in range(8)
+            },
         },
         status=HTTP_200_OK,
     )

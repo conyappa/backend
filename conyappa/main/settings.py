@@ -9,6 +9,8 @@ from sentry_sdk.integrations.django import DjangoIntegration
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...).
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+int_bool = lambda x: bool(int(x))
+
 
 ##########################
 # APPLICATION DEFINITION #
@@ -112,8 +114,8 @@ EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_PORT = int(os.environ.get("EMAIL_HOST_PORT", "25"))
-EMAIL_USE_TLS = bool(int(os.environ.get("EMAIL_USE_TLS", "0")))
-EMAIL_USE_SSL = bool(int(os.environ.get("EMAIL_USE_SSL", "0")))
+EMAIL_USE_TLS = int_bool(os.environ.get("EMAIL_USE_TLS", "0"))
+EMAIL_USE_SSL = int_bool(os.environ.get("EMAIL_USE_SSL", "0"))
 EMAIL_USE_LOCALTIME = True
 
 
@@ -187,8 +189,8 @@ LOGGING = {
 TICKET_COST = int(os.environ.get("TICKET_COST", "5000"))
 INITIAL_EXTRA_TICKETS_TTL = list(map(int, os.environ.get("INITIAL_EXTRA_TICKETS_TTL", "1").split(" ")))
 PICK_RANGE = tuple(range(int(os.environ.get("MIN_PICK", "1")), int(os.environ.get("MAX_PICK", "30")) + 1))
-PRIZES = tuple(map(int, os.environ.get("PRIZES", "10 20 50 100 200 500 1000 5000").split(" ")))
-BANK_ACCOUNT = os.environ.get("BANK_ACCOUNT")
+PRIZES = tuple(map(int, os.environ.get("PRIZES", "0 0 0 0 0 0 0 0").split(" ")))
+IS_SHARED_PRIZE = tuple(map(int_bool, os.environ.get("IS_SHARED_PRIZE", "0 0 0 0 0 0 0 0").split(" ")))
 
 
 ##################
@@ -209,7 +211,7 @@ REST_FRAMEWORK = {
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 INTERNAL_KEY = os.environ.get("INTERNAL_KEY")
 
-FINTOC_IS_ENABLED = bool(int(os.environ.get("FINTOC_IS_ENABLED", "0")))
+FINTOC_IS_ENABLED = int_bool(os.environ.get("FINTOC_IS_ENABLED", "0"))
 FINTOC_SECRET_KEY = os.environ.get("FINTOC_SECRET_KEY")
 FINTOC_LINK_TOKEN = os.environ.get("FINTOC_LINK_TOKEN")
 FINTOC_ACCOUNT_ID = os.environ.get("FINTOC_ACCOUNT_ID")

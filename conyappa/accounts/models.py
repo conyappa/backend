@@ -92,7 +92,7 @@ class User(BaseModel, AbstractUser):
 
     @property
     def current_prize(self):
-        return sum(map(lambda x: x.prize, self.current_tickets))
+        return self.current_tickets.prize()
 
     @property
     def owners(self):

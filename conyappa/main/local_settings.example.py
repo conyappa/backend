@@ -53,6 +53,14 @@ PLATANUS = "192.168.xxx.yyy"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", HOME, PLATANUS]
 
 
+##############
+# PARAMETERS #
+##############
+
+PRIZES = [0, 5, 10, 50, 777, 13000, 250000, 5000000]
+IS_SHARED_PRIZE = [False, False, False, False, False, True, True, True]
+
+
 ###########
 # SECRETS #
 ###########

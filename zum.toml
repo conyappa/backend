@@ -49,6 +49,11 @@ body = ["android_id", "expo_push_token"]
 headers = ["Authorization"]
 
 # Draws.
+[endpoints.get-draws-metadata]
+route = "/v1/draws/metadata"
+method = "get"
+headers = ["Authorization"]
+
 [endpoints.get-ongoing-draw]
 route = "/v1/draws/ongoing"
 method = "get"

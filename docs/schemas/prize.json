@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "integer",
+      "minimum": 0,
+      "example": 100
+    },
+    "is_shared": {
+      "type": "boolean",
+      "description": "whether the prize is to be shared between all winning tickets",
+      "example": false
+    }
+  }
+}
