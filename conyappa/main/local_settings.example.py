@@ -58,7 +58,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", HOME, PLATANUS]
 ##############
 
 PRIZES = [0, 5, 10, 50, 777, 13000, 250000, 5000000]
-PRIZE_IS_SHARED = [False, False, False, False, False, True, True, True]
+IS_SHARED_PRIZE = [False, False, False, False, False, True, True, True]
 
 
 ###########

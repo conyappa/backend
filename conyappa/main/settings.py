@@ -190,7 +190,7 @@ TICKET_COST = int(os.environ.get("TICKET_COST", "5000"))
 INITIAL_EXTRA_TICKETS_TTL = list(map(int, os.environ.get("INITIAL_EXTRA_TICKETS_TTL", "1").split(" ")))
 PICK_RANGE = tuple(range(int(os.environ.get("MIN_PICK", "1")), int(os.environ.get("MAX_PICK", "30")) + 1))
 PRIZES = tuple(map(int, os.environ.get("PRIZES", "0 0 0 0 0 0 0 0").split(" ")))
-PRIZE_IS_SHARED = tuple(map(int_bool, os.environ.get("PRIZE_IS_SHARED", "0 0 0 0 0 0 0 0").split(" ")))
+IS_SHARED_PRIZE = tuple(map(int_bool, os.environ.get("IS_SHARED_PRIZE", "0 0 0 0 0 0 0 0").split(" ")))
 
 
 ##################

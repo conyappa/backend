@@ -1,4 +1,7 @@
+from django.conf import settings
+
 from rest_framework.serializers import (
+    BooleanField,
     IntegerField,
     JSONField,
     ListSerializer,
@@ -28,13 +31,13 @@ class TicketListSerializer(ListSerializer):
         reps = super().to_representation(data)
 
         def transform(rep):
-            matches = rep["matches"]
             sorted_picks = sorted(rep["picks"])
 
             return {
                 "number_of_matches": rep["number_of_matches"],
                 "prize": rep["prize"],
-                "picks": [{"value": pick, "in_results": pick in matches} for pick in sorted_picks],
+                "is_shared_prize": settings.IS_SHARED_PRIZE[rep["number_of_matches"]],
+                "picks": [{"value": pick, "in_results": pick in rep["matches"]} for pick in sorted_picks],
             }
 
         return list(map(transform, reps))
@@ -49,6 +52,7 @@ class TicketSerializer(ModelSerializer):
             "matches",
             "number_of_matches",
             "prize",
+            "is_shared_prize",
             "picks",
         ]
 
@@ -58,5 +62,6 @@ class TicketSerializer(ModelSerializer):
             "picks": {"read_only": True},
         }
 
-    matches = JSONField()
-    number_of_matches = IntegerField()
+    matches = JSONField(read_only=True)
+    number_of_matches = IntegerField(read_only=True)
+    is_shared_prize = BooleanField(read_only=True)

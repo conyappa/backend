@@ -1,4 +1,5 @@
 import datetime as dt
+import math
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -145,15 +146,17 @@ class TicketQuerySet(models.QuerySet):
             return count * prize
 
         def denominator(number_of_matches):
-            prize_is_shared = settings.PRIZE_IS_SHARED[number_of_matches]
+            is_shared_prize = settings.IS_SHARED_PRIZE[number_of_matches]
             total_count = total_drilled_down_count and total_drilled_down_count[number_of_matches]
 
-            return (prize_is_shared and total_count) or 1
+            return (is_shared_prize and total_count) or 1
 
-        return sum(
+        value = sum(
             (base_prize(number_of_matches, count) / denominator(number_of_matches))
             for (number_of_matches, count) in self.drilled_down_count().items()
         )
+
+        return math.ceil(value)
 
 
 class TicketManager(models.Manager):
