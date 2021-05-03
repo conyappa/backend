@@ -21,7 +21,7 @@ from .serializers import DrawSerializer, PrizeField, TicketSerializer
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def draws_metadata(request):
+def draws_metadata(request, **kwargs):
     prize_field = PrizeField()
 
     return Response(
@@ -37,7 +37,7 @@ def draws_metadata(request):
 
 @api_view(["POST"])
 @permission_classes([InternalCommunication])
-def choose_result(request):
+def choose_result(request, **kwargs):
     draw = Draw.objects.ongoing()
     draw.choose_result()
 
@@ -63,7 +63,7 @@ class GenericDrawView(GenericAPIView, VersionedView):
 class DrawListView(CreateModelMixin, GenericDrawView):
     permission_classes = [InternalCommunication]
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         response = self.create(request)
 
         thread = th.Thread(
@@ -81,7 +81,7 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
     def get_object(self):
         return Draw.objects.ongoing()
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         return self.retrieve(request)
 
 
@@ -105,5 +105,5 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
     def get_queryset(self):
         return self.user.current_tickets.order_by("-number_of_matches")
 
-    def get(self, request, user_id):
+    def get(self, request, user_id, **kwargs):
         return self.list(request)
