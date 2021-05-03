@@ -7,31 +7,32 @@ from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 from main.permissions import ListOwnership, ObjectOwnership
 
+from main.versioning import VersionedView
 from .models import Device, User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
 
 
-class TokenLoginView(TokenObtainSlidingView):
+class TokenLoginView(TokenObtainSlidingView, VersionedView):
     serializer_class = TokenLoginSerializer
 
 
-class GenericUserView(GenericAPIView):
+class GenericUserView(GenericAPIView, VersionedView):
     queryset = User.objects
     serializer_class = UserSerializer
 
 
-class UserListView(CreateModelMixin, GenericUserView):
-    def post(self, request):
+class UserListView(CreateModelMixin, GenericUserView, VersionedView):
+    def post(self, request, **kwargs):
         return self.create(request)
 
 
-class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
+class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView, VersionedView):
     permission_classes = [IsAuthenticated & ObjectOwnership]
 
-    def get(self, request, pk):
+    def get(self, request, pk, **kwargs):
         return self.retrieve(request, pk=pk)
 
-    def patch(self, request, pk):
+    def patch(self, request, pk, **kwargs):
         return self.partial_update(request, pk=pk)
 
 
@@ -39,7 +40,7 @@ class GenericDeviceView(GenericAPIView):
     serializer_class = DeviceSerializer
 
 
-class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
+class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView, VersionedView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
     def initial(self, request, user_id):
@@ -54,7 +55,7 @@ class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
 
         return Device.objects.get(android_id=android_id, ios_id=ios_id)
 
-    def post(self, request, user_id):
+    def post(self, request, user_id, **kwargs):
         request.data["user"] = user_id
 
         try:
