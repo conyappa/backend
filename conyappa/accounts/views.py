@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainSlidingView
 
 from main.permissions import ListOwnership, ObjectOwnership
-
 from main.versioning import VersionedView
+
 from .models import Device, User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
 
@@ -21,12 +21,12 @@ class GenericUserView(GenericAPIView, VersionedView):
     serializer_class = UserSerializer
 
 
-class UserListView(CreateModelMixin, GenericUserView, VersionedView):
+class UserListView(CreateModelMixin, GenericUserView):
     def post(self, request, **kwargs):
         return self.create(request)
 
 
-class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView, VersionedView):
+class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
     permission_classes = [IsAuthenticated & ObjectOwnership]
 
     def get(self, request, pk, **kwargs):
@@ -36,11 +36,11 @@ class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView, Vers
         return self.partial_update(request, pk=pk)
 
 
-class GenericDeviceView(GenericAPIView):
+class GenericDeviceView(GenericAPIView, VersionedView):
     serializer_class = DeviceSerializer
 
 
-class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView, VersionedView):
+class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
     def initial(self, request, user_id):
