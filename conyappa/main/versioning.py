@@ -1,6 +1,5 @@
 from rest_framework.versioning import URLPathVersioning
 
-
 ALLOWED_VERSIONS = ["v1", "v2"]
 
 

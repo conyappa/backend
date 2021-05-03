@@ -3,7 +3,6 @@ from django.urls import include, path, re_path
 from .versioning import ALLOWED_VERSIONS
 from .views import admin_site, health_check, trigger_error
 
-
 allowed_versions_string = "|".join(ALLOWED_VERSIONS)
 
 urlpatterns = [
