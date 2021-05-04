@@ -1,15 +1,7 @@
 {
   "allOf": [
     {
-      "type": "object",
-      "properties": {
-        "token": {
-          "type": "string",
-          "format": "jwt",
-          "readOnly": true,
-          "example": "xxxxx.yyyyy.zzzzz"
-        }
-      }
+      "$ref": "./tokens.json"
     },
     {
       "$ref": "./user.json"

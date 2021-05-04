@@ -43,9 +43,9 @@
     }
   ],
   "paths": {
-    "/v2/login": {
+    "/v2/auth/login": {
       "post": {
-        "summary": "Obtain JSON Web Sliding Token",
+        "summary": "Obtain JSON Web Token",
         "tags":[
           "Users"
         ],
@@ -82,6 +82,78 @@
                       "enum":[
                         "No active account found with the given credentials"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/auth/refresh": {
+      "post": {
+        "summary": "Refresh JSON Web Token",
+        "tags":[
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/tokens.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/tokens.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refresh": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["This field is required."]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "Token is invalid or expired",
+                        "Token is blacklisted"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": ["token_not_valid"]
                     }
                   }
                 }
