@@ -11,6 +11,7 @@ from .views import (
 app_name = "accounts"
 
 urlpatterns = [
+    path("login", TokenLoginView.as_view(), name="legacy-login"),  # LEGACY
     path("auth/login", TokenLoginView.as_view(), name="login"),
     path("auth/refresh", RefreshTokenView.as_view(), name="refresh_token"),
     path("users", UserListView.as_view(), name="user-list"),

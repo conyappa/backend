@@ -55,12 +55,21 @@ AUTH_USER_MODEL = "accounts.User"
 ACCESS_TOKEN_LIFETIME = int(os.environ.get("ACCESS_TOKEN_LIFETIME", "15"))  # minutes
 REFRESH_TOKEN_LIFETIME = int(os.environ.get("REFRESH_TOKEN_LIFETIME", "336"))  # hours
 
+# LEGACY
+SLIDING_TOKEN_LIFETIME = os.environ.get("SLIDING_TOKEN_LIFETIME", 365)
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": dt.timedelta(minutes=ACCESS_TOKEN_LIFETIME),
     "REFRESH_TOKEN_LIFETIME": dt.timedelta(hours=REFRESH_TOKEN_LIFETIME),
     "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY"),
     "ALGORITHM": os.environ.get("JWT_ALGORITHM"),
     "ROTATE_REFRESH_TOKENS": True,
+    # LEGACY
+    "AUTH_TOKEN_CLASSES": [
+        "rest_framework_simplejwt.tokens.AccessToken",
+        "rest_framework_simplejwt.tokens.SlidingToken",
+    ],
+    "SLIDING_TOKEN_LIFETIME": dt.timedelta(days=SLIDING_TOKEN_LIFETIME),
 }
 
 

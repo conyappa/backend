@@ -1,11 +1,21 @@
 from django.db import transaction
 
 from rest_framework.serializers import CharField, ModelSerializer, ValidationError
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenObtainSlidingSerializer,
+)
 
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import Device, User
+
+
+class TokenLoginSerializerVersion1(TokenObtainSlidingSerializer):  # LEGACY
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["id"] = self.user.id
+        return data
 
 
 class TokenLoginSerializer(TokenObtainPairSerializer):
