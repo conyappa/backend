@@ -13,6 +13,11 @@ class PrizeField(Field):
         }
 
 
+class PrizeFieldVersion1(PrizeField):
+    def to_representation(self, value):
+        return settings.PRIZES[value]
+
+
 class DrawSerializer(ModelSerializer):
     class Meta:
         model = Draw
@@ -29,6 +34,11 @@ class DrawSerializer(ModelSerializer):
 
 
 class TicketPrizeField(PrizeField):
+    def get_attribute(self, instance):
+        return instance.number_of_matches
+
+
+class TicketPrizeFieldVersion1(TicketPrizeField):
     def get_attribute(self, instance):
         return instance.number_of_matches
 
@@ -61,3 +71,7 @@ class TicketSerializer(ModelSerializer):
     number_of_matches = IntegerField(read_only=True)
     prize = TicketPrizeField(read_only=True)
     picks = TicketPicksField(read_only=True)
+
+
+class TicketSerializerVersion1(TicketSerializer):
+    prize = TicketPrizeFieldVersion1(read_only=True)

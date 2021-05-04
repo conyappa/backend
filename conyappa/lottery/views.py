@@ -12,16 +12,26 @@ from rest_framework.status import HTTP_200_OK
 
 from accounts.models import Device
 from main.permissions import InternalCommunication, ListOwnership, ReadOnly
+from main.versioning import VersioningMixin
 
 from .models import Draw
 from .pagination import TicketPagination
-from .serializers import DrawSerializer, PrizeField, TicketSerializer
+from .serializers import (
+    DrawSerializer,
+    PrizeField,
+    PrizeFieldVersion1,
+    TicketSerializer,
+    TicketSerializerVersion1,
+)
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def draws_metadata(request, **kwargs):
-    prize_field = PrizeField()
+    if request.version == "v1":
+        prize_field = PrizeFieldVersion1()
+    else:
+        prize_field = PrizeField()
 
     return Response(
         data={
@@ -84,9 +94,13 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
-class GenericTicketView(GenericAPIView):
-    serializer_class = TicketSerializer
+class GenericTicketView(GenericAPIView, VersioningMixin):
     pagination_class = TicketPagination
+
+    def get_serializer_class(self):
+        if self.request.version == "v1":
+            return TicketSerializerVersion1
+        return TicketSerializer
 
 
 class UserTicketsView(ListModelMixin, GenericTicketView):
