@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Con Yappa’s API",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "x-logo": {
       "url": "static/svg/logo.svg",
       "altText": "Con Yappa logo"
@@ -43,7 +43,7 @@
     }
   ],
   "paths": {
-    "/v1/auth/login": {
+    "/v2/auth/login": {
       "post": {
         "summary": "Obtain JSON Web Token",
         "tags":[
@@ -163,7 +163,7 @@
         }
       }
     },
-    "/v1/users": {
+    "/v2/users": {
       "post": {
         "summary": "Create a user",
         "tags":[
@@ -203,7 +203,7 @@
         }
       }
     },
-    "/v1/users/{user_id}": {
+    "/v2/users/{user_id}": {
       "get": {
         "summary": "Retrieve a user",
         "tags":[
@@ -353,7 +353,7 @@
         }
       }
     },
-    "/v1/users/{user_id}/devices": {
+    "/v2/users/{user_id}/devices": {
       "post": {
         "summary": "Register a user’s device",
         "tags":[
@@ -440,7 +440,7 @@
         }
       }
     },
-    "/v1/users/{user_id}/tickets": {
+    "/v2/users/{user_id}/tickets": {
       "get": {
         "summary": "Obtain a user’s tickets",
         "description": "Only returns the tickets of the ongoing draw.",
@@ -536,7 +536,7 @@
         }
       }
     },
-    "/v1/draws": {
+    "/v2/draws": {
       "post": {
         "summary": "Create a draw",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
@@ -582,7 +582,7 @@
         }
       }
     },
-    "/v1/draws/metadata": {
+    "/v2/draws/metadata": {
       "get": {
         "summary": "Retrieve the draws’ metadata",
         "tags":[
@@ -627,7 +627,7 @@
         }
       }
     },
-    "/v1/draws/ongoing": {
+    "/v2/draws/ongoing": {
       "get": {
         "summary": "Retrieve the ongoing draw",
         "description": "Returns this week’s draw (there is only one).",
@@ -673,7 +673,7 @@
         }
       }
     },
-    "/v1/draws/ongoing/choose": {
+    "/v2/draws/ongoing/choose": {
       "post": {
         "summary": "Choose a result for the ongoing draw",
         "tags":[
@@ -718,7 +718,7 @@
         }
       }
     },
-    "/v1/movements/fetch": {
+    "/v2/movements/fetch": {
       "post": {
         "summary": "Fetch bank movements using Fintoc",
         "tags":[

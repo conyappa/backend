@@ -1,10 +1,11 @@
 import datetime as dt
+import math
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models, transaction
-from django.db.models import F, Func
+from django.db.models import Count, F, Func
 
 from main.base import BaseModel
 from utils import random, sql
@@ -89,11 +90,13 @@ class Draw(BaseModel):
 
     @transaction.atomic
     def conclude(self):
-        for ticket in self.tickets.all():
-            user = ticket.user
-            prize = ticket.prize
+        User = get_user_model()
+        drilled_down_count = self.tickets.all().drilled_down_count()
 
-            user.award_prize(prize)
+        for user in User.objects.all():
+            tickets = user.tickets.filter(draw=self)
+            prize_after_sharing = tickets.prize(total_drilled_down_count=drilled_down_count)
+            user.award_prize(prize_after_sharing)
 
     def __str__(self):
         return str(self.start_date)
@@ -118,6 +121,42 @@ class TicketQuerySet(models.QuerySet):
         function_call = Func(*expressions, function="cardinality", arity=1)
 
         return self.annotate(number_of_matches=function_call)
+
+    def drilled_down_count(self):
+        """
+        Returns a dictionary with the ticket count per number of matches.
+        """
+        ticket_count = {i: 0 for i in range(8)}
+        number_of_matches = self.values("number_of_matches")
+
+        ticket_count.update(
+            {el["number_of_matches"]: el["count"] for el in number_of_matches.annotate(count=Count("pk"))}
+        )
+
+        return ticket_count
+
+    def prize(self, total_drilled_down_count=None):
+        """
+        Computes the prize of many tickets in an aggregated way, which, at a large scale,
+        is much more efficient than the naive way: computing the prize of each ticket and then adding the results.
+        """
+
+        def base_prize(number_of_matches, count):
+            prize = settings.PRIZES[number_of_matches]
+            return count * prize
+
+        def denominator(number_of_matches):
+            is_shared_prize = settings.IS_SHARED_PRIZE[number_of_matches]
+            total_count = total_drilled_down_count and total_drilled_down_count[number_of_matches]
+
+            return (is_shared_prize and total_count) or 1
+
+        value = sum(
+            (base_prize(number_of_matches, count) / denominator(number_of_matches))
+            for (number_of_matches, count) in self.drilled_down_count().items()
+        )
+
+        return math.ceil(value)
 
 
 class TicketManager(models.Manager):
@@ -147,10 +186,6 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
-
-    @property
-    def prize(self):
-        return settings.PRIZES[self.number_of_matches]
 
     def __str__(self):
         return str(self.picks)

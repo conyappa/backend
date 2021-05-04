@@ -1,7 +1,5 @@
 from collections import OrderedDict
 
-from django.conf import settings
-from django.db.models import Count
 from django.utils.functional import cached_property
 
 from rest_framework.pagination import PageNumberPagination
@@ -11,13 +9,7 @@ from rest_framework.response import Response
 class TicketPaginator(PageNumberPagination.django_paginator_class):
     @cached_property
     def total_prize(self):
-        number_of_matches = self.object_list.values("number_of_matches")
-        ticket_count_per_number_of_matches = number_of_matches.annotate(Count("pk"))
-
-        prizes = map(
-            lambda el: settings.PRIZES[el["number_of_matches"]] * el["pk__count"], ticket_count_per_number_of_matches
-        )
-        return sum(prizes)
+        return self.object_list.prize()
 
 
 class TicketPagination(PageNumberPagination):

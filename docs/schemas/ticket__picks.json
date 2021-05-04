@@ -15,6 +15,5 @@
         "description": "whether the draw’s results contain this value"
       }
     }
-  },
-  "readOnly": true
+  }
 }
