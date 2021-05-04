@@ -24,6 +24,8 @@ from .serializers import (
     TicketSerializerVersion1,
 )
 
+from utils.logging import log_return_value
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -94,7 +96,7 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
-class GenericTicketView(GenericAPIView, VersioningMixin):
+class GenericTicketView(VersioningMixin, GenericAPIView):
     pagination_class = TicketPagination
 
     def get_serializer_class(self):
@@ -108,12 +110,12 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
     # For now, and for security reasons, make this viewset read-only.
     permission_classes = [IsAuthenticated & ListOwnership & ReadOnly]
 
-    def initial(self, request, user_id):
+    def initial(self, request, user_id, **kwargs):
         User = get_user_model()
         self.user = get_object_or_404(User.objects, pk=user_id)
         self.owners = {self.user}
 
-        return super().initial(request, user_id)
+        return super().initial(request, user_id, **kwargs)
 
     def get_queryset(self):
         return self.user.current_tickets.order_by("-number_of_matches")
