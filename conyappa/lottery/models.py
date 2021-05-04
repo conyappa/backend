@@ -189,3 +189,14 @@ class Ticket(BaseModel):
 
     def __str__(self):
         return str(self.picks)
+
+
+class LuckyTicket(BaseModel):
+    picks = ArrayField(base_field=models.PositiveSmallIntegerField())
+
+    user = models.ForeignKey(
+        to="accounts.User",
+        verbose_name="user",
+        related_name="tickets",
+        on_delete=models.CASCADE,
+    )
