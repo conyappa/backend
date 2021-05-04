@@ -41,7 +41,8 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "full_name",
             "balance",
             "winnings",
-            "token",
+            "access",
+            "refresh",
         ]
 
         # These fields can only be set once.
@@ -59,11 +60,13 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "winnings": {"read_only": True},
         }
 
-    token = CharField(read_only=True, required=False)
+    access = CharField(read_only=True, required=False)
+    refresh = CharField(read_only=True, required=False)
 
     def create(self, validated_data):
         user = super().create(validated_data)
-        user.token = TokenLoginSerializer.get_token(user)
+        user.refresh = TokenLoginSerializer.get_token(user)
+        user.access = user.refresh.access_token
         return user
 
     @transaction.atomic
