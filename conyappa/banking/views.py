@@ -9,7 +9,7 @@ from .fintoc import Interface as Fintoc
 
 @api_view(["POST"])
 @permission_classes([InternalCommunication])
-def fetch_movements(request):
+def fetch_movements(request, **kwargs):
     Fintoc().fetch_movements()
 
     return Response(status=HTTP_204_NO_CONTENT)
