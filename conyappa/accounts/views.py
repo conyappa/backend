@@ -18,18 +18,18 @@ from .serializers import (
 )
 
 
-class TokenLoginView(simplejwt_views.TokenObtainPairView, VersioningMixin):
+class TokenLoginView(VersioningMixin, simplejwt_views.TokenObtainPairView):
     def get_serializer_class(self):
         if self.request.version == "v1":
             return TokenLoginSerializerVersion1
         return TokenLoginSerializer
 
 
-class RefreshTokenView(simplejwt_views.TokenRefreshView, VersioningMixin):
+class RefreshTokenView(simplejwt_views.TokenRefreshView):
     serializer_class = TokenRefreshSerializer
 
 
-class GenericUserView(GenericAPIView, VersioningMixin):
+class GenericUserView(GenericAPIView):
     queryset = User.objects
     serializer_class = UserSerializer
 
@@ -49,7 +49,7 @@ class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
         return self.partial_update(request, pk=pk)
 
 
-class GenericDeviceView(GenericAPIView, VersioningMixin):
+class GenericDeviceView(GenericAPIView):
     serializer_class = DeviceSerializer
 
 
