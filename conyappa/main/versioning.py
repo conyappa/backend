@@ -8,5 +8,5 @@ class VersioningClass(URLPathVersioning):
     allowed_versions = ALLOWED_VERSIONS
 
 
-class VersionedView:
+class VersioningMixin:
     versioning_class = VersioningClass

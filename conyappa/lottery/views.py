@@ -12,7 +12,7 @@ from rest_framework.status import HTTP_200_OK
 
 from accounts.models import Device
 from main.permissions import InternalCommunication, ListOwnership, ReadOnly
-from main.versioning import VersionedView
+from main.versioning import VersioningMixin
 
 from .models import Draw
 from .pagination import TicketPagination
@@ -55,7 +55,7 @@ def choose_result(request, **kwargs):
     return response
 
 
-class GenericDrawView(GenericAPIView, VersionedView):
+class GenericDrawView(GenericAPIView, VersioningMixin):
     queryset = Draw.objects
     serializer_class = DrawSerializer
 
@@ -85,7 +85,7 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
-class GenericTicketView(GenericAPIView, VersionedView):
+class GenericTicketView(GenericAPIView, VersioningMixin):
     serializer_class = TicketSerializer
     pagination_class = TicketPagination
 
