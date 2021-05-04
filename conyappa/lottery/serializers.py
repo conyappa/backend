@@ -38,7 +38,7 @@ class TicketPrizeField(PrizeField):
         return instance.number_of_matches
 
 
-class TicketPrizeFieldVersion1(TicketPrizeField):
+class TicketPrizeFieldVersion1(PrizeFieldVersion1):
     def get_attribute(self, instance):
         return instance.number_of_matches
 
