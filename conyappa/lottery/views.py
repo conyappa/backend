@@ -55,7 +55,7 @@ def choose_result(request, **kwargs):
     return response
 
 
-class GenericDrawView(GenericAPIView, VersioningMixin):
+class GenericDrawView(VersioningMixin, GenericAPIView):
     queryset = Draw.objects
     serializer_class = DrawSerializer
 
@@ -85,7 +85,7 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
-class GenericTicketView(GenericAPIView, VersioningMixin):
+class GenericTicketView(VersioningMixin, GenericAPIView):
     serializer_class = TicketSerializer
     pagination_class = TicketPagination
 

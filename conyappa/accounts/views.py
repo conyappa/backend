@@ -12,11 +12,11 @@ from .models import Device, User
 from .serializers import DeviceSerializer, TokenLoginSerializer, UserSerializer
 
 
-class TokenLoginView(TokenObtainSlidingView, VersioningMixin):
+class TokenLoginView(VersioningMixin, TokenObtainSlidingView):
     serializer_class = TokenLoginSerializer
 
 
-class GenericUserView(GenericAPIView, VersioningMixin):
+class GenericUserView(VersioningMixin, GenericAPIView):
     queryset = User.objects
     serializer_class = UserSerializer
 
@@ -36,7 +36,7 @@ class UserDetailView(RetrieveModelMixin, UpdateModelMixin, GenericUserView):
         return self.partial_update(request, pk=pk)
 
 
-class GenericDeviceView(GenericAPIView, VersioningMixin):
+class GenericDeviceView(VersioningMixin, GenericAPIView):
     serializer_class = DeviceSerializer
 
 
