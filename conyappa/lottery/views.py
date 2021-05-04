@@ -24,8 +24,6 @@ from .serializers import (
     TicketSerializerVersion1,
 )
 
-from utils.logging import log_return_value
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
