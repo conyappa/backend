@@ -102,7 +102,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "./schemas/token_refresh.json"
+                "$ref": "./schemas/tokens.json"
               }
             }
           }
@@ -113,7 +113,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "./schemas/token_refresh.json"
+                  "$ref": "./schemas/tokens.json"
                 }
               }
             }
