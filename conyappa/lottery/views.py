@@ -50,6 +50,9 @@ def choose_result(request, **kwargs):
     draw = Draw.objects.ongoing()
     draw.choose_result()
 
+    if len(draw.results) == 7:
+        draw.conclude()
+
     serializer_context = {"request": request}
     serializer = DrawSerializer(instance=draw, context=serializer_context)
 
