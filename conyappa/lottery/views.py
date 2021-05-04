@@ -12,16 +12,26 @@ from rest_framework.status import HTTP_200_OK
 
 from accounts.models import Device
 from main.permissions import InternalCommunication, ListOwnership, ReadOnly
+from main.versioning import VersioningMixin
 
 from .models import Draw
 from .pagination import TicketPagination
-from .serializers import DrawSerializer, PrizeField, TicketSerializer
+from .serializers import (
+    DrawSerializer,
+    PrizeField,
+    PrizeFieldVersion1,
+    TicketSerializer,
+    TicketSerializerVersion1,
+)
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def draws_metadata(request, **kwargs):
-    prize_field = PrizeField()
+    if request.version == "v1":
+        prize_field = PrizeFieldVersion1()
+    else:
+        prize_field = PrizeField()
 
     return Response(
         data={
@@ -84,9 +94,13 @@ class OngoingDrawView(RetrieveModelMixin, GenericDrawView):
         return self.retrieve(request)
 
 
-class GenericTicketView(GenericAPIView):
-    serializer_class = TicketSerializer
+class GenericTicketView(VersioningMixin, GenericAPIView):
     pagination_class = TicketPagination
+
+    def get_serializer_class(self):
+        if self.request.version == "v1":
+            return TicketSerializerVersion1
+        return TicketSerializer
 
 
 class UserTicketsView(ListModelMixin, GenericTicketView):
@@ -94,12 +108,12 @@ class UserTicketsView(ListModelMixin, GenericTicketView):
     # For now, and for security reasons, make this viewset read-only.
     permission_classes = [IsAuthenticated & ListOwnership & ReadOnly]
 
-    def initial(self, request, user_id):
+    def initial(self, request, user_id, **kwargs):
         User = get_user_model()
         self.user = get_object_or_404(User.objects, pk=user_id)
         self.owners = {self.user}
 
-        return super().initial(request, user_id)
+        return super().initial(request, user_id, **kwargs)
 
     def get_queryset(self):
         return self.user.current_tickets.order_by("-number_of_matches")
