@@ -91,7 +91,7 @@
         }
       }
     },
-    "/v1/auth/refresh": {
+    "/v2/auth/refresh": {
       "post": {
         "summary": "Refresh JSON Web Token",
         "tags":[
