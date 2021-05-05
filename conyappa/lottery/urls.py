@@ -2,12 +2,12 @@ from django.urls import path
 
 from .views import (
     DrawListView,
+    LuckyTicketDetailView,
     OngoingDrawView,
+    UserLuckyTicketsView,
     UserTicketsView,
     choose_result,
     draws_metadata,
-    UserLuckyTicketsView,
-    LuckyTicketDetailView,
 )
 
 app_name = "lottery"

@@ -1,6 +1,11 @@
 from django.conf import settings
 
-from rest_framework.serializers import Field, IntegerField, ModelSerializer, ValidationError
+from rest_framework.serializers import (
+    Field,
+    IntegerField,
+    ModelSerializer,
+    ValidationError,
+)
 
 from .models import Draw, LuckyTicket, Ticket
 
@@ -93,7 +98,7 @@ class LuckyTicketPicksField(Field):
 
     def validate_range(self, value):
         if not all([(pick in settings.PICK_RANGE) for pick in value]):
-            formatted_range = ', '.join(map(str, settings.PICK_RANGE))
+            formatted_range = ", ".join(map(str, settings.PICK_RANGE))
             raise ValidationError(f"Ensure all items of this array belong to the valid range: {formatted_range}.")
 
         return value
