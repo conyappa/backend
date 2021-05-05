@@ -197,6 +197,13 @@ class LuckyTicket(BaseModel):
     user = models.ForeignKey(
         to="accounts.User",
         verbose_name="user",
-        related_name="tickets",
+        related_name="lucky_tickets",
         on_delete=models.CASCADE,
     )
+
+    @property
+    def owners(self):
+        return {self.user}
+
+    def __str__(self):
+        return str(self.picks)

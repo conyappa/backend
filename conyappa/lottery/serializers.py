@@ -1,8 +1,8 @@
 from django.conf import settings
 
-from rest_framework.serializers import Field, IntegerField, ModelSerializer
+from rest_framework.serializers import Field, IntegerField, ModelSerializer, ValidationError
 
-from .models import Draw, Ticket
+from .models import Draw, LuckyTicket, Ticket
 
 
 class PrizeField(Field):
@@ -63,8 +63,6 @@ class TicketSerializer(ModelSerializer):
         ]
 
         extra_kwargs = {
-            # Choosing picks is a feature we would like to have in the near future.
-            # For now, and for security reasons, make them read-only.
             "picks": {"read_only": True},
         }
 
@@ -75,3 +73,42 @@ class TicketSerializer(ModelSerializer):
 
 class TicketSerializerVersion1(TicketSerializer):
     prize = TicketPrizeFieldVersion1(read_only=True)
+
+
+class LuckyTicketPicksField(Field):
+    def get_attribute(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        sorted_picks = sorted(value.picks)
+        return [{"value": pick} for pick in sorted_picks]
+
+    def to_internal_value(self, data):
+        PICKS_LENGTH = 7
+
+        try:
+            value = [el["value"] for el in data]
+        except (TypeError, KeyError):
+            raise ValidationError("Ensure this array has the correct structure.")
+
+        if len(value) != PICKS_LENGTH:
+            raise ValidationError(f"Ensure this array has exactly {PICKS_LENGTH} items.")
+
+        return value
+
+
+class LuckyTicketSerializer(ModelSerializer):
+    class Meta:
+        model = LuckyTicket
+
+        fields = [
+            "id",
+            "user",
+            "picks",
+        ]
+
+        extra_kwargs = {
+            "picks": {"write_only": True},
+        }
+
+    picks = LuckyTicketPicksField()

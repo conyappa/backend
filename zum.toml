@@ -74,3 +74,10 @@ headers = ["Internal-Key"]
 route = "/v2/movements/fetch"
 method = "post"
 headers = ["Internal-Key"]
+
+
+# Lucky tickets.
+[endpoints.create-lucky-ticket]
+route = "/v2/user/{user_id}/lucky-tickets"
+method = "post"
+headers = ["Authorization"]
