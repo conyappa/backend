@@ -51,11 +51,11 @@ class GenericDeviceView(GenericAPIView):
 class UserDeviceListView(CreateModelMixin, UpdateModelMixin, GenericDeviceView):
     permission_classes = [IsAuthenticated & ListOwnership]
 
-    def initial(self, request, user_id):
+    def initial(self, request, user_id, **kwargs):
         self.user = get_object_or_404(User.objects, pk=user_id)
         self.owners = {self.user}
 
-        return super().initial(request, user_id)
+        return super().initial(request, user_id, **kwargs)
 
     def get_object(self):
         android_id = self.request.data.get("android_id")
