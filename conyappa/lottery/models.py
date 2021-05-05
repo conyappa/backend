@@ -43,6 +43,8 @@ class DrawManager(models.Manager):
         tickets = []
 
         for user in users:
+            # Here we assume the draw is created sufficiently in advance
+            # so that the first number of the draw cannot be infered yet.
             n = user.number_of_tickets
             user_lucky_tickets = user.lucky_tickets.all()[:n]
             user_tickets = draw.generate_tickets_from_lucky_tickets(qs=user_lucky_tickets)

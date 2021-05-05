@@ -84,17 +84,40 @@ class LuckyTicketPicksField(Field):
         return [{"value": pick} for pick in sorted_picks]
 
     def to_internal_value(self, data):
-        PICKS_LENGTH = 7
-
         try:
             value = [el["value"] for el in data]
         except (TypeError, KeyError):
             raise ValidationError("Ensure this array has the correct structure.")
 
+        return value
+
+    def validate_range(self, value):
+        if not all([(pick in settings.PICK_RANGE) for pick in value]):
+            formatted_range = ', '.join(map(str, settings.PICK_RANGE))
+            raise ValidationError(f"Ensure all items of this array belong to the valid range: {formatted_range}.")
+
+        return value
+
+    def validate_uniqueness(self, value):
+        if len(value) != len(set(value)):
+            raise ValidationError("Ensure all items of this array are unique.")
+
+        return value
+
+    def validate_length(self, value):
+        PICKS_LENGTH = 7
+
         if len(value) != PICKS_LENGTH:
             raise ValidationError(f"Ensure this array has exactly {PICKS_LENGTH} items.")
 
         return value
+
+    def get_validators(self):
+        return [
+            self.validate_range,
+            self.validate_uniqueness,
+            self.validate_length,
+        ]
 
 
 class LuckyTicketSerializer(ModelSerializer):
