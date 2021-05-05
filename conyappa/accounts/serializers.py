@@ -1,14 +1,24 @@
 from django.db import transaction
 
 from rest_framework.serializers import CharField, ModelSerializer, ValidationError
-from rest_framework_simplejwt.serializers import TokenObtainSlidingSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenObtainSlidingSerializer,
+)
 
 from utils.serializers import SetOnlyFieldsMixin
 
 from .models import Device, User
 
 
-class TokenLoginSerializer(TokenObtainSlidingSerializer):
+class TokenLoginSerializerVersion1(TokenObtainSlidingSerializer):  # LEGACY
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["id"] = self.user.id
+        return data
+
+
+class TokenLoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         data["id"] = self.user.id
@@ -31,7 +41,8 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "full_name",
             "balance",
             "winnings",
-            "token",
+            "access",
+            "refresh",
         ]
 
         # These fields can only be set once.
@@ -49,11 +60,13 @@ class UserSerializer(SetOnlyFieldsMixin, ModelSerializer):
             "winnings": {"read_only": True},
         }
 
-    token = CharField(read_only=True, required=False)
+    access = CharField(read_only=True, required=False)
+    refresh = CharField(read_only=True, required=False)
 
     def create(self, validated_data):
         user = super().create(validated_data)
-        user.token = TokenLoginSerializer.get_token(user)
+        user.refresh = TokenLoginSerializer.get_token(user)
+        user.access = user.refresh.access_token
         return user
 
     @transaction.atomic
