@@ -1,0 +1,15 @@
+{
+  "type": "array",
+  "uniqueItems": true,
+  "minItems": 7,
+  "maxItems": 7,
+  "items": {
+    "type": "object",
+    "properties": {
+      "value": {
+        "type": "integer",
+        "minimum": 1
+      }
+    }
+  }
+}

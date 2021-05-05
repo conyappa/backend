@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "user": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "picks": {
+      "$ref": "./lucky_ticket__picks.json",
+      "readOnly": true
+    }
+  }
+}

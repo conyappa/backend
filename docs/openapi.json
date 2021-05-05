@@ -8,7 +8,7 @@
       "altText": "Con Yappa logo"
     }
   },
-  "servers":[
+  "servers": [
     {
       "url": "http://localhost:8000",
       "description": "Development server"
@@ -22,7 +22,7 @@
       "description": "Production server"
     }
   ],
-  "tags":[
+  "tags": [
     {
       "name": "Users"
     },
@@ -46,7 +46,7 @@
     "/v2/auth/login": {
       "post": {
         "summary": "Obtain JSON Web Token",
-        "tags":[
+        "tags": [
           "Users"
         ],
         "requestBody": {
@@ -79,7 +79,7 @@
                   "properties": {
                     "detail": {
                       "type": "string",
-                      "enum":[
+                      "enum": [
                         "No active account found with the given credentials"
                       ]
                     }
@@ -94,7 +94,7 @@
     "/v2/auth/refresh": {
       "post": {
         "summary": "Refresh JSON Web Token",
-        "tags":[
+        "tags": [
           "Users"
         ],
         "requestBody": {
@@ -166,7 +166,7 @@
     "/v2/users": {
       "post": {
         "summary": "Create a user",
-        "tags":[
+        "tags": [
           "Users"
         ],
         "requestBody": {
@@ -206,7 +206,7 @@
     "/v2/users/{user_id}": {
       "get": {
         "summary": "Retrieve a user",
-        "tags":[
+        "tags": [
           "Users"
         ],
         "security": [
@@ -214,7 +214,7 @@
             "bearerAuth": []
           }
         ],
-        "parameters":[
+        "parameters": [
           {
             "in": "path",
             "name": "user_id",
@@ -270,7 +270,7 @@
       },
       "patch": {
         "summary": "Update a user",
-        "tags":[
+        "tags": [
           "Users"
         ],
         "security": [
@@ -356,7 +356,7 @@
     "/v2/users/{user_id}/devices": {
       "post": {
         "summary": "Register a user’s device",
-        "tags":[
+        "tags": [
           "Users",
           "Devices"
         ],
@@ -365,7 +365,7 @@
             "bearerAuth": []
           }
         ],
-        "parameters":[
+        "parameters": [
           {
             "in": "path",
             "name": "user_id",
@@ -444,7 +444,7 @@
       "get": {
         "summary": "Obtain a user’s tickets",
         "description": "Only returns the tickets of the ongoing draw.",
-        "tags":[
+        "tags": [
           "Users",
           "Tickets"
         ],
@@ -453,7 +453,7 @@
             "bearerAuth": []
           }
         ],
-        "parameters":[
+        "parameters": [
           {
             "in": "path",
             "name": "user_id",
@@ -536,11 +536,289 @@
         }
       }
     },
+    "/v2/users/{user_id}/lucky-tickets": {
+      "get": {
+        "summary": "Obtain a user’s lucky tickets",
+        "tags": [
+          "Users",
+          "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/lucky_ticket.json"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a user’s lucky ticket",
+        "tags": [
+          "Users",
+          "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/lucky_ticket.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/lucky_ticket_400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/lucky-tickets/{id}": {
+      "patch": {
+        "summary": "Update a lucky ticket",
+        "tags": [
+          "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/lucky_ticket.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/lucky_ticket_400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Destroy a lucky ticket",
+        "tags": [
+          "Tickets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/default_404"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/draws": {
       "post": {
         "summary": "Create a draw",
         "description": "Creates an empty draw (_i.e._, with no results) and the corresponding tickets for all active users.",
-        "tags":[
+        "tags": [
           "Internal comunication"
         ],
         "security": [
@@ -585,7 +863,7 @@
     "/v2/draws/metadata": {
       "get": {
         "summary": "Retrieve the draws’ metadata",
-        "tags":[
+        "tags": [
           "Draws"
         ],
         "security": [
@@ -631,7 +909,7 @@
       "get": {
         "summary": "Retrieve the ongoing draw",
         "description": "Returns this week’s draw (there is only one).",
-        "tags":[
+        "tags": [
           "Draws"
         ],
         "security": [
@@ -676,7 +954,7 @@
     "/v2/draws/ongoing/choose": {
       "post": {
         "summary": "Choose a result for the ongoing draw",
-        "tags":[
+        "tags": [
           "Internal comunication"
         ],
         "security": [
@@ -721,7 +999,7 @@
     "/v2/movements/fetch": {
       "post": {
         "summary": "Fetch bank movements using Fintoc",
-        "tags":[
+        "tags": [
           "Internal comunication"
         ],
         "security": [
@@ -759,7 +1037,7 @@
     "/": {
       "get": {
         "summary": "Health check",
-        "tags":[
+        "tags": [
           "Misc"
         ],
         "responses": {
@@ -775,7 +1053,7 @@
                   "properties": {
                     "detail": {
                       "type": "string",
-                      "enum":[
+                      "enum": [
                         "Can't connect to database.",
                         "Unknown database problem."
                       ]
@@ -791,7 +1069,7 @@
     "/error": {
       "get": {
         "summary": "Trigger an error",
-        "tags":[
+        "tags": [
           "Misc"
         ],
         "responses": {
@@ -816,6 +1094,23 @@
       }
     },
     "responses": {
+      "lucky_ticket_400": {
+        "type": "object",
+        "properties": {
+          "picks": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ensure all items of this array belong to the valid range: <pick_range>.",
+                "Ensure all items of this array are unique.",
+                "Ensure this array has exactly 7 items."
+              ]
+            }
+          }
+        }
+      },
       "user_400": {
         "type": "object",
         "properties": {
@@ -874,7 +1169,7 @@
             "properties": {
               "detail": {
                 "type": "string",
-                "enum":[
+                "enum": [
                   "Authentication credentials were not provided."
                 ]
               }
@@ -886,13 +1181,13 @@
             "properties": {
               "detail": {
                 "type": "string",
-                "enum":[
+                "enum": [
                   "Authorization header must contain two space-delimited values"
                 ]
               },
               "code": {
                 "type": "string",
-                "enum":[
+                "enum": [
                   "bad_authorization_header"
                 ]
               }
@@ -904,13 +1199,13 @@
             "properties": {
               "detail": {
                 "type": "string",
-                "enum":[
+                "enum": [
                   "Given token not valid for any token type"
                 ]
               },
               "code": {
                 "type": "string",
-                "enum":[
+                "enum": [
                   "token_not_valid"
                 ]
               },
@@ -929,7 +1224,7 @@
         "properties": {
           "detail": {
             "type": "string",
-            "enum":[
+            "enum": [
               "You do not have permission to perform this action."
             ]
           }
@@ -941,7 +1236,7 @@
         "properties": {
           "detail": {
             "type": "string",
-            "enum":[
+            "enum": [
               "Not found."
             ]
           }
