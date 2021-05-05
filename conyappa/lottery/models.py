@@ -192,6 +192,9 @@ class Ticket(BaseModel):
 
 
 class LuckyTicket(BaseModel):
+    class Meta:
+        ordering = ["created_at"]
+
     picks = ArrayField(base_field=models.PositiveSmallIntegerField())
 
     user = models.ForeignKey(
