@@ -1103,6 +1103,7 @@
             "items": {
               "type": "string",
               "enum": [
+                "Ensure this array has the correct structure.",
                 "Ensure all items of this array belong to the valid range: <pick_range>.",
                 "Ensure all items of this array are unique.",
                 "Ensure this array has exactly 7 items."
