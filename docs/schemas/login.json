@@ -1,21 +1,24 @@
 {
   "allOf": [
     {
-      "id": {
-        "type": "string",
-        "format": "uuid",
-        "readOnly": true
-      },
-      "email": {
-        "type": "string",
-        "format": "email",
-        "maxLength": 254,
-        "writeOnly": true
-      },
-      "password": {
-        "type": "string",
-        "format": "password",
-        "writeOnly": true
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254,
+          "writeOnly": true
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "writeOnly": true
+        }
       }
     },
     {
