@@ -12,13 +12,13 @@ method = "get"
 
 # Session.
 [endpoints.login]
-route = "/v1/login"
+route = "/v2/login"
 method = "post"
 body = ["email", "password"]
 
 # Users.
 [endpoints.create-user]
-route = "/v1/users"
+route = "/v2/users"
 method = "post"
 body = [
   "email",
@@ -30,42 +30,47 @@ body = [
 ]
 
 [endpoints.get-user]
-route = "/v1/users/{user_id}"
+route = "/v2/users/{user_id}"
 method = "get"
 params = ["user_id"]
 headers = ["Authorization"]
 
 [endpoints.get-tickets]
-route = "/v1/users/{user_id}/tickets?page={page}&page_size={page_size}"
+route = "/v2/users/{user_id}/tickets?page={page}&page_size={page_size}"
 method = "get"
 params = ["user_id", "page", "page_size"]
 headers = ["Authorization"]
 
 [endpoints.register-device]
-route = "/v1/users/{user_id}/devices"
+route = "/v2/users/{user_id}/devices"
 method = "post"
 params = ["user_id"]
 body = ["android_id", "expo_push_token"]
 headers = ["Authorization"]
 
 # Draws.
+[endpoints.get-draws-metadata]
+route = "/v2/draws/metadata"
+method = "get"
+headers = ["Authorization"]
+
 [endpoints.get-ongoing-draw]
-route = "/v1/draws/ongoing"
+route = "/v2/draws/ongoing"
 method = "get"
 headers = ["Authorization"]
 
 # Internal.
 [endpoints.create-draw]
-route = "/v1/draws"
+route = "/v2/draws"
 method = "post"
 headers = ["Internal-Key"]
 
 [endpoints.choose-result]
-route = "/v1/draws/ongoing/choose"
+route = "/v2/draws/ongoing/choose"
 method = "post"
 headers = ["Internal-Key"]
 
 [endpoints.fetch-movements]
-route = "/v1/movements/fetch"
+route = "/v2/movements/fetch"
 method = "post"
 headers = ["Internal-Key"]

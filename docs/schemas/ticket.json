@@ -8,13 +8,11 @@
       "readOnly": true
     },
     "prize": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 2147483647,
-      "readOnly": true
+      "$ref": "./prize.json"
     },
     "picks": {
-      "$ref": "./ticket__picks.json"
+      "$ref": "./ticket__picks.json",
+      "readOnly": true
     }
   }
 }

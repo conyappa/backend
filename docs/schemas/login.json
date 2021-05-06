@@ -12,7 +12,13 @@
       "format": "password",
       "writeOnly": true
     },
-    "token": {
+    "access": {
+      "type": "string",
+      "format": "jwt",
+      "readOnly": true,
+      "example": "xxxxx.yyyyy.zzzzz"
+    },
+    "refresh": {
       "type": "string",
       "format": "jwt",
       "readOnly": true,

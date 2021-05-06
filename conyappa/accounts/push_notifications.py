@@ -29,12 +29,13 @@ class Interface(metaclass=Singleton):
         except Exception as e:
             logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
 
-        try:
-            response.validate_response()
-        except DeviceNotRegisteredError as e:
-            logger.warning(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
-        except PushTicketError as e:
-            logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
+        else:
+            try:
+                response.validate_response()
+            except DeviceNotRegisteredError as e:
+                logger.warning(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
+            except PushTicketError as e:
+                logger.error(self.EXCEPTION_MESSAGE_TEMPLATE.format(device=device, e=e))
 
     def send(self, device, body, data=None, async_=True):
         kwargs = {"device": device, "body": body, "data": data}
