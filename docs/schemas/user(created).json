@@ -1,10 +1,10 @@
 {
   "allOf": [
     {
-      "$ref": "./tokens.json"
+      "$ref": "./user.json"
     },
     {
-      "$ref": "./user.json"
+      "$ref": "./tokens.json"
     }
   ]
 }

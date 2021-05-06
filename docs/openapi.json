@@ -102,7 +102,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "./schemas/tokens.json"
+                "type": "object",
+                "properties": {
+                  "refresh": {
+                    "type": "string",
+                    "format": "jwt",
+                    "example": "xxxxx.yyyyy.zzzzz"
+                  }
+                }
               }
             }
           }
