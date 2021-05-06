@@ -10,4 +10,4 @@ from .models import User
 def user_join_current_draw(sender, instance, created, *args, **kwargs):
     if created and Draw.objects.exists():
         draw = Draw.objects.ongoing()
-        draw.add_tickets(user=instance, n=instance.number_of_tickets)
+        draw.add_random_tickets(user=instance, n=instance.number_of_tickets)

@@ -43,7 +43,15 @@ class DrawManager(models.Manager):
         tickets = []
 
         for user in users:
-            user_tickets = draw.generate_tickets(user=user, n=user.number_of_tickets)
+            # Here we assume the draw is created sufficiently in advance
+            # so that the first number of the draw cannot be infered yet.
+            n = user.number_of_tickets
+            user_lucky_tickets = user.lucky_tickets.all()[:n]
+            user_tickets = draw.generate_tickets_from_lucky_tickets(qs=user_lucky_tickets)
+
+            n -= len(user_tickets)
+            user_tickets += draw.generate_random_tickets(user=user, n=n)
+
             tickets += user_tickets
             user.consume_extra_tickets()
 
@@ -66,13 +74,16 @@ class Draw(BaseModel):
 
     objects = DrawManager()
 
-    def generate_tickets(self, user, n):
+    def generate_tickets_from_lucky_tickets(self, qs):
+        return [Ticket(draw=self, user=lucky_ticket.user, picks=lucky_ticket.picks) for lucky_ticket in qs]
+
+    def generate_random_tickets(self, user, n):
         return [Ticket(draw=self, user=user, picks=generate_random_picks(pool=self.pool)) for _ in range(n)]
 
-    def add_tickets(self, user, n):
+    def add_random_tickets(self, user, n):
         random.update()
 
-        tickets = self.generate_tickets(user=user, n=n)
+        tickets = self.generate_random_tickets(user=user, n=n)
         Ticket.objects.bulk_create(objs=tickets)
 
     def choose_result(self):
@@ -186,6 +197,27 @@ class Ticket(BaseModel):
     )
 
     objects = TicketManager()
+
+    def __str__(self):
+        return str(self.picks)
+
+
+class LuckyTicket(BaseModel):
+    class Meta:
+        ordering = ["created_at"]
+
+    picks = ArrayField(base_field=models.PositiveSmallIntegerField())
+
+    user = models.ForeignKey(
+        to="accounts.User",
+        verbose_name="user",
+        related_name="lucky_tickets",
+        on_delete=models.CASCADE,
+    )
+
+    @property
+    def owners(self):
+        return {self.user}
 
     def __str__(self):
         return str(self.picks)

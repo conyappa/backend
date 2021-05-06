@@ -131,7 +131,7 @@ class User(BaseModel, AbstractUser):
 
             draw = Draw.objects.ongoing()
             delta_tickets = get_number_of_tickets(amount)
-            draw.add_tickets(user=self, n=delta_tickets)
+            draw.add_random_tickets(user=self, n=delta_tickets)
 
         formatted_amount = format_pesos(amount)
         self.send_push_notification(body=f"Se ha efectuado tu depósito de {formatted_amount}.")
