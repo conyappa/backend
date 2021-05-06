@@ -1,33 +1,25 @@
 {
-  "type": "object",
-  "properties": {
-    "email": {
-      "type": "string",
-      "format": "email",
-      "maxLength": 254,
-      "writeOnly": true
+  "allOf": [
+    {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "readOnly": true
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "maxLength": 254,
+        "writeOnly": true
+      },
+      "password": {
+        "type": "string",
+        "format": "password",
+        "writeOnly": true
+      }
     },
-    "password": {
-      "type": "string",
-      "format": "password",
-      "writeOnly": true
-    },
-    "access": {
-      "type": "string",
-      "format": "jwt",
-      "readOnly": true,
-      "example": "xxxxx.yyyyy.zzzzz"
-    },
-    "refresh": {
-      "type": "string",
-      "format": "jwt",
-      "readOnly": true,
-      "example": "xxxxx.yyyyy.zzzzz"
-    },
-    "id": {
-      "type": "string",
-      "format": "uuid",
-      "readOnly": true
+    {
+      "$ref": "./tokens.json"
     }
-  }
+  ]
 }
